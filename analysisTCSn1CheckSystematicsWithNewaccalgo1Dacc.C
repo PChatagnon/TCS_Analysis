@@ -76,7 +76,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	// Acceptance setup
 	//////////////////////////////////////////////
 
-	Acceptance Acc_TCS(TString(argv[argc-2]), 4, 3, 3, 36, 13);
+	Acceptance Acc_TCS(TString(argv[argc - 2]), 4, 3, 3, 36, 13);
 	Acc_TCS.Draw_Acc();
 	Acc_TCS.Draw_Error();
 
@@ -256,11 +256,9 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 			nbEvent++;
 
-			//cout << "event" << endl;
+			// cout << "event" << endl;
 			double w = 1; // MCfluxBH[0]*MCpsfBH[0]*MCcsBH[0];
 			int polarization;
-			bool pass_topology_cut = true;
-			bool pass_positron_cut = true;
 			Event ev;
 
 			if (IsHipo)
@@ -295,8 +293,10 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				///////////////////////////////////////////
 				ev.Set_Particles(PART);
 				if (!ev.pass_topology_cut())
-					pass_topology_cut = false;
+					continue;
 				///////////////////////////////////////////
+
+				cout << ev.Positron.Vector.P() << " " << ev.Proton.Vector.P() << " " << ev.Electron.Vector.P() << endl;
 
 				///////////////////////////////////////////
 				// Associate detector responses and do EC cuts
@@ -313,7 +313,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				// cout<<PositronPID.Accept(ev.Positron)<<endl;
 
 				if (!PositronPID.Accept(ev.Positron))
-					pass_positron_cut = false;
+					continue;
 				///////////////////////////////////////////
 
 				///////////////////////////////////////////
@@ -329,17 +329,13 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				ev.Apply_MC_Correction(MomCorr);
 				///////////////////////////////////////////
 			}
-			//cout << nbevent_after_posi << endl;
+			// cout << nbevent_after_posi << endl;
 			/*if (pass_positron_cut == false)
 				cout << pass_positron_cut << endl;
 */
-			if (!pass_topology_cut || !pass_positron_cut)
-			{
-				//cout << "I am fucking here" << endl;
-				continue;
-			}
+
 			nbevent_after_posi++;
-			//cout << nbevent_after_posi << endl;
+			// cout << nbevent_after_posi << endl;
 
 			if (!IsHipo)
 			{
