@@ -1,0 +1,11 @@
+MMassBeamCut 0.4
+PtCut  0.05
+ElecMomCut 1.
+PosiMomCut 1.
+ElecMinSF 0.15
+PosiMinSF 0.15
+MLPscoreCut 0.5
+MLPMomCut 4.0
+RadCorr true
+CentralMomCorr true
+factorPola 0.892
