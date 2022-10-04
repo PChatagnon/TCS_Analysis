@@ -70,7 +70,7 @@ public:
                 m2PCAL = M2PCAL;
                 m2ECIN = M2ECIN;
                 m2ECOUT = M2ECOUT;
-
+                
                 score = PositronIdentificationReader->EvaluateMVA(methodName);
         }
 

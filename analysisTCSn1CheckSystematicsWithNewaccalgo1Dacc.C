@@ -54,6 +54,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	bool IsData = true;
 	bool IsHipo = true;
 
+	bool IsTCSGen = false;
+
 	Int_t argc = gApplication->Argc();
 	char **argv = gApplication->Argv();
 	double nbrecEvent = 0;
@@ -125,7 +127,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	outT->Branch("Proton", "TLorentzVector", &tree_Proton);
 
 	TString fvars[] = {
-		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "theta", "phi", "positron_SF", "electron_SF"};
+		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "theta", "phi", "positron_SF", "electron_SF", "weight"};
 
 	std::map<TString, Float_t>
 		outVars;
@@ -203,7 +205,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 		TLorentzVector *input_Electron = 0;
 		TLorentzVector *input_Positron = 0;
 		TLorentzVector *input_Proton = 0;
-		float input_t, input_MMassBeam, input_Epho, input_qp2, input_M, input_xi, input_Pt_Frac, input_theta, input_phi, input_positron_SF, input_electron_SF;
+		float input_t, input_MMassBeam, input_Epho, input_qp2, input_M, input_xi, input_Pt_Frac, input_theta, input_phi, input_positron_SF, input_electron_SF, input_weight;
 		float input_s, input_L0, input_L;
 		////////////////////////////////////////////
 
@@ -236,6 +238,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 			input_tree->SetBranchAddress("phi", &input_phi);
 			input_tree->SetBranchAddress("positron_SF", &input_positron_SF);
 			input_tree->SetBranchAddress("electron_SF", &input_electron_SF);
+			input_tree->SetBranchAddress("weight", &input_weight);
 		}
 
 		hipo::bank EVENT(factory.getSchema("REC::Event"));
@@ -288,6 +291,12 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				double MCcsBH = MCEVENT.getFloat("pbeam", 0);
 				double MCcsTOT = MCEVENT.getFloat("weight", 0);
 
+				if(IsTCSGen)
+					w = MCfluxBH*MCcsTOT*MCcsBH;
+				//cout<<" weight check "<<MCfluxBH<<" "<<MCpsfBH<<" "<<MCcsBH<<" "<<MCcsTOT<<endl;
+
+				ev.Set_Weight(w);
+
 				///////////////////////////////////////////
 				// Get Particles and cut on event topology
 				///////////////////////////////////////////
@@ -295,8 +304,6 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				if (!ev.pass_topology_cut())
 					continue;
 				///////////////////////////////////////////
-
-				cout << ev.Positron.Vector.P() << " " << ev.Proton.Vector.P() << " " << ev.Electron.Vector.P() << endl;
 
 				///////////////////////////////////////////
 				// Associate detector responses and do EC cuts
@@ -383,6 +390,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 									  input_xi, input_L0, input_L);
 
 					ev.Set_SF(input_electron_SF, input_positron_SF);
+					ev.Set_Weight(input_weight);
 				}
 
 				ev.Get_Polarization_Transfer();
@@ -421,6 +429,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 					outVars["phi"] = ev.phi;
 					outVars["positron_SF"] = ev.positron_SF;
 					outVars["electron_SF"] = ev.electron_SF;
+					outVars["weight"] = ev.w;
 					tree_Electron = ev.Electron.Vector;
 					tree_Positron = ev.Positron.Vector;
 					tree_Proton = ev.Proton.Vector;
