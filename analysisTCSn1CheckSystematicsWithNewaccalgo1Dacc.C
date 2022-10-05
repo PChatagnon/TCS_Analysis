@@ -42,7 +42,7 @@ double n_real(double Eb, double Eg)
 int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 {
 
-	time_t begin, end; // time_t is a datatype to store time values.
+	time_t begin, intermediate, end; // time_t is a datatype to store time values.
 
 	time(&begin); // note time before execution
 
@@ -60,8 +60,9 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	bool IsData = true;
 	bool IsHipo = true;
 
-	bool IsTCSGen = true;
+	bool IsTCSGen = false;
 	bool IsGrape = false;
+	bool IsJPsi = false;
 
 	Int_t argc = gApplication->Argc();
 	char **argv = gApplication->Argv();
@@ -216,6 +217,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 			cout << "Running on TCSGen Simulation" << endl;
 		else if (IsGrape)
 			cout << "Running on Grape Simulation" << endl;
+		else if (IsJPsi)
+			cout << "Running on JPsi Simulation" << endl;
 		cout << "////////////////////////////////////////////" << endl;
 		////////////////////////////////////////////
 
@@ -288,7 +291,14 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 		{
 
 			nbEvent++;
-			//Number of total event
+			if (nbEvent % 30000 == 0)
+			{
+				time(&intermediate);
+				double intermediate_time = difftime(intermediate, begin);
+
+				cout << nbEvent << " events processed in " << intermediate_time << "s" << endl;
+			}
+			// Number of total event
 			Plots.Fill_1D("evt_count", 0, 1);
 			// cout << "event" << endl;
 			double w = 1; // MCfluxBH[0]*MCpsfBH[0]*MCcsBH[0];
@@ -340,6 +350,14 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 					w = MCpsf * MCcs * flux;
 				}
 
+				if (IsJPsi)
+				{
+					float MC_factor_1 = MCEVENT.getFloat("ptarget", 0);
+					float MC_factor_2 = MCEVENT.getFloat("pbeam", 0);
+					float MC_factor_3 = MCEVENT.getFloat("ebeam", 0);
+					w =  MC_factor_1*MC_factor_2*MC_factor_3;
+				}
+
 				ev.Set_Weight(w);
 
 				///////////////////////////////////////////
@@ -356,7 +374,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 					continue;
 				///////////////////////////////////////////
 
-				//Number of events after topology cuts
+				// Number of events after topology cuts
 				Plots.Fill_1D("evt_count", 1, 1);
 
 				///////////////////////////////////////////
@@ -377,7 +395,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 					continue;
 				///////////////////////////////////////////
 
-				//Number of events after positron cuts
+				// Number of events after positron cuts
 				Plots.Fill_1D("evt_count", 2, 1);
 
 				///////////////////////////////////////////
@@ -475,7 +493,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 					&& (ev.positron_SF) > InputParameters.PosiMinSF)
 				{
 
-					//Number of events after exclusivity cuts
+					// Number of events after exclusivity cuts
 					Plots.Fill_1D("evt_count", 3, 1);
 
 					outVars["p_p"] = ev.Positron.Vector.P();
