@@ -4,6 +4,7 @@
 const std::vector<vector<TString>> ListPlot1D{
 
     // Format : { "name", "title;tile_x;title_y" , bin_x , min_x , max_x }
+    {"evt_count", "evt_count", "4", "0", "4"},
     {"MMass", "Missing mass beam", "100", "-20", "20"},
     {"Q2", "Virtuality incoming photon (Q2)", "100", "-20", "20"},
     {"EM1", ";M;events", "200", "0.0", "4.0"},
