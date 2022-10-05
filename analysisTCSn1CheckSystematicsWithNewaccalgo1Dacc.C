@@ -61,6 +61,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	bool IsHipo = true;
 
 	bool IsTCSGen = true;
+	bool IsGrape = true;
 
 	Int_t argc = gApplication->Argc();
 	char **argv = gApplication->Argv();
@@ -202,7 +203,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 			nameFiles = TString(argv[i]);
 		}
 
-		if (IsTCSGen)
+		if (IsTCSGen || IsGrape)
 		{
 			IsData = false;
 		}
@@ -211,8 +212,10 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 		cout << "////////////////////////////////////////////" << endl;
 		if (IsData)
 			cout << "Running on Data" << endl;
-		else
-			cout << "Running on Simulation" << endl;
+		else if (IsTCSGen)
+			cout << "Running on TCSGen Simulation" << endl;
+		else if (IsGrape)
+			cout << "Running on Grape Simulation" << endl;
 		cout << "////////////////////////////////////////////" << endl;
 		////////////////////////////////////////////
 
