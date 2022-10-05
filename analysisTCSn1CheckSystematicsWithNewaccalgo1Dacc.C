@@ -24,6 +24,7 @@
 #include "bib/TCSAFBclass.h"
 #include "bib/TCSRRatioclass.h"
 #include "bib/TCSEvent.h"
+#include "bib/TCSRunSelector.h"
 
 #include "reader.h"
 
@@ -32,6 +33,11 @@
 using namespace std;
 
 #define ADDVAR(x, name, t, tree) tree->Branch(name, x, TString(name) + TString(t))
+
+double n_real(double Eb, double Eg)
+{
+	return 0.5 * (5.0 / 929.0) * (1 / Eg) * ((4.0 / 3.0) - (4.0 / 3.0) * (Eg / Eb) + (Eg * Eg) / (Eb * Eb));
+}
 
 int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 {
@@ -54,7 +60,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	bool IsData = true;
 	bool IsHipo = true;
 
-	bool IsTCSGen = false;
+	bool IsTCSGen = true;
 
 	Int_t argc = gApplication->Argc();
 	char **argv = gApplication->Argv();
@@ -81,6 +87,12 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	Acceptance Acc_TCS(TString(argv[argc - 2]), 4, 3, 3, 36, 13);
 	Acc_TCS.Draw_Acc();
 	Acc_TCS.Draw_Error();
+
+	////////////////////////////////////////////
+	// Init run selector
+	////////////////////////////////////////////
+
+	RunSelector Run_Selector;
 
 	////////////////////////////////////////////
 	// Bin volume correction
@@ -190,6 +202,20 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 			nameFiles = TString(argv[i]);
 		}
 
+		if (IsTCSGen)
+		{
+			IsData = false;
+		}
+
+		////////////////////////////////////////////
+		cout << "////////////////////////////////////////////" << endl;
+		if (IsData)
+			cout << "Running on Data" << endl;
+		else
+			cout << "Running on Simulation" << endl;
+		cout << "////////////////////////////////////////////" << endl;
+		////////////////////////////////////////////
+
 		////////////////////////////////////////////
 		// hipo reader
 		hipo::reader reader;
@@ -205,7 +231,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 		TLorentzVector *input_Electron = 0;
 		TLorentzVector *input_Positron = 0;
 		TLorentzVector *input_Proton = 0;
-		float input_t, input_MMassBeam, input_Epho, input_qp2, input_M, input_xi, input_Pt_Frac, input_theta, input_phi, input_positron_SF, input_electron_SF, input_weight;
+		float input_t, input_MMassBeam, input_Epho, input_qp2, input_M, input_xi, input_Pt_Frac, input_theta, input_phi, input_positron_SF, input_electron_SF, input_weight, input_run;
 		float input_s, input_L0, input_L;
 		////////////////////////////////////////////
 
@@ -239,6 +265,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 			input_tree->SetBranchAddress("positron_SF", &input_positron_SF);
 			input_tree->SetBranchAddress("electron_SF", &input_electron_SF);
 			input_tree->SetBranchAddress("weight", &input_weight);
+			input_tree->SetBranchAddress("run", &input_run);
 		}
 
 		hipo::bank EVENT(factory.getSchema("REC::Event"));
@@ -283,19 +310,39 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				if (PART.getSize() < 1)
 					continue;
 
+				int run = RUN.getInt("run", 0); // To be checked
 				int np_input = PART.getRows();
 				ev.Set_nb_part(np_input);
 
-				double MCfluxBH = MCEVENT.getFloat("ebeam", 0);
-				double MCpsfBH = MCEVENT.getFloat("ptarget", 0);
-				double MCcsBH = MCEVENT.getFloat("pbeam", 0);
-				double MCcsTOT = MCEVENT.getFloat("weight", 0);
+				float MCpsf = MCEVENT.getFloat("pbeam", 0);
+				float MCcs = MCEVENT.getFloat("weight", 0);
 
-				if(IsTCSGen)
-					w = MCfluxBH*MCcsTOT*MCcsBH;
-				//cout<<" weight check "<<MCfluxBH<<" "<<MCpsfBH<<" "<<MCcsBH<<" "<<MCcsTOT<<endl;
+				if (IsTCSGen)
+				{
+					TLorentzVector GenElectron;
+					TLorentzVector GenPositron;
+					TLorentzVector GenProton;
+					TLorentzVector GenRestProton;
+
+					// finish this
+					GenElectron.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), me);
+					GenPositron.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), me);
+					GenProton.SetXYZM(MCPART.getFloat("px", 2), MCPART.getFloat("py", 2), MCPART.getFloat("pz", 2), mp);
+					GenRestProton.SetXYZM(0.0, 0.0, 0.0, mp);
+
+					float Egamma_gen = (GenElectron + GenPositron + GenProton - GenRestProton).E();
+					float flux = n_real(ebeam, Egamma_gen);
+					// w = MCEVENT.getFloat("ebeam", 0) * MCEVENT.getFloat("weight", 0) * MCEVENT.getFloat("pbeam", 0);
+					w = MCpsf * MCcs * flux;
+				}
 
 				ev.Set_Weight(w);
+
+				///////////////////////////////////////////
+				// Filter good runs
+				///////////////////////////////////////////
+				if (!Run_Selector.Is_Good_Run(run) && IsData)
+					continue;
 
 				///////////////////////////////////////////
 				// Get Particles and cut on event topology
@@ -375,7 +422,10 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 					///////////////////////////////////////////
 					// Momentum Data-driven correction
 					///////////////////////////////////////////
-					ev.Apply_Central_Correction(MomCorr, InputParameters.CentralMomCorr, TRACK, TRAJ);
+					if (IsData)
+					{
+						ev.Apply_Central_Correction(MomCorr, InputParameters.CentralMomCorr, TRACK, TRAJ);
+					}
 
 					///////////////////////////////////////////
 					// Compute kinematics
