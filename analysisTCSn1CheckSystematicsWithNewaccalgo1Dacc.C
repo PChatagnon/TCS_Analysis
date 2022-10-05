@@ -61,7 +61,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	bool IsHipo = true;
 
 	bool IsTCSGen = true;
-	bool IsGrape = true;
+	bool IsGrape = false;
 
 	Int_t argc = gApplication->Argc();
 	char **argv = gApplication->Argv();
@@ -288,7 +288,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 		{
 
 			nbEvent++;
-
+			//Number of total event
+			Plots.Fill_1D("evt_count", 0, 1);
 			// cout << "event" << endl;
 			double w = 1; // MCfluxBH[0]*MCpsfBH[0]*MCcsBH[0];
 			int polarization;
@@ -355,6 +356,9 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 					continue;
 				///////////////////////////////////////////
 
+				//Number of events after topology cuts
+				Plots.Fill_1D("evt_count", 1, 1);
+
 				///////////////////////////////////////////
 				// Associate detector responses and do EC cuts
 				///////////////////////////////////////////
@@ -372,6 +376,9 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				if (!PositronPID.Accept(ev.Positron))
 					continue;
 				///////////////////////////////////////////
+
+				//Number of events after positron cuts
+				Plots.Fill_1D("evt_count", 2, 1);
 
 				///////////////////////////////////////////
 				// Radiative correction
@@ -467,6 +474,9 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 					&& (ev.positron_SF) > InputParameters.PosiMinSF)
 				{
+
+					//Number of events after exclusivity cuts
+					Plots.Fill_1D("evt_count", 3, 1);
 
 					outVars["p_p"] = ev.Positron.Vector.P();
 					outVars["e_p"] = ev.Electron.Vector.P();
