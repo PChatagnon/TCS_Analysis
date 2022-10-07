@@ -152,7 +152,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	outT->Branch("Proton", "TLorentzVector", &tree_Proton);
 
 	TString fvars[] = {
-		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "theta", "phi", "positron_SF", "electron_SF", "weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage"};
+		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage"};
 
 	std::map<TString, Float_t>
 		outVars;
@@ -504,6 +504,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				outVars["M"] = ev.M;
 				outVars["xi"] = ev.xi;
 				outVars["Pt_Frac"] = ev.Pt_Frac;
+				outVars["Q2"]=ev.Q2;
 				outVars["theta"] = ev.theta;
 				outVars["phi"] = ev.phi;
 				outVars["positron_SF"] = ev.positron_SF;
