@@ -52,6 +52,17 @@ public:
         float positron_SF;
         float electron_SF;
 
+        // Acceptance
+        float acc = 0;
+        float acc_error = -1;
+
+        // Photon flux
+        float real_flux;
+        float virtual_flux;
+
+        // run number
+        float run;
+
         Event(int nb_part)
         {
                 vRestProton.SetPxPyPzE(0., 0., 0., mp);
@@ -337,6 +348,23 @@ public:
                 vMissing = vBeam - vPhoton;
         }
 
+        void Set_Acceptance(float Acc, float Acc_Error)
+        {
+                acc = Acc;
+                acc_error = Acc_Error;
+        }
+
+        void Set_Photon_Flux(float input_real_flux, float input_virtual_flux)
+        {
+                real_flux = input_real_flux;
+                virtual_flux = input_virtual_flux;
+        }
+
+        void Set_Run_Number(int input_run)
+        {
+                run = (float)(input_run);
+        }
+       
         void Add_Event_to_TTree()
         {
         }

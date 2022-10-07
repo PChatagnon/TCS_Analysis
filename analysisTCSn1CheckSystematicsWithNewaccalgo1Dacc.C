@@ -39,6 +39,17 @@ double n_real(double Eb, double Eg)
 	return 0.5 * (5.0 / 929.0) * (1 / Eg) * ((4.0 / 3.0) - (4.0 / 3.0) * (Eg / Eb) + (Eg * Eg) / (Eb * Eb));
 }
 
+double n_virtual(double Eb, double Eg, double Q2_max)
+{
+	double alpha = 1. / 137.;
+	double PI = 3.14159265358979312;
+	double x = Eg / Eb;
+	double me = 0.00051;
+	double Mp = 0.9383;
+	double Q2_min = me * me * x * x / (1 - x);
+	return (1 / Eb) * alpha / (PI * x) * ((1 - x + x * x / 2) * log(Q2_max / Q2_min) - (1 - x));
+}
+
 int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 {
 
@@ -141,7 +152,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	outT->Branch("Proton", "TLorentzVector", &tree_Proton);
 
 	TString fvars[] = {
-		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "theta", "phi", "positron_SF", "electron_SF", "weight"};
+		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "theta", "phi", "positron_SF", "electron_SF", "weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage"};
 
 	std::map<TString, Float_t>
 		outVars;
@@ -204,7 +215,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 			nameFiles = TString(argv[i]);
 		}
 
-		if (IsTCSGen || IsGrape)
+		if (IsTCSGen || IsGrape || IsJPsi)
 		{
 			IsData = false;
 		}
@@ -237,7 +248,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 		TLorentzVector *input_Electron = 0;
 		TLorentzVector *input_Positron = 0;
 		TLorentzVector *input_Proton = 0;
-		float input_t, input_MMassBeam, input_Epho, input_qp2, input_M, input_xi, input_Pt_Frac, input_theta, input_phi, input_positron_SF, input_electron_SF, input_weight, input_run;
+		float input_t, input_MMassBeam, input_Epho, input_qp2, input_M, input_xi, input_Pt_Frac, input_theta, input_phi, input_positron_SF, input_electron_SF, input_weight;
+		float input_run, input_acc, input_acc_error, input_real_flux, input_virtual_flux;
 		float input_s, input_L0, input_L;
 		////////////////////////////////////////////
 
@@ -272,6 +284,10 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 			input_tree->SetBranchAddress("electron_SF", &input_electron_SF);
 			input_tree->SetBranchAddress("weight", &input_weight);
 			input_tree->SetBranchAddress("run", &input_run);
+			input_tree->SetBranchAddress("acc", &input_acc);
+			input_tree->SetBranchAddress("acc_error", &input_acc_error);
+			input_tree->SetBranchAddress("real_flux", &input_real_flux);
+			input_tree->SetBranchAddress("virtual_flux", &input_virtual_flux);
 		}
 
 		hipo::bank EVENT(factory.getSchema("REC::Event"));
@@ -305,6 +321,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 			int polarization;
 			Event ev;
 
+			int run = 0;
+
 			if (IsHipo)
 			{
 
@@ -324,7 +342,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				if (PART.getSize() < 1)
 					continue;
 
-				int run = RUN.getInt("run", 0); // To be checked
+				run = RUN.getInt("run", 0); // To be checked
 				int np_input = PART.getRows();
 				ev.Set_nb_part(np_input);
 
@@ -355,7 +373,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 					float MC_factor_1 = MCEVENT.getFloat("ptarget", 0);
 					float MC_factor_2 = MCEVENT.getFloat("pbeam", 0);
 					float MC_factor_3 = MCEVENT.getFloat("ebeam", 0);
-					w =  MC_factor_1*MC_factor_2*MC_factor_3;
+					w = MC_factor_1 * MC_factor_2 * MC_factor_3;
 				}
 
 				ev.Set_Weight(w);
@@ -441,6 +459,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 			}
 
 			ev.Set_Polarization(polarization);
+			ev.Set_Run_Number(run);
 
 			if ((ev.pass_EC_cut() && IsHipo) || (!IsHipo))
 			{
@@ -475,6 +494,29 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 				Plots.Fill_1D("T rec", -ev.t, w);
 
+				outVars["p_p"] = ev.Positron.Vector.P();
+				outVars["e_p"] = ev.Electron.Vector.P();
+				outVars["prot_p"] = ev.Proton.Vector.P();
+				outVars["t"] = ev.t;
+				outVars["MMassBeam"] = ev.MMassBeam;
+				outVars["Epho"] = ev.Epho;
+				outVars["qp2"] = ev.qp2;
+				outVars["M"] = ev.M;
+				outVars["xi"] = ev.xi;
+				outVars["Pt_Frac"] = ev.Pt_Frac;
+				outVars["theta"] = ev.theta;
+				outVars["phi"] = ev.phi;
+				outVars["positron_SF"] = ev.positron_SF;
+				outVars["electron_SF"] = ev.electron_SF;
+				outVars["weight"] = ev.w;
+				outVars["real_flux"] = ev.real_flux;
+				outVars["virtual_flux"] = ev.virtual_flux;
+				outVars["run"] = ev.run;
+				outVars["analysis_stage"] = 0.0;
+				tree_Electron = ev.Electron.Vector;
+				tree_Positron = ev.Positron.Vector;
+				tree_Proton = ev.Proton.Vector;
+
 				double cutchi2 = 3.;
 				// bool chi2cutProton = (vProton.status > 4000 && abs(vProton.chi2 - meanCD) < (cutchi2 * sigmaCD)) || (vProton.status < 4000 && abs(vProton.chi2 - meanFD) < (cutchi2 * sigmaFD));
 
@@ -493,28 +535,9 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 					&& (ev.positron_SF) > InputParameters.PosiMinSF)
 				{
 
+					outVars["analysis_stage"] = 1.0;
 					// Number of events after exclusivity cuts
 					Plots.Fill_1D("evt_count", 3, 1);
-
-					outVars["p_p"] = ev.Positron.Vector.P();
-					outVars["e_p"] = ev.Electron.Vector.P();
-					outVars["prot_p"] = ev.Proton.Vector.P();
-					outVars["t"] = ev.t;
-					outVars["MMassBeam"] = ev.MMassBeam;
-					outVars["Epho"] = ev.Epho;
-					outVars["qp2"] = ev.qp2;
-					outVars["M"] = ev.M;
-					outVars["xi"] = ev.xi;
-					outVars["Pt_Frac"] = ev.Pt_Frac;
-					outVars["theta"] = ev.theta;
-					outVars["phi"] = ev.phi;
-					outVars["positron_SF"] = ev.positron_SF;
-					outVars["electron_SF"] = ev.electron_SF;
-					outVars["weight"] = ev.w;
-					tree_Electron = ev.Electron.Vector;
-					tree_Positron = ev.Positron.Vector;
-					tree_Proton = ev.Proton.Vector;
-					outT->Fill();
 
 					Plots.Fill_1D("EM1", ev.M, w);
 
@@ -534,7 +557,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 					)
 					{
-
+						
+						outVars["analysis_stage"] = 2.0;
 						nEventTCS += ev.w;
 						denom += (ev.w * ev.w);
 
@@ -546,8 +570,12 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 						if ((ev.L / ev.L0) < 0.)
 							cout << " L/L0 is negative  " << (ev.L / ev.L0) << endl;
 
-						double AccValue = Acc_TCS.GetValue(ev.t, ev.Epho, ev.qp2, ev.phi, ev.theta);
-						double AccError = Acc_TCS.GetError(ev.t, ev.Epho, ev.qp2, ev.phi, ev.theta);
+						float AccValue = Acc_TCS.GetValue(ev.t, ev.Epho, ev.qp2, ev.phi, ev.theta);
+						float AccError = Acc_TCS.GetError(ev.t, ev.Epho, ev.qp2, ev.phi, ev.theta);
+
+						ev.Set_Acceptance(AccValue, AccError);
+						outVars["acc"] = ev.acc;
+						outVars["acc_error"] = ev.acc_error;
 
 						BSA_vs_t.AddEvent(-ev.t, ev.phi, ev.polarization, ev.polaT, AccValue, AccError, ev.w);
 						BSA_vs_Xi.AddEvent(ev.xi, ev.phi, ev.polarization, ev.polaT, AccValue, AccError, ev.w);
@@ -560,8 +588,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 						int binningMass = Acc_TCS.Get_M_bin(ev.qp2);
 						int binningEg = Acc_TCS.Get_Eg_bin(ev.Epho);
 
-						double CorrVolume1 = Bin_Volume_Corr.volume1[binningt + Acc_TCS.bin_t * binningMass + Acc_TCS.bin_t * Acc_TCS.bin_M * binningEg];
-						double CorrVolume2 = Bin_Volume_Corr.volume2[binningt + Acc_TCS.bin_t * binningMass + Acc_TCS.bin_t * Acc_TCS.bin_M * binningEg];
+						float CorrVolume1 = Bin_Volume_Corr.volume1[binningt + Acc_TCS.bin_t * binningMass + Acc_TCS.bin_t * Acc_TCS.bin_M * binningEg];
+						float CorrVolume2 = Bin_Volume_Corr.volume2[binningt + Acc_TCS.bin_t * binningMass + Acc_TCS.bin_t * Acc_TCS.bin_M * binningEg];
 						AFB_vs_t.AddEvent(-ev.t, ev.phi, ev.theta, AccValue, AccError, ev.w, CorrVolume1, CorrVolume2);
 						AFB_vs_t1.AddEvent(-ev.t, ev.phi, ev.theta, AccValue, AccError, ev.w, CorrVolume1, CorrVolume2);
 						AFB_vs_M.AddEvent(sqrt(ev.qp2), ev.phi, ev.theta, AccValue, AccError, ev.w, CorrVolume1, CorrVolume2);
@@ -573,6 +601,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 							cout << "Acc Value bellow zero : problem" << endl;
 					}
 				}
+
+				outT->Fill();
 			}
 		}
 	}
