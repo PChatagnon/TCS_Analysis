@@ -34,22 +34,6 @@ using namespace std;
 
 #define ADDVAR(x, name, t, tree) tree->Branch(name, x, TString(name) + TString(t))
 
-double n_real(double Eb, double Eg)
-{
-	return 0.5 * (5.0 / 929.0) * (1 / Eg) * ((4.0 / 3.0) - (4.0 / 3.0) * (Eg / Eb) + (Eg * Eg) / (Eb * Eb));
-}
-
-double n_virtual(double Eb, double Eg, double Q2_max)
-{
-	double alpha = 1. / 137.;
-	double PI = 3.14159265358979312;
-	double x = Eg / Eb;
-	double me = 0.00051;
-	double Mp = 0.9383;
-	double Q2_min = me * me * x * x / (1 - x);
-	return (1 / Eb) * alpha / (PI * x) * ((1 - x + x * x / 2) * log(Q2_max / Q2_min) - (1 - x));
-}
-
 int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 {
 
@@ -74,6 +58,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	bool IsTCSGen = false;
 	bool IsGrape = false;
 	bool IsJPsi = false;
+
+	bool RGA_Fall2018 = false;
 
 	Int_t argc = gApplication->Argc();
 	char **argv = gApplication->Argv();
@@ -146,10 +132,12 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	TFile *outFile = new TFile("outputTCS.root", "recreate");
 	TTree *outT = new TTree("tree", "tree");
 
-	TLorentzVector tree_Electron, tree_Positron, tree_Proton;
+	TLorentzVector tree_Electron, tree_Positron, tree_Proton, tree_Missing;
 	outT->Branch("Electron", "TLorentzVector", &tree_Electron);
 	outT->Branch("Positron", "TLorentzVector", &tree_Positron);
 	outT->Branch("Proton", "TLorentzVector", &tree_Proton);
+	outT->Branch("Missing", "TLorentzVector", &tree_Missing);
+
 
 	TString fvars[] = {
 		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage"};
@@ -303,7 +291,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 		outFile->cd();
 
-		while (((reader.next() && IsHipo) || (nbEvent < nentries && !IsHipo)) /*&& nbEvent < 100000*/)
+		while (((reader.next() && IsHipo) || (nbEvent < nentries && !IsHipo)) /*&& nbEvent < 10000*/)
 		{
 
 			nbEvent++;
@@ -381,7 +369,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				///////////////////////////////////////////
 				// Filter good runs
 				///////////////////////////////////////////
-				if (!Run_Selector.Is_Good_Run(run) && IsData)
+				if (!Run_Selector.Is_Good_Run(run) && IsData && RGA_Fall2018)
 					continue;
 
 				///////////////////////////////////////////
@@ -469,7 +457,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 					///////////////////////////////////////////
 					// Momentum Data-driven correction
 					///////////////////////////////////////////
-					if (IsData)
+					if(false)//if (IsData)
 					{
 						ev.Apply_Central_Correction(MomCorr, InputParameters.CentralMomCorr, TRACK, TRAJ);
 					}
@@ -517,6 +505,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				tree_Electron = ev.Electron.Vector;
 				tree_Positron = ev.Positron.Vector;
 				tree_Proton = ev.Proton.Vector;
+				tree_Missing = ev.vMissing;
 
 				double cutchi2 = 3.;
 				// bool chi2cutProton = (vProton.status > 4000 && abs(vProton.chi2 - meanCD) < (cutchi2 * sigmaCD)) || (vProton.status < 4000 && abs(vProton.chi2 - meanFD) < (cutchi2 * sigmaFD));
