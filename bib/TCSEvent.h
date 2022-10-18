@@ -27,6 +27,9 @@ public:
         int recem = 0;
         int recep = 0;
         int recp = 0;
+        int recneg = 0;
+        int recpos = 0;
+        int recn = 0;
 
         // Kinematic variables
         float t;
@@ -168,12 +171,29 @@ public:
                                 Photons[i].status = status;
                                 Photons[i].beta = beta;
                         }
+
+
+                        if(charge>0)
+                                recpos++;
+                        else if(charge<0)
+                                recneg++;
+                        else recn++;
                 }
         }
 
         bool pass_topology_cut()
         {
                 return (recem == 1 && recep == 1 && recp == 1);
+        }
+
+        void show_topology()
+        {
+                cout<<"Nb of electrons: "<<recem<<", Nb of positrons: "<<recep<<", Nb of protons: "<<recp<<endl;
+        }
+
+        int topology()
+        {
+                return recep*1000000+recem*100000+recp*10000+recneg*1000+recpos*100+recn;
         }
 
         void Apply_EC_Cuts(hipo::bank CALO)
@@ -292,7 +312,7 @@ public:
                 qp2 = (Positron.Vector + Electron.Vector).M2();
                 M = sqrt(qp2);
                 Pt_Frac = vMissing.Pt() / vMissing.P();
-                Q2 = 2*ebeam*vMissing.E()*(1.-cos(vMissing.Theta()));
+                Q2 = 2 * ebeam * vMissing.E() * (1. - cos(vMissing.Theta()));
 
                 // Angular variables
                 cm = CM(Electron, Positron, Proton);
@@ -366,7 +386,7 @@ public:
         {
                 run = (float)(input_run);
         }
-       
+
         void Add_Event_to_TTree()
         {
         }

@@ -140,7 +140,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 
 	TString fvars[] = {
-		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage"};
+		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology"};
 
 	std::map<TString, Float_t>
 		outVars;
@@ -291,7 +291,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 		outFile->cd();
 
-		while (((reader.next() && IsHipo) || (nbEvent < nentries && !IsHipo)) /*&& nbEvent < 10000*/)
+		while (((reader.next() && IsHipo) || (nbEvent < nentries && !IsHipo)) && nbEvent < 100000)
 		{
 
 			nbEvent++;
@@ -376,8 +376,12 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				// Get Particles and cut on event topology
 				///////////////////////////////////////////
 				ev.Set_Particles(PART);
-				if (!ev.pass_topology_cut())
+				if (!ev.pass_topology_cut()){
+					if(ev.recem>1)
+						PART.show();
 					continue;
+
+				}
 				///////////////////////////////////////////
 
 				// Number of events after topology cuts
@@ -502,6 +506,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				outVars["virtual_flux"] = ev.virtual_flux;
 				outVars["run"] = ev.run;
 				outVars["analysis_stage"] = 0.0;
+				outVars["topology"] = ev.topology();
 				tree_Electron = ev.Electron.Vector;
 				tree_Positron = ev.Positron.Vector;
 				tree_Proton = ev.Proton.Vector;
@@ -524,7 +529,6 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 					&& (ev.positron_SF) > InputParameters.PosiMinSF)
 				{
-
 					outVars["analysis_stage"] = 1.0;
 					// Number of events after exclusivity cuts
 					Plots.Fill_1D("evt_count", 3, 1);
