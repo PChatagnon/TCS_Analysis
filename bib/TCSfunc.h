@@ -442,4 +442,20 @@ double polarizationTransfer(double Eb, double Eg, double angle)
 	return Pola;
 }
 
+double n_real(double Eb, double Eg)
+{
+	return 0.5 * (5.0 / 929.0) * (1 / Eg) * ((4.0 / 3.0) - (4.0 / 3.0) * (Eg / Eb) + (Eg * Eg) / (Eb * Eb));
+}
+
+double n_virtual(double Eb, double Eg, double Q2_max)
+{
+	double alpha = 1. / 137.;
+	double PI = 3.14159265358979312;
+	double x = Eg / Eb;
+	double me = 0.00051;
+	double Mp = 0.9383;
+	double Q2_min = me * me * x * x / (1 - x);
+	return (1 / Eb) * alpha / (PI * x) * ((1 - x + x * x / 2) * log(Q2_max / Q2_min) - (1 - x));
+}
+
 #endif
