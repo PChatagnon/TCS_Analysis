@@ -27,9 +27,15 @@ public:
         int recem = 0;
         int recep = 0;
         int recp = 0;
-        int recneg = 0;
-        int recpos = 0;
-        int recn = 0;
+        int recneg_FD = 0;
+        int recpos_FD = 0;
+        int recn_FD = 0;
+        int recneg_CD = 0;
+        int recpos_CD = 0;
+        int recn_CD = 0;
+        int recneg_FT = 0;
+        int recpos_FT = 0;
+        int recn_FT = 0;
 
         // Kinematic variables
         float t;
@@ -172,14 +178,34 @@ public:
                                 Photons[i].beta = beta;
                         }
 
-                        if (status>2000 && status <3000)
+                        if (status>1000 && status <2000)
                         {
                                 if (charge > 0)
-                                        recpos++;
+                                        recpos_FT++;
                                 else if (charge < 0)
-                                        recneg++;
+                                        recneg_FT++;
                                 else
-                                        recn++;
+                                        recn_FT++;
+                        }
+
+                        if (status>2000 && status <3500)
+                        {
+                                if (charge > 0)
+                                        recpos_FD++;
+                                else if (charge < 0)
+                                        recneg_FD++;
+                                else
+                                        recn_FD++;
+                        }
+
+                        if (status>4000 && status <5000)
+                        {
+                                if (charge > 0)
+                                        recpos_CD++;
+                                else if (charge < 0)
+                                        recneg_CD++;
+                                else
+                                        recn_CD++;
                         }
                 }
         }
@@ -196,7 +222,48 @@ public:
 
         int topology()
         {
-                return recep * 1000000 + recem * 100000 + recp * 10000 + recneg * 1000 + recpos * 100 + recn;
+                int EFS = 1;
+                int FD_topo = 0;
+                int CD_topo = 0;
+                int FT_topo = 0;
+                if(recem >= 1)
+                        EFS = 2;
+                
+                if(recpos_FD == 1 && recneg_FD == 1 && recn_FD == 0)
+                        FD_topo =1;
+                else if(recpos_FD == 1 && recneg_FD == 1 && recn_FD > 0)
+                        FD_topo =2;
+                else if (recpos_FD == 2 && recneg_FD == 1 && recn_FD == 0)
+                        FD_topo =3;
+                else if (recpos_FD == 2 && recneg_FD == 1 && recn_FD > 0)
+                        FD_topo =4;
+                else if (recpos_FD == 2 && recneg_FD > 1 && recn_FD >= 0)
+                        FD_topo =5;
+                else if (recpos_FD > 2 && recneg_FD == 1 && recn_FD >= 0)
+                        FD_topo =6;
+                else if (recpos_FD == 1 && recneg_FD > 1 && recn_FD >= 0)
+                        FD_topo =7;
+                else if (recpos_FD > 2 && recneg_FD > 1 && recn_FD >= 0)
+                        FD_topo =8;
+                else FD_topo =0;
+              
+
+                if ( recpos_CD == 0 && recneg_CD == 0 && recn_CD >= 0)
+                        CD_topo =1;
+                else if ( recpos_CD == 1 && recneg_CD == 0 && recn_CD >= 0)
+                        CD_topo =2;
+                else if ( (recpos_CD >1 || recneg_CD > 0) && recn_CD >= 0)
+                        CD_topo =3;
+                else CD_topo =0;
+                
+
+               
+                if ( recpos_FT == 0 && recneg_FT == 0 && recn_FT == 0)
+                        FT_topo =1;
+                else FT_topo =0;
+                
+
+                return EFS * 1000 + FD_topo * 100 + CD_topo * 10 + FT_topo;
         }
 
         void Apply_EC_Cuts(hipo::bank CALO)

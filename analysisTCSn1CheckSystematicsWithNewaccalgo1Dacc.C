@@ -483,6 +483,9 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 				Plots.Fill_1D("T rec", -ev.t, w);
 
+				//cout<<ev.topology()<<endl;
+				//PART.show();
+
 				outVars["p_p"] = ev.Positron.Vector.P();
 				outVars["e_p"] = ev.Electron.Vector.P();
 				outVars["prot_p"] = ev.Proton.Vector.P();
