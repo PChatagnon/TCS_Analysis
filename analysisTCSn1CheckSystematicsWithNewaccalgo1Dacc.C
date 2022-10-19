@@ -377,10 +377,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				///////////////////////////////////////////
 				ev.Set_Particles(PART);
 				if (!ev.pass_topology_cut()){
-					if(ev.recem>1)
-						PART.show();
 					continue;
-
 				}
 				///////////////////////////////////////////
 
@@ -506,7 +503,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				outVars["virtual_flux"] = ev.virtual_flux;
 				outVars["run"] = ev.run;
 				outVars["analysis_stage"] = 0.0;
-				outVars["topology"] = ev.topology();
+				outVars["topology"] = (float)ev.topology();
 				tree_Electron = ev.Electron.Vector;
 				tree_Positron = ev.Positron.Vector;
 				tree_Proton = ev.Proton.Vector;

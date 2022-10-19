@@ -172,28 +172,31 @@ public:
                                 Photons[i].beta = beta;
                         }
 
-
-                        if(charge>0)
-                                recpos++;
-                        else if(charge<0)
-                                recneg++;
-                        else recn++;
+                        if (status>2000 && status <3000)
+                        {
+                                if (charge > 0)
+                                        recpos++;
+                                else if (charge < 0)
+                                        recneg++;
+                                else
+                                        recn++;
+                        }
                 }
         }
 
         bool pass_topology_cut()
         {
-                return (recem == 1 && recep == 1 && recp == 1);
+                return (recem >= 1 && recep == 1 && recp == 1);
         }
 
         void show_topology()
         {
-                cout<<"Nb of electrons: "<<recem<<", Nb of positrons: "<<recep<<", Nb of protons: "<<recp<<endl;
+                cout << "Nb of electrons: " << recem << ", Nb of positrons: " << recep << ", Nb of protons: " << recp << endl;
         }
 
         int topology()
         {
-                return recep*1000000+recem*100000+recp*10000+recneg*1000+recpos*100+recn;
+                return recep * 1000000 + recem * 100000 + recp * 10000 + recneg * 1000 + recpos * 100 + recn;
         }
 
         void Apply_EC_Cuts(hipo::bank CALO)
