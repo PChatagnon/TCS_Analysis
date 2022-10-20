@@ -62,6 +62,10 @@ public:
         float positron_SF;
         float electron_SF;
 
+        // Lepton OID scores
+        float positron_score;
+        float electron_score;
+
         // Acceptance
         float acc = 0;
         float acc_error = -1;
@@ -260,13 +264,13 @@ public:
                
                 if ( recpos_FT == 0 && recneg_FT == 0 && recn_FT == 0)
                         FT_topo =1;
-                if ( recpos_FT >= 0 && recneg_FT == 0 && recn_FT == 0)
+                if ( recpos_FT > 0 && recneg_FT == 0 && recn_FT == 0)
                         FT_topo =2;
-                if ( recpos_FT == 0 && recneg_FT >= 0 && recn_FT == 0)
+                if ( recpos_FT == 0 && recneg_FT > 0 && recn_FT == 0)
                         FT_topo =3;
-                if ( recpos_FT >= 0 && recneg_FT == 0 && recn_FT >= 0)
+                if ( recpos_FT > 0 && recneg_FT == 0 && recn_FT > 0)
                         FT_topo =4;
-                if ( recpos_FT == 0 && recneg_FT >= 0 && recn_FT >= 0)
+                if ( recpos_FT == 0 && recneg_FT > 0 && recn_FT > 0)
                         FT_topo =5;
                 else FT_topo =0;
                 
@@ -290,6 +294,14 @@ public:
         {
                 electron_SF = ((Electron.Energy(ECAL, PCAL) + Electron.Energy(ECAL, ECIN) + Electron.Energy(ECAL, ECOUT))) / Electron.Vector.P();
                 positron_SF = ((Positron.Energy(ECAL, PCAL) + Positron.Energy(ECAL, ECIN) + Positron.Energy(ECAL, ECOUT))) / Positron.Vector.P();
+        }
+
+        void Set_Elec_score(float input_elec_score){
+                electron_score = input_elec_score;
+        }
+
+        void Set_Posi_score(float input_posi_score){
+                positron_score = input_posi_score;
         }
 
         void Associate_detector_resp(hipo::bank CHE, hipo::bank SCIN)

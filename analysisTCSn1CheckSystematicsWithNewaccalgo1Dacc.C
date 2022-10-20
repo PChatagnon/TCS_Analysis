@@ -138,9 +138,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	outT->Branch("Proton", "TLorentzVector", &tree_Proton);
 	outT->Branch("Missing", "TLorentzVector", &tree_Missing);
 
-
 	TString fvars[] = {
-		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology"};
+		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score", "weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology"};
 
 	std::map<TString, Float_t>
 		outVars;
@@ -376,7 +375,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				// Get Particles and cut on event topology
 				///////////////////////////////////////////
 				ev.Set_Particles(PART);
-				if (!ev.pass_topology_cut()){
+				if (!ev.pass_topology_cut())
+				{
 					continue;
 				}
 				///////////////////////////////////////////
@@ -395,11 +395,23 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				// TMVA
 				///////////////////////////////////////////
 				PositronPID.Evaluate(ev.Positron);
-				// cout<<PositronPID.score<<endl;
+				ev.Set_Posi_score(PositronPID.score);
+				//cout<<"event"<<endl;
+				//cout<<PositronPID.score<<endl;
 				// cout<<PositronPID.Accept(ev.Positron)<<endl;
 
 				if (!PositronPID.Accept(ev.Positron))
 					continue;
+
+				PositronPID.Evaluate(ev.Electron);
+				ev.Set_Elec_score(PositronPID.score);
+				//cout<<PositronPID.score<<endl;
+
+				/*if (PositronPID.score<0.7)
+				{
+					continue;
+				}*/
+
 				///////////////////////////////////////////
 
 				// Number of events after positron cuts
@@ -458,7 +470,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 					///////////////////////////////////////////
 					// Momentum Data-driven correction
 					///////////////////////////////////////////
-					if(false)//if (IsData)
+					if (false) // if (IsData)
 					{
 						ev.Apply_Central_Correction(MomCorr, InputParameters.CentralMomCorr, TRACK, TRAJ);
 					}
@@ -483,8 +495,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 				Plots.Fill_1D("T rec", -ev.t, w);
 
-				//cout<<ev.topology()<<endl;
-				//PART.show();
+				// cout<<ev.topology()<<endl;
+				// PART.show();
 
 				outVars["p_p"] = ev.Positron.Vector.P();
 				outVars["e_p"] = ev.Electron.Vector.P();
@@ -496,11 +508,13 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				outVars["M"] = ev.M;
 				outVars["xi"] = ev.xi;
 				outVars["Pt_Frac"] = ev.Pt_Frac;
-				outVars["Q2"]=ev.Q2;
+				outVars["Q2"] = ev.Q2;
 				outVars["theta"] = ev.theta;
 				outVars["phi"] = ev.phi;
 				outVars["positron_SF"] = ev.positron_SF;
 				outVars["electron_SF"] = ev.electron_SF;
+				outVars["positron_score"] = ev.positron_score;
+				outVars["electron_score"] = ev.electron_score;
 				outVars["weight"] = ev.w;
 				outVars["real_flux"] = ev.real_flux;
 				outVars["virtual_flux"] = ev.virtual_flux;
@@ -551,7 +565,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 					)
 					{
-						
+
 						outVars["analysis_stage"] = 2.0;
 						nEventTCS += ev.w;
 						denom += (ev.w * ev.w);
