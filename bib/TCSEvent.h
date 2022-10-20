@@ -226,7 +226,7 @@ public:
                 int FD_topo = 0;
                 int CD_topo = 0;
                 int FT_topo = 0;
-                if(recem >= 1)
+                if(recem > 1)
                         EFS = 2;
                 
                 if(recpos_FD == 1 && recneg_FD == 1 && recn_FD == 0)
@@ -260,6 +260,14 @@ public:
                
                 if ( recpos_FT == 0 && recneg_FT == 0 && recn_FT == 0)
                         FT_topo =1;
+                if ( recpos_FT >= 0 && recneg_FT == 0 && recn_FT == 0)
+                        FT_topo =2;
+                if ( recpos_FT == 0 && recneg_FT >= 0 && recn_FT == 0)
+                        FT_topo =3;
+                if ( recpos_FT >= 0 && recneg_FT == 0 && recn_FT >= 0)
+                        FT_topo =4;
+                if ( recpos_FT == 0 && recneg_FT >= 0 && recn_FT >= 0)
+                        FT_topo =5;
                 else FT_topo =0;
                 
 
