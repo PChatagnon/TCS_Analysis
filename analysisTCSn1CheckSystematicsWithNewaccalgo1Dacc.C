@@ -59,7 +59,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	bool IsGrape = false;
 	bool IsJPsi = false;
 
-	bool RGA_Fall2018 = false;
+	bool RGA_Fall2018 = true;
 
 	Int_t argc = gApplication->Argc();
 	char **argv = gApplication->Argv();
@@ -137,6 +137,9 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	outT->Branch("Positron", "TLorentzVector", &tree_Positron);
 	outT->Branch("Proton", "TLorentzVector", &tree_Proton);
 	outT->Branch("Missing", "TLorentzVector", &tree_Missing);
+
+	int trigger_bit;
+	outT->Branch("trigger_bit", &trigger_bit,"trigger_bit/I");
 
 	TString fvars[] = {
 		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score", "weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology"};
@@ -309,6 +312,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 			Event ev;
 
 			int run = 0;
+			//int trigger_bit = 0;
 
 			if (IsHipo)
 			{
@@ -329,9 +333,13 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				if (PART.getSize() < 1)
 					continue;
 
-				run = RUN.getInt("run", 0); // To be checked
+				run = RUN.getInt("run", 0);
+				trigger_bit = RUN.getLong("trigger", 0);
+				//cout<<trigger_bit<<endl;
 				int np_input = PART.getRows();
 				ev.Set_nb_part(np_input);
+				ev.Set_trigger_bit(trigger_bit);
+				//cout<<(int)ev.trigger_bit<<endl;
 
 				float MCpsf = MCEVENT.getFloat("pbeam", 0);
 				float MCcs = MCEVENT.getFloat("weight", 0);
@@ -379,6 +387,9 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				{
 					continue;
 				}
+				//cout<<"event"<<endl;
+				//cout<<ev.topology()<<endl;
+				//PART.show();
 				///////////////////////////////////////////
 
 				// Number of events after topology cuts

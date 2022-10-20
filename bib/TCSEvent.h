@@ -74,8 +74,9 @@ public:
         float real_flux;
         float virtual_flux;
 
-        // run number
+        // run number and trigger bit
         float run;
+        int trigger_bit;
 
         Event(int nb_part)
         {
@@ -95,6 +96,11 @@ public:
         {
                 np = input_np;
                 Photons = new Particle[np];
+        }
+
+        void Set_trigger_bit(long input_trigger_bit)
+        {
+                trigger_bit = (long)input_trigger_bit;
         }
 
         void Set_Polarization(float pola)
@@ -182,7 +188,7 @@ public:
                                 Photons[i].beta = beta;
                         }
 
-                        if (status>1000 && status <2000)
+                        if (status > 1000 && status < 2000)
                         {
                                 if (charge > 0)
                                         recpos_FT++;
@@ -192,7 +198,7 @@ public:
                                         recn_FT++;
                         }
 
-                        if (status>2000 && status <3500)
+                        if (status > 2000 && status < 3500)
                         {
                                 if (charge > 0)
                                         recpos_FD++;
@@ -202,7 +208,7 @@ public:
                                         recn_FD++;
                         }
 
-                        if (status>4000 && status <5000)
+                        if (status > 4000 && status < 5000)
                         {
                                 if (charge > 0)
                                         recpos_CD++;
@@ -230,50 +236,49 @@ public:
                 int FD_topo = 0;
                 int CD_topo = 0;
                 int FT_topo = 0;
-                if(recem > 1)
+                if (recem > 1)
                         EFS = 2;
-                
-                if(recpos_FD == 1 && recneg_FD == 1 && recn_FD == 0)
-                        FD_topo =1;
-                else if(recpos_FD == 1 && recneg_FD == 1 && recn_FD > 0)
-                        FD_topo =2;
+
+                if (recpos_FD == 1 && recneg_FD == 1 && recn_FD == 0)
+                        FD_topo = 1;
+                else if (recpos_FD == 1 && recneg_FD == 1 && recn_FD > 0)
+                        FD_topo = 2;
                 else if (recpos_FD == 2 && recneg_FD == 1 && recn_FD == 0)
-                        FD_topo =3;
+                        FD_topo = 3;
                 else if (recpos_FD == 2 && recneg_FD == 1 && recn_FD > 0)
-                        FD_topo =4;
+                        FD_topo = 4;
                 else if (recpos_FD == 2 && recneg_FD > 1 && recn_FD >= 0)
-                        FD_topo =5;
+                        FD_topo = 5;
                 else if (recpos_FD > 2 && recneg_FD == 1 && recn_FD >= 0)
-                        FD_topo =6;
+                        FD_topo = 6;
                 else if (recpos_FD == 1 && recneg_FD > 1 && recn_FD >= 0)
-                        FD_topo =7;
+                        FD_topo = 7;
                 else if (recpos_FD > 2 && recneg_FD > 1 && recn_FD >= 0)
-                        FD_topo =8;
-                else FD_topo =0;
-              
+                        FD_topo = 8;
+                else
+                        FD_topo = 0;
 
-                if ( recpos_CD == 0 && recneg_CD == 0 && recn_CD >= 0)
-                        CD_topo =1;
-                else if ( recpos_CD == 1 && recneg_CD == 0 && recn_CD >= 0)
-                        CD_topo =2;
-                else if ( (recpos_CD >1 || recneg_CD > 0) && recn_CD >= 0)
-                        CD_topo =3;
-                else CD_topo =0;
-                
+                if (recpos_CD == 0 && recneg_CD == 0 && recn_CD >= 0)
+                        CD_topo = 1;
+                else if (recpos_CD == 1 && recneg_CD == 0 && recn_CD >= 0)
+                        CD_topo = 2;
+                else if ((recpos_CD > 1 || recneg_CD > 0) && recn_CD >= 0)
+                        CD_topo = 3;
+                else
+                        CD_topo = 0;
 
-               
-                if ( recpos_FT == 0 && recneg_FT == 0 && recn_FT == 0)
-                        FT_topo =1;
-                if ( recpos_FT > 0 && recneg_FT == 0 && recn_FT == 0)
-                        FT_topo =2;
-                if ( recpos_FT == 0 && recneg_FT > 0 && recn_FT == 0)
-                        FT_topo =3;
-                if ( recpos_FT > 0 && recneg_FT == 0 && recn_FT > 0)
-                        FT_topo =4;
-                if ( recpos_FT == 0 && recneg_FT > 0 && recn_FT > 0)
-                        FT_topo =5;
-                else FT_topo =0;
-                
+                if (recpos_FT == 0 && recneg_FT == 0 && recn_FT == 0)
+                        FT_topo = 1;
+                else if (recpos_FT > 0 && recneg_FT == 0 && recn_FT == 0)
+                        FT_topo = 2;
+                else if (recpos_FT == 0 && recneg_FT > 0 && recn_FT == 0)
+                        FT_topo = 3;
+                else if (recpos_FT > 0 && recneg_FT == 0 && recn_FT > 0)
+                        FT_topo = 4;
+                else if (recpos_FT == 0 && recneg_FT > 0 && recn_FT > 0)
+                        FT_topo = 5;
+                else
+                        FT_topo = 0;
 
                 return EFS * 1000 + FD_topo * 100 + CD_topo * 10 + FT_topo;
         }
@@ -296,11 +301,13 @@ public:
                 positron_SF = ((Positron.Energy(ECAL, PCAL) + Positron.Energy(ECAL, ECIN) + Positron.Energy(ECAL, ECOUT))) / Positron.Vector.P();
         }
 
-        void Set_Elec_score(float input_elec_score){
+        void Set_Elec_score(float input_elec_score)
+        {
                 electron_score = input_elec_score;
         }
 
-        void Set_Posi_score(float input_posi_score){
+        void Set_Posi_score(float input_posi_score)
+        {
                 positron_score = input_posi_score;
         }
 
