@@ -58,8 +58,9 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	bool IsTCSGen = false;
 	bool IsGrape = false;
 	bool IsJPsi = false;
+	bool Weighted_simu = true;
 
-	bool RGA_Fall2018 = true;
+	bool RGA_Fall2018 = false;
 
 	Int_t argc = gApplication->Argc();
 	char **argv = gApplication->Argv();
@@ -139,7 +140,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	outT->Branch("Missing", "TLorentzVector", &tree_Missing);
 
 	int trigger_bit;
-	outT->Branch("trigger_bit", &trigger_bit,"trigger_bit/I");
+	outT->Branch("trigger_bit", &trigger_bit, "trigger_bit/I");
 
 	TString fvars[] = {
 		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score", "weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology"};
@@ -293,7 +294,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 		outFile->cd();
 
-		while (((reader.next() && IsHipo) || (nbEvent < nentries && !IsHipo)) && nbEvent < 100000)
+		while (((reader.next() && IsHipo) || (nbEvent < nentries && !IsHipo)) && nbEvent < 10000)
 		{
 
 			nbEvent++;
@@ -312,7 +313,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 			Event ev;
 
 			int run = 0;
-			//int trigger_bit = 0;
+			// int trigger_bit = 0;
 
 			if (IsHipo)
 			{
@@ -335,11 +336,11 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 				run = RUN.getInt("run", 0);
 				trigger_bit = RUN.getLong("trigger", 0);
-				//cout<<trigger_bit<<endl;
+				// cout<<trigger_bit<<endl;
 				int np_input = PART.getRows();
 				ev.Set_nb_part(np_input);
 				ev.Set_trigger_bit(trigger_bit);
-				//cout<<(int)ev.trigger_bit<<endl;
+				// cout<<(int)ev.trigger_bit<<endl;
 
 				float MCpsf = MCEVENT.getFloat("pbeam", 0);
 				float MCcs = MCEVENT.getFloat("weight", 0);
@@ -371,6 +372,11 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 					w = MC_factor_1 * MC_factor_2 * MC_factor_3;
 				}
 
+				if (Weighted_simu)
+				{
+					w = MCEVENT.getFloat("weight", 0);
+				}
+
 				ev.Set_Weight(w);
 
 				///////////////////////////////////////////
@@ -387,9 +393,9 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				{
 					continue;
 				}
-				//cout<<"event"<<endl;
-				//cout<<ev.topology()<<endl;
-				//PART.show();
+				// cout<<"event"<<endl;
+				// cout<<ev.topology()<<endl;
+				// PART.show();
 				///////////////////////////////////////////
 
 				// Number of events after topology cuts
@@ -407,16 +413,16 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				///////////////////////////////////////////
 				PositronPID.Evaluate(ev.Positron);
 				ev.Set_Posi_score(PositronPID.score);
-				//cout<<"event"<<endl;
-				//cout<<PositronPID.score<<endl;
-				// cout<<PositronPID.Accept(ev.Positron)<<endl;
+				// cout<<"event"<<endl;
+				// cout<<PositronPID.score<<endl;
+				//  cout<<PositronPID.Accept(ev.Positron)<<endl;
 
 				if (!PositronPID.Accept(ev.Positron))
 					continue;
 
 				PositronPID.Evaluate(ev.Electron);
 				ev.Set_Elec_score(PositronPID.score);
-				//cout<<PositronPID.score<<endl;
+				// cout<<PositronPID.score<<endl;
 
 				/*if (PositronPID.score<0.7)
 				{
