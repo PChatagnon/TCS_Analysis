@@ -109,6 +109,37 @@ public:
                 return time;
         }
 
+        float SectorChe(int det)
+        {
+                int sector = 0;
+                for (int i = 0; i < Cherenkov.size(); i++)
+                {
+                        if (det == Cherenkov[i].detector)
+                        {
+                                sector = Cherenkov[i].sector;
+                                break;
+                        }
+                }
+                return sector;
+        }
+
+        float SectorCalo(int det, int layer)
+        {
+                int sector = 0;
+                for (int i = 0; i < Calorimeter.size(); i++)
+                {
+                        if (layer == Calorimeter[i].layer)
+                        {
+                                if (det == Calorimeter[i].detector)
+                                {
+                                        sector = Calorimeter[i].sector;
+                                        break;
+                                }
+                        }
+                }
+                return sector;
+        }
+
         float Chi2Che(int det)
         {
                 float chi2 = 0;

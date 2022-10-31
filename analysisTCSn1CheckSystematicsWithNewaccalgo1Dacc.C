@@ -58,9 +58,9 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	bool IsTCSGen = false;
 	bool IsGrape = false;
 	bool IsJPsi = false;
-	bool Weighted_simu = true;
+	bool Weighted_simu = false;
 
-	bool RGA_Fall2018 = false;
+	bool RGA_Fall2018 = true;
 
 	Int_t argc = gApplication->Argc();
 	char **argv = gApplication->Argv();
@@ -143,7 +143,9 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	outT->Branch("trigger_bit", &trigger_bit, "trigger_bit/I");
 
 	TString fvars[] = {
-		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score", "weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology"};
+		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score", 
+		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology", "positron_Nphe", "electron_Nphe"
+		};
 
 	std::map<TString, Float_t>
 		outVars;
@@ -406,6 +408,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				///////////////////////////////////////////
 				ev.Apply_EC_Cuts(CALO);
 				ev.Associate_detector_resp(CHE, SCIN);
+				ev.Set_Nphe_HTCC();
 				///////////////////////////////////////////
 
 				///////////////////////////////////////////
@@ -422,13 +425,6 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 				PositronPID.Evaluate(ev.Electron);
 				ev.Set_Elec_score(PositronPID.score);
-				// cout<<PositronPID.score<<endl;
-
-				/*if (PositronPID.score<0.7)
-				{
-					continue;
-				}*/
-
 				///////////////////////////////////////////
 
 				// Number of events after positron cuts
@@ -482,6 +478,19 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 			if ((ev.pass_EC_cut() && IsHipo) || (!IsHipo))
 			{
 				nbevent_after_EC++;
+
+
+				if(ev.Positron.SectorCalo(ECAL, PCAL)!=ev.Positron.SectorChe(HTCC)){
+					//cout<<"mismatch posi"<<endl;
+					continue;
+				}
+
+				if(ev.Electron.SectorCalo(ECAL, PCAL)!=ev.Electron.SectorChe(HTCC)){
+					//cout<<"mismatch elec"<<endl;
+					continue;
+				}
+
+
 				if (IsHipo)
 				{
 					///////////////////////////////////////////
@@ -538,6 +547,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				outVars["run"] = ev.run;
 				outVars["analysis_stage"] = 0.0;
 				outVars["topology"] = (float)ev.topology();
+				outVars["positron_Nphe"] = ev.positron_Nphe;
+				outVars["electron_Nphe"] = ev.electron_Nphe;
 				tree_Electron = ev.Electron.Vector;
 				tree_Positron = ev.Positron.Vector;
 				tree_Proton = ev.Proton.Vector;

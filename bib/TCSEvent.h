@@ -62,9 +62,13 @@ public:
         float positron_SF;
         float electron_SF;
 
-        // Lepton OID scores
+        // Lepton PID scores
         float positron_score;
         float electron_score;
+
+        // Lepton HTCC Nphe
+        float positron_Nphe;
+        float electron_Nphe;
 
         // Acceptance
         float acc = 0;
@@ -310,6 +314,13 @@ public:
         {
                 positron_score = input_posi_score;
         }
+
+        void Set_Nphe_HTCC()
+        {
+                positron_Nphe = Positron.nphe(15);
+                electron_Nphe = Electron.nphe(15);
+        }
+        
 
         void Associate_detector_resp(hipo::bank CHE, hipo::bank SCIN)
         {
