@@ -60,6 +60,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	bool IsJPsi = false;
 	bool Weighted_simu = false;
 
+	bool HTCCSectorCut = false;
+
 	bool RGA_Fall2018 = true;
 
 	Int_t argc = gApplication->Argc();
@@ -143,9 +145,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	outT->Branch("trigger_bit", &trigger_bit, "trigger_bit/I");
 
 	TString fvars[] = {
-		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score", 
-		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology", "positron_Nphe", "electron_Nphe"
-		};
+		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
+		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology", "positron_Nphe", "electron_Nphe"};
 
 	std::map<TString, Float_t>
 		outVars;
@@ -479,17 +480,20 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 			{
 				nbevent_after_EC++;
 
+				if (HTCCSectorCut)
+				{
+					if (ev.Positron.SectorCalo(ECAL, PCAL) != ev.Positron.SectorChe(HTCC))
+					{
+						// cout<<"mismatch posi"<<endl;
+						continue;
+					}
 
-				if(ev.Positron.SectorCalo(ECAL, PCAL)!=ev.Positron.SectorChe(HTCC)){
-					//cout<<"mismatch posi"<<endl;
-					continue;
+					if (ev.Electron.SectorCalo(ECAL, PCAL) != ev.Electron.SectorChe(HTCC))
+					{
+						// cout<<"mismatch elec"<<endl;
+						continue;
+					}
 				}
-
-				if(ev.Electron.SectorCalo(ECAL, PCAL)!=ev.Electron.SectorChe(HTCC)){
-					//cout<<"mismatch elec"<<endl;
-					continue;
-				}
-
 
 				if (IsHipo)
 				{
