@@ -146,7 +146,8 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 	TString fvars[] = {
 		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
-		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology", "positron_Nphe", "electron_Nphe"};
+		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology", 
+		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match"};
 
 	std::map<TString, Float_t>
 		outVars;
@@ -306,7 +307,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				time(&intermediate);
 				double intermediate_time = difftime(intermediate, begin);
 
-				cout << nbEvent << " events processed in " << intermediate_time << "s" << endl;
+				cout << nbEvent << " events processed in " << intermediate_time << "s"<<endl;
 			}
 			// Number of total event
 			Plots.Fill_1D("evt_count", 0, 1);
@@ -525,8 +526,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 				Plots.Fill_1D("T rec", -ev.t, w);
 
-				// cout<<ev.topology()<<endl;
-				// PART.show();
+				//cout<<ev.Positron.TimeChe(HTCC)<<" "<<ev.Electron.TimeChe(HTCC)<<endl;
 
 				outVars["p_p"] = ev.Positron.Vector.P();
 				outVars["e_p"] = ev.Electron.Vector.P();
@@ -553,6 +553,10 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				outVars["topology"] = (float)ev.topology();
 				outVars["positron_Nphe"] = ev.positron_Nphe;
 				outVars["electron_Nphe"] = ev.electron_Nphe;
+				outVars["positron_HTCCt"] = ev.Positron.TimeChe(HTCC);
+				outVars["electron_HTCCt"] = ev.Electron.TimeChe(HTCC);
+				outVars["positron_HTCC_ECAL_match"] = (ev.Positron.SectorCalo(ECAL, PCAL) == ev.Positron.SectorChe(HTCC)) ? 1. : 0.0;
+				outVars["electron_HTCC_ECAL_match"] = (ev.Electron.SectorCalo(ECAL, PCAL) == ev.Electron.SectorChe(HTCC)) ? 1. : 0.0;
 				tree_Electron = ev.Electron.Vector;
 				tree_Positron = ev.Positron.Vector;
 				tree_Proton = ev.Proton.Vector;
