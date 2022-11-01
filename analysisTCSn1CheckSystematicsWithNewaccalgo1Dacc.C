@@ -86,7 +86,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	// Acceptance setup
 	//////////////////////////////////////////////
 
-	Acceptance Acc_TCS(TString(argv[argc - 2]), 4, 3, 3, 36, 13);
+	Acceptance Acc_TCS(TString(argv[4]), 4, 3, 3, 36, 13);
 	Acc_TCS.Draw_Acc();
 	Acc_TCS.Draw_Error();
 
@@ -132,7 +132,9 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 	///////////////////////////////////////////
 	// Setup the TTree output
-	TFile *outFile = new TFile("outputTCS.root", "recreate");
+	TString output_file = (TString)(argv[6]);
+	TFile *outFile = new TFile(Form("outputTCS_%s.root", output_file.Data()), "recreate");
+	//TFile *outFile = new TFile("outputTCS_"+output_file+".root", "recreate");
 	TTree *outT = new TTree("tree", "tree");
 
 	TLorentzVector tree_Electron, tree_Positron, tree_Proton, tree_Missing;
@@ -298,7 +300,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 		outFile->cd();
 
-		while (((reader.next() && IsHipo) || (nbEvent < nentries && !IsHipo)) && nbEvent < 10000)
+		while (((reader.next() && IsHipo) || (nbEvent < nentries && !IsHipo)) /*&& nbEvent < 10000*/)
 		{
 
 			nbEvent++;
