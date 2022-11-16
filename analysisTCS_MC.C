@@ -364,7 +364,7 @@ int analysisTCS_MC()
 				MC_ev.Set_MC_Particles(MCEVENT, MCPART, IsGrape);
 				MC_ev.Get_Kinematics();
 
-				if (!IsData)
+				if (IsTCSGen)
 					w = MC_ev.w;
 
 				ev.Set_Weight(w);
