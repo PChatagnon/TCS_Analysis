@@ -140,8 +140,8 @@ int analysisTCS_BG()
 				if(ev.recep==1 && ev.recem==1 && ev.recp==1 && ev.PionM.index>-1)
 				{
 
-						ev.Apply_EC_Cuts(CALO);
-						ev.Associate_detector_resp(CHE, SCIN);
+						//ev.Apply_EC_Cuts(CALO);
+						ev.Associate_detector_resp(CHE, SCIN, CALO);
 						ev.Set_Nphe_HTCC();
 						ev.Compute_SF();
 
@@ -150,7 +150,7 @@ int analysisTCS_BG()
 						outVars["positron_SF"] = ev.positron_SF;
 						outVars["electron_SF"] = ev.electron_SF;
 						outVars["positron_Nphe"] = ev.positron_Nphe;
-						if(ev.positron_Nphe>1.0 && ev.Positron.Vector.P()<3.5){PART.show(); CHE.show();}
+						//if(ev.positron_Nphe>1.0 && ev.Positron.Vector.P()<3.5){PART.show(); CHE.show();}
 						outVars["electron_Nphe"] = ev.electron_Nphe;
 						outVars["status_positron"]=ev.Positron.status;
 						outVars["status_electron"]=ev.Electron.status;
