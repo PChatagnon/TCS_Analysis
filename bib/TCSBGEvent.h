@@ -118,6 +118,7 @@ public:
                                 PionM.pid = -211;
                                 PionM.status = status;
                                 PionM.beta = beta;
+                                recpionm++;
                         }
                 }
         }
@@ -232,7 +233,7 @@ public:
                                 float Calom3v = CALO.getFloat("m3v", c);
                                 float Calom3w = CALO.getFloat("m3w", c);
 
-                                if (Calopindex == (particle.index))
+                                if (Calopindex == (Particles[i].index))
                                 {
                                         Calo.detector = Calodetector;
                                         Calo.pindex = Calopindex;
@@ -255,7 +256,7 @@ public:
                                         Calo.m3v = Calom3v;
                                         Calo.m3w = Calom3w;
 
-                                        Particles[i]..Calorimeter.push_back(Calo);
+                                        Particles[i].Calorimeter.push_back(Calo);
                                 }
                         }
 
@@ -265,5 +266,5 @@ public:
                         PionM = Particles[3];
                 }
         };
-
+}
 #endif

@@ -39,47 +39,56 @@ using namespace std;
 int analysisTCS_BG()
 {
 
-		time_t begin, intermediate, end;
+	time_t begin, intermediate, end;
 
-		time(&begin);
+	time(&begin);
 
-		gROOT->SetBatch(kTRUE);
-		gStyle->SetOptStat(111);
-		gStyle->SetPalette(55);
-		gStyle->SetLabelSize(.05, "xyz");
-		gStyle->SetTitleSize(.05, "xyz");
-		gStyle->SetTitleSize(.07, "t");
-		gStyle->SetMarkerStyle(13);
-		gStyle->SetOptFit(1);
+	gROOT->SetBatch(kTRUE);
+	gStyle->SetOptStat(111);
+	gStyle->SetPalette(55);
+	gStyle->SetLabelSize(.05, "xyz");
+	gStyle->SetTitleSize(.05, "xyz");
+	gStyle->SetTitleSize(.07, "t");
+	gStyle->SetMarkerStyle(13);
+	gStyle->SetOptFit(1);
 
-		Int_t argc = gApplication->Argc();
-		char **argv = gApplication->Argv();
+	Int_t argc = gApplication->Argc();
+	char **argv = gApplication->Argv();
 
-		TString output_file = (TString)(argv[argc - 1]);
-		TFile *outFile = new TFile(Form("outputTCS_%s.root", output_file.Data()), "recreate");
-		TTree *outT = new TTree("tree", "tree");
+	TString output_file = (TString)(argv[argc - 1]);
+	TFile *outFile = new TFile(Form("outputTCS_%s.root", output_file.Data()), "recreate");
+	TTree *outT = new TTree("tree", "tree");
 
-		TLorentzVector tree_Electron, tree_Positron, tree_Proton, tree_PionM;
-		outT->Branch("Electron", "TLorentzVector", &tree_Electron);
-		outT->Branch("Positron", "TLorentzVector", &tree_Positron);
-		outT->Branch("Proton", "TLorentzVector", &tree_Proton);
-		outT->Branch("PionM", "TLorentzVector", &tree_PionM);
+	TLorentzVector tree_Electron, tree_Positron, tree_Proton, tree_PionM;
+	outT->Branch("Electron", "TLorentzVector", &tree_Electron);
+	outT->Branch("Positron", "TLorentzVector", &tree_Positron);
+	outT->Branch("Proton", "TLorentzVector", &tree_Proton);
+	outT->Branch("PionM", "TLorentzVector", &tree_PionM);
 
-		TString fvars[] = {
-				"MMass", "MMassProton", "positron_SF", "electron_SF", "positron_Nphe", "electron_Nphe","status_positron","status_electron","status_pion","status_proton"};
+	TString fvars[] = {
+		"MMass", "MMassProton", "positron_SF", "electron_SF", "positron_Nphe", "electron_Nphe", "status_positron", "status_electron", "status_pion", "status_proton"};
 
-		std::map<TString, Float_t>
-				outVars;
-		for (size_t i = 0; i < sizeof(fvars) / sizeof(TString); i++)
+	std::map<TString, Float_t>
+		outVars;
+	for (size_t i = 0; i < sizeof(fvars) / sizeof(TString); i++)
+	{
+		outVars[fvars[i]] = 0.;
+		ADDVAR(&(outVars[fvars[i]]), fvars[i], "/F", outT);
+	}
+
+	TString nameFiles = "";
+	////////////////////////////////////////////
+	// Get file name
+	////////////////////////////////////////////
+	for (Int_t i = 3; i < (argc - 1); i++)
+	{
+
+		if (TString(argv[i]).Contains(".hipo"))
 		{
-				outVars[fvars[i]] = 0.;
-				ADDVAR(&(outVars[fvars[i]]), fvars[i], "/F", outT);
+			nbf++;
+			nameFiles = TString(argv[i]);
 		}
-
-		////////////////////////////////////////////
-		// Get file name
-		////////////////////////////////////////////
-		TString nameFiles = TString(argv[3]);
+		else continue;
 
 		////////////////////////////////////////////
 		// hipo reader
@@ -108,74 +117,75 @@ int analysisTCS_BG()
 		int nbEvent = 0;
 		while (reader.next())
 		{
-				nbEvent++;
-				if (nbEvent % 30000 == 0)
-				{
-						time(&intermediate);
-						double intermediate_time = difftime(intermediate, begin);
+			nbEvent++;
+			if (nbEvent % 30000 == 0)
+			{
+				time(&intermediate);
+				double intermediate_time = difftime(intermediate, begin);
 
-						cout << nbEvent << " events processed in " << intermediate_time << "s"
-								<< "\n";
-				}
+				cout << nbEvent << " events processed in " << intermediate_time << "s"
+					 << "\n";
+			}
 
-				BGEvent ev;
+			BGEvent ev;
 
-				reader.read(hipo_event);
-				hipo_event.getStructure(MCPART);
-				hipo_event.getStructure(MCEVENT);
-				hipo_event.getStructure(RUN);
-				hipo_event.getStructure(PART);
-				hipo_event.getStructure(SCIN);
-				hipo_event.getStructure(CHE);
-				hipo_event.getStructure(CALO);
-				hipo_event.getStructure(EVENT);
-				hipo_event.getStructure(TRAJ);
-				hipo_event.getStructure(TRACK);
+			reader.read(hipo_event);
+			hipo_event.getStructure(MCPART);
+			hipo_event.getStructure(MCEVENT);
+			hipo_event.getStructure(RUN);
+			hipo_event.getStructure(PART);
+			hipo_event.getStructure(SCIN);
+			hipo_event.getStructure(CHE);
+			hipo_event.getStructure(CALO);
+			hipo_event.getStructure(EVENT);
+			hipo_event.getStructure(TRAJ);
+			hipo_event.getStructure(TRACK);
 
-				if (PART.getSize() < 1)
-						continue;
+			if (PART.getSize() < 1)
+				continue;
 
-				ev.Set_Particles(PART);
+			ev.Set_Particles(PART);
 
-				if(ev.recep==1 && ev.recem==1 && ev.recp==1 && ev.PionM.index>-1)
-				{
+			if (ev.recep == 1 && ev.recem == 1 && ev.recp == 1 && recpionm == 1)
+			{
 
-						//ev.Apply_EC_Cuts(CALO);
-						ev.Associate_detector_resp(CHE, SCIN, CALO);
-						ev.Set_Nphe_HTCC();
-						ev.Compute_SF();
+				// ev.Apply_EC_Cuts(CALO);
+				ev.Associate_detector_resp(CHE, SCIN, CALO);
+				ev.Set_Nphe_HTCC();
+				ev.Compute_SF();
 
-						outVars["MMass"] = (ev.vBeam+ev.vRestProton-ev.Positron.Vector-ev.Electron.Vector-ev.Proton.Vector-ev.PionM.Vector).M2();
-						outVars["MMassProton"] = (ev.vBeam+ev.vRestProton-ev.Positron.Vector-ev.Electron.Vector-ev.PionM.Vector).M2();
-						outVars["positron_SF"] = ev.positron_SF;
-						outVars["electron_SF"] = ev.electron_SF;
-						outVars["positron_Nphe"] = ev.positron_Nphe;
-						//if(ev.positron_Nphe>1.0 && ev.Positron.Vector.P()<3.5){PART.show(); CHE.show();}
-						outVars["electron_Nphe"] = ev.electron_Nphe;
-						outVars["status_positron"]=ev.Positron.status;
-						outVars["status_electron"]=ev.Electron.status;
-						outVars["status_proton"]=ev.Proton.status;
-						outVars["status_pion"]=ev.PionM.status;
+				outVars["MMass"] = (ev.vBeam + ev.vRestProton - ev.Positron.Vector - ev.Electron.Vector - ev.Proton.Vector - ev.PionM.Vector).M2();
+				outVars["MMassProton"] = (ev.vBeam + ev.vRestProton - ev.Positron.Vector - ev.Electron.Vector - ev.PionM.Vector).M2();
+				outVars["positron_SF"] = ev.positron_SF;
+				outVars["electron_SF"] = ev.electron_SF;
+				outVars["positron_Nphe"] = ev.positron_Nphe;
+				// if(ev.positron_Nphe>1.0 && ev.Positron.Vector.P()<3.5){PART.show(); CHE.show();}
+				outVars["electron_Nphe"] = ev.electron_Nphe;
+				outVars["status_positron"] = ev.Positron.status;
+				outVars["status_electron"] = ev.Electron.status;
+				outVars["status_proton"] = ev.Proton.status;
+				outVars["status_pion"] = ev.PionM.status;
 
-						tree_Electron = ev.Electron.Vector;
-						tree_Positron = ev.Positron.Vector;
-						tree_Proton = ev.Proton.Vector;
-						tree_PionM = ev.PionM.Vector;
+				tree_Electron = ev.Electron.Vector;
+				tree_Positron = ev.Positron.Vector;
+				tree_Proton = ev.Proton.Vector;
+				tree_PionM = ev.PionM.Vector;
 
-						outT->Fill();
-				}
+				outT->Fill();
+			}
 		}
+	}
 
-		outT->Write();
-		outFile->Write();
-		outFile->Close();
+	outT->Write();
+	outFile->Write();
+	outFile->Close();
 
-		time(&end);
+	time(&end);
 
-		double difference = difftime(end, begin);
-		printf("All this work done in only %.2lf seconds. Congratulations !\n", difference);
+	double difference = difftime(end, begin);
+	printf("All this work done in only %.2lf seconds. Congratulations !\n", difference);
 
-		gApplication->Terminate();
+	gApplication->Terminate();
 
-		return 0;
+	return 0;
 }
