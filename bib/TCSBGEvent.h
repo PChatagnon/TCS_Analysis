@@ -266,5 +266,5 @@ public:
                         PionM = Particles[3];
                 }
         };
-}
+};
 #endif

@@ -85,7 +85,6 @@ int analysisTCS_BG()
 
 		if (TString(argv[i]).Contains(".hipo"))
 		{
-			nbf++;
 			nameFiles = TString(argv[i]);
 		}
 		else continue;
@@ -146,7 +145,7 @@ int analysisTCS_BG()
 
 			ev.Set_Particles(PART);
 
-			if (ev.recep == 1 && ev.recem == 1 && ev.recp == 1 && recpionm == 1)
+			if (ev.recep == 1 && ev.recem == 1 && ev.recp == 1 && ev.recpionm == 1)
 			{
 
 				// ev.Apply_EC_Cuts(CALO);
