@@ -31,7 +31,7 @@ public:
         float run;
         int trigger_bit;
 
-        BGEvent()
+        EEEvent()
         {
                 vRestProton.SetPxPyPzE(0., 0., 0., mp);
                 vBeam.SetPxPyPzE(0., 0., ebeam, ebeam);
