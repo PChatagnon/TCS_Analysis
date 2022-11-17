@@ -173,7 +173,7 @@ int analysisTCS_EE()
 
 				outVars["Pt_Frac"] = ((ev.vBeam + ev.vRestProton - ev.Electron[0].Vector - ev.Electron[1].Vector - ev.Proton.Vector).Pt()) / ((ev.vBeam + ev.vRestProton - ev.Electron[0].Vector - ev.Electron[1].Vector - ev.Proton.Vector).P());
 				outVars["MMass"] = (ev.vBeam + ev.vRestProton - ev.Electron[0].Vector - ev.Electron[1].Vector - ev.Proton.Vector).M2();
-				outVars["M"] = (ev.Electron[0]+ev.Electron[1]).M();
+				outVars["M"] = (ev.Electron[0].Vector+ev.Electron[1].Vector).M();
 				outVars["electron_1_SF"] = ev.electron_1_SF;
 				outVars["electron_2_SF"] = ev.electron_2_SF;
 				outVars["electron_1_Nphe"] = ev.electron_1_Nphe;
