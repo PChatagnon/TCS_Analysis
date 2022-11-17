@@ -25,7 +25,7 @@
 #include "bib/TCSRRatioclass.h"
 #include "bib/TCSEvent.h"
 #include "bib/TCSMCEvent.h"
-#include "bib/TCSBGEvent.h"
+#include "bib/TCSEEEvent.h"
 #include "bib/TCSRunSelector.h"
 
 #include "reader.h"
