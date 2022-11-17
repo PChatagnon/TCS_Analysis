@@ -59,7 +59,7 @@ public:
                         float vy = PART.getFloat("vy", i);
                         float vz = PART.getFloat("vz", i);
                         float vt = PART.getFloat("vt", i);
-                        if (pid == -11)
+                        if (pid == 211)
                         {
                                 Positron.Vector.SetXYZM(px, py, pz, mass_pion);
                                 Positron.index = i;
@@ -77,7 +77,8 @@ public:
                         if (pid == 11)
                         {
 
-                                Electron.Vector.SetXYZM(px, py, pz, me);
+                               if(status>2000){
+								Electron.Vector.SetXYZM(px, py, pz, me);
                                 Electron.index = i;
                                 Electron.pid = 11;
                                 Electron.beta = beta;
@@ -88,6 +89,7 @@ public:
                                 Electron.vertex.z = vz;
                                 Electron.vt = vt;
                                 recem++;
+                                }
                         }
 
                         if (pid == 2212)
