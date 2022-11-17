@@ -56,20 +56,7 @@ public:
                         float vy = PART.getFloat("vy", i);
                         float vz = PART.getFloat("vz", i);
                         float vt = PART.getFloat("vt", i);
-                        if (pid == -11)
-                        {
-                                Positron.Vector.SetXYZM(px, py, pz, mass_pion);
-                                Positron.index = i;
-                                Positron.pid = -11;
-                                Positron.beta = beta;
-                                Positron.status = status;
-                                Positron.chi2 = chi2;
-                                Positron.vertex.x = vx;
-                                Positron.vertex.y = vy;
-                                Positron.vertex.z = vz;
-                                Positron.vt = vt;
-                                recep++;
-                        }
+                        
 
                         if (pid == 11)
                         {
