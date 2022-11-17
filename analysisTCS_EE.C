@@ -64,9 +64,8 @@ int analysisTCS_EE()
 	outT->Branch("Electron_2", "TLorentzVector", &tree_Electron_2);
 	outT->Branch("Proton", "TLorentzVector", &tree_Proton);
 
-
 	TString fvars[] = {
-		"Pt_Frac", "MMass", "electron_1_SF", "electron_2_SF", "electron_1_Nphe", "electron_2_Nphe",  "status_electron_1",  "status_electron_2", "status_proton"};
+		"M", "Pt_Frac", "MMass", "electron_1_SF", "electron_2_SF", "electron_1_Nphe", "electron_2_Nphe", "status_electron_1", "status_electron_2", "status_proton","PID_electron_1","PID_electron_2"};
 
 	std::map<TString, Float_t>
 		outVars;
@@ -78,9 +77,15 @@ int analysisTCS_EE()
 
 	TString nameFiles = "";
 	int nbEvent = 0;
-	////////////////////////////////////////////
-	// Get file name
-	////////////////////////////////////////////
+	
+
+	///////////////////////////////////////////
+	// TMVA PID for Positron
+	///////////////////////////////////////////
+	PositronIdentification PositronPID("MLP method", "TMVAClassification_MLP6D.weights.xml", 0.5, 4.0);
+	PositronPID.InitializePositronIdentification();
+
+	
 	for (Int_t i = 3; i < (argc - 1); i++)
 	{
 
@@ -88,7 +93,8 @@ int analysisTCS_EE()
 		{
 			nameFiles = TString(argv[i]);
 		}
-		else continue;
+		else
+			continue;
 
 		////////////////////////////////////////////
 		// hipo reader
@@ -114,7 +120,6 @@ int analysisTCS_EE()
 
 		outFile->cd();
 
-		
 		while (reader.next())
 		{
 			nbEvent++;
@@ -146,21 +151,29 @@ int analysisTCS_EE()
 
 			ev.Set_Particles(PART);
 
-			if (ev.recp == 1 && ev.recem == 2  )
+			if (ev.recp == 1 && ev.recem == 2)
 			{
 
-				if((ev.Electron[0].Energy(ECAL, PCAL) + ev.Electron[0].Energy(ECAL, ECIN))/ev.Electron[0].Vector.P()<0.2)
-					continue;
-				if((ev.Electron[1].Energy(ECAL, PCAL) + ev.Electron[1].Energy(ECAL, ECIN))/ev.Electron[1].Vector.P()<0.2)
-					continue;
-				if(ev.Proton.chi2>3.0)
-					continue;
 				ev.Associate_detector_resp(CHE, SCIN, CALO);
 				ev.Set_Nphe_HTCC();
 				ev.Compute_SF();
 
-				outVars["Pt_Frac"] = ((ev.vBeam + ev.vRestProton - ev.Electron[0].Vector - ev.Electron[1].Vector - ev.Proton.Vector).Pt())/((ev.vBeam + ev.vRestProton - ev.Electron[0].Vector - ev.Electron[1].Vector - ev.Proton.Vector).P());
+				if ((ev.Electron[0].Energy(ECAL, PCAL) + ev.Electron[0].Energy(ECAL, ECIN)) / ev.Electron[0].Vector.P() < 0.2)
+					continue;
+				if ((ev.Electron[1].Energy(ECAL, PCAL) + ev.Electron[1].Energy(ECAL, ECIN)) / ev.Electron[1].Vector.P() < 0.2)
+					continue;
+				if (ev.Proton.chi2 > 3.0)
+					continue;
+
+
+				PositronPID.Evaluate(ev.Electron[0]);
+				outVars["PID_electron_1"] = PositronPID.score;
+				PositronPID.Evaluate(ev.Electron[1]);
+				outVars["PID_electron_2"] = PositronPID.score;
+
+				outVars["Pt_Frac"] = ((ev.vBeam + ev.vRestProton - ev.Electron[0].Vector - ev.Electron[1].Vector - ev.Proton.Vector).Pt()) / ((ev.vBeam + ev.vRestProton - ev.Electron[0].Vector - ev.Electron[1].Vector - ev.Proton.Vector).P());
 				outVars["MMass"] = (ev.vBeam + ev.vRestProton - ev.Electron[0].Vector - ev.Electron[1].Vector - ev.Proton.Vector).M2();
+				outVars["M"] = (ev.Electron[0]+ev.Electron[1]).M();
 				outVars["electron_1_SF"] = ev.electron_1_SF;
 				outVars["electron_2_SF"] = ev.electron_2_SF;
 				outVars["electron_1_Nphe"] = ev.electron_1_Nphe;
