@@ -159,10 +159,10 @@ int analysisTCS_EE()
 				ev.Set_Nphe_HTCC();
 				ev.Compute_SF();
 
-				outVars["Pt_Frac"] = (ev.vBeam + ev.vRestProton - ev.Electron[0].Vector - ev.Electron[1].Vector - ev.Proton.Vector).Pt();
+				outVars["Pt_Frac"] = ((ev.vBeam + ev.vRestProton - ev.Electron[0].Vector - ev.Electron[1].Vector - ev.Proton.Vector).Pt())/((ev.vBeam + ev.vRestProton - ev.Electron[0].Vector - ev.Electron[1].Vector - ev.Proton.Vector).P());
 				outVars["MMass"] = (ev.vBeam + ev.vRestProton - ev.Electron[0].Vector - ev.Electron[1].Vector - ev.Proton.Vector).M2();
 				outVars["electron_1_SF"] = ev.electron_1_SF;
-				outVars["electron_2_SF"] = ev.electron_1_SF;
+				outVars["electron_2_SF"] = ev.electron_2_SF;
 				outVars["electron_1_Nphe"] = ev.electron_1_Nphe;
 				outVars["electron_2_Nphe"] = ev.electron_2_Nphe;
 				outVars["status_electron_1"] = ev.Electron[0].status;
