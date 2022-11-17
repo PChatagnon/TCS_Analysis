@@ -65,7 +65,7 @@ int analysisTCS_EE()
 	outT->Branch("Proton", "TLorentzVector", &tree_Proton);
 
 	TString fvars[] = {
-		"M", "Pt_Frac", "MMass", "electron_1_SF", "electron_2_SF", "electron_1_Nphe", "electron_2_Nphe", "status_electron_1", "status_electron_2", "status_proton","PID_electron_1","PID_electron_2"};
+		"run", "M", "Pt_Frac", "MMass", "electron_1_SF", "electron_2_SF", "electron_1_Nphe", "electron_2_Nphe", "status_electron_1", "status_electron_2", "status_proton","PID_electron_1","PID_electron_2"};
 
 	std::map<TString, Float_t>
 		outVars;
@@ -164,6 +164,9 @@ int analysisTCS_EE()
 					continue;
 				if (ev.Proton.chi2 > 3.0)
 					continue;
+
+				float run = (float)RUN.getInt("run", 0);
+				outVars["run"] = run;
 
 
 				PositronPID.Evaluate(ev.Electron[0]);

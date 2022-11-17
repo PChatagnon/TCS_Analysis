@@ -66,7 +66,7 @@ int analysisTCS_BG()
 	outT->Branch("PionM", "TLorentzVector", &tree_PionM);
 
 	TString fvars[] = {
-		"MMass", "MMassProton", "positron_SF", "electron_SF", "positron_Nphe", "electron_Nphe", "status_positron", "status_electron", "status_pion", "status_proton"};
+		"run", "MMass", "MMassProton", "positron_SF", "electron_SF", "positron_Nphe", "electron_Nphe", "status_positron", "status_electron", "status_pion", "status_proton"};
 
 	std::map<TString, Float_t>
 		outVars;
@@ -153,6 +153,9 @@ int analysisTCS_BG()
 				ev.Set_Nphe_HTCC();
 				ev.Compute_SF();
 
+				float run = (float)RUN.getInt("run", 0);
+
+				outVars["run"] = run;
 				outVars["MMass"] = (ev.vBeam + ev.vRestProton - ev.Positron.Vector - ev.Electron.Vector - ev.Proton.Vector - ev.PionM.Vector).M2();
 				outVars["MMassProton"] = (ev.vBeam + ev.vRestProton - ev.Positron.Vector - ev.Electron.Vector - ev.PionM.Vector).M2();
 				outVars["positron_SF"] = ev.positron_SF;
