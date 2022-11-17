@@ -146,10 +146,15 @@ int analysisTCS_EE()
 
 			ev.Set_Particles(PART);
 
-			if (ev.recep == 1 && ev.recem == 2  )
+			if (ev.recp == 1 && ev.recem == 2  )
 			{
 
-				// ev.Apply_EC_Cuts(CALO);
+				if((ev.Electron[0].Energy(ECAL, PCAL) + ev.Electron[0].Energy(ECAL, ECIN))/ev.Electron[0].Vector.P()<0.2)
+					continue;
+				if((ev.Electron[1].Energy(ECAL, PCAL) + ev.Electron[1].Energy(ECAL, ECIN))/ev.Electron[1].Vector.P()<0.2)
+					continue;
+				if(ev.Proton.chi2>3.0)
+					continue;
 				ev.Associate_detector_resp(CHE, SCIN, CALO);
 				ev.Set_Nphe_HTCC();
 				ev.Compute_SF();

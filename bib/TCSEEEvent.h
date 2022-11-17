@@ -13,7 +13,6 @@ public:
         TLorentzVector vRestProton;
 
         int recem = 0;
-        int recep = 0;
         int recp = 0;
 
         // Kinematic variables
