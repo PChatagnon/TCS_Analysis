@@ -55,14 +55,14 @@ public:
                         float py = PART.getFloat("py", i);
                         float pz = PART.getFloat("pz", i);
                         float beta = PART.getFloat("beta", i);
-                        int status = abs(PART.getInt("status", i));
+                        int status = (PART.getInt("status", i));
                         int charge = PART.getInt("charge", i);
                         float chi2 = PART.getFloat("chi2pid", i);
                         float vx = PART.getFloat("vx", i);
                         float vy = PART.getFloat("vy", i);
                         float vz = PART.getFloat("vz", i);
                         float vt = PART.getFloat("vt", i);
-                        if (pid == 211)
+                        if (pid == -11)
                         {
                                 Positron.Vector.SetXYZM(px, py, pz, mass_pion);
                                 Positron.index = i;
@@ -80,7 +80,7 @@ public:
                         if (pid == 11)
                         {
 
-                                if (status > 2000)
+                                if (abs(status) > 2000)
                                 {
                                         Electron.Vector.SetXYZM(px, py, pz, me);
                                         Electron.index = i;
@@ -125,7 +125,7 @@ public:
 
         void Compute_SF()
         {
-                if (Electron.status > 2000)
+                if (abs(Electron.status) > 2000)
                         electron_SF = ((Electron.Energy(ECAL, PCAL) + Electron.Energy(ECAL, ECIN) + Electron.Energy(ECAL, ECOUT))) / Electron.Vector.P();
                 positron_SF = ((Positron.Energy(ECAL, PCAL) + Positron.Energy(ECAL, ECIN) + Positron.Energy(ECAL, ECOUT))) / Positron.Vector.P();
         }
