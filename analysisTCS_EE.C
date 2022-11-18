@@ -78,6 +78,11 @@ int analysisTCS_EE()
 	TString nameFiles = "";
 	int nbEvent = 0;
 	
+	////////////////////////////////////////////
+	// Init run selector
+	////////////////////////////////////////////
+
+	RunSelector Run_Selector;
 
 	///////////////////////////////////////////
 	// TMVA PID for Positron
@@ -166,6 +171,10 @@ int analysisTCS_EE()
 					continue;
 
 				float run = (float)RUN.getInt("run", 0);
+				if (!Run_Selector.Is_Good_Run(run))
+					continue;
+
+
 				outVars["run"] = run;
 
 
