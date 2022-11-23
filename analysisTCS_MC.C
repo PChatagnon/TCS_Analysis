@@ -384,8 +384,8 @@ int analysisTCS_MC()
 					outVars_Gen["Q2_Gen"] = MC_ev.Q2_Gen;
 					outVars_Gen["theta_Gen"] = MC_ev.theta_Gen;
 					outVars_Gen["phi_Gen"] = MC_ev.phi_Gen;
-					outVars_Gen["real_flux_Gen"] = MC_ev.real_flux;
-					outVars_Gen["virtual_flux_Gen"] = MC_ev.virtual_flux;
+					outVars_Gen["real_flux_Gen"] = MC_ev.real_flux_Gen;
+					outVars_Gen["virtual_flux_Gen"] = MC_ev.virtual_flux_Gen;
 				}
 
 				outT_Gen->Fill();
