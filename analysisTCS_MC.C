@@ -56,8 +56,8 @@ int analysisTCS_MC()
 	bool IsData = true;
 	bool IsHipo = true;
 
-	bool IsTCSGen = false;
-	bool IsGrape = true;
+	bool IsTCSGen = true;
+	bool IsGrape = false;
 	bool IsJPsi = false;
 	bool Weighted_simu = false;
 
@@ -161,7 +161,7 @@ int analysisTCS_MC()
 	}
 
 	TString fvars_Gen[] = {
-		"evt_num", "t_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen", "theta_Gen", "phi_Gen, real_flux_Gen, virtual_flux_Gen"};
+		"weight", "evt_num", "t_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen", "theta_Gen", "phi_Gen, real_flux_Gen, virtual_flux_Gen"};
 
 	std::map<TString, Float_t>outVars_Gen;
 	if (IsGrape || IsTCSGen)
@@ -386,6 +386,9 @@ int analysisTCS_MC()
 					outVars_Gen["phi_Gen"] = MC_ev.phi_Gen;
 					outVars_Gen["real_flux_Gen"] = MC_ev.real_flux_Gen;
 					outVars_Gen["virtual_flux_Gen"] = MC_ev.virtual_flux_Gen;
+					outVars_Gen["evt_num"] = nbEvent;
+					outVars_Gen["weight"] = w;
+
 				}
 
 				outT_Gen->Fill();
@@ -524,6 +527,7 @@ int analysisTCS_MC()
 
 				// cout<<ev.Positron.TimeChe(HTCC)<<" "<<ev.Electron.TimeChe(HTCC)<<endl;
 
+				outVars["evt_num"] = nbEvent;
 				outVars["p_p"] = ev.Positron.Vector.P();
 				outVars["e_p"] = ev.Electron.Vector.P();
 				outVars["prot_p"] = ev.Proton.Vector.P();
