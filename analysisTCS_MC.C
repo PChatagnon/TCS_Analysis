@@ -370,6 +370,16 @@ int analysisTCS_MC()
 				if (IsTCSGen)
 					w = MC_ev.w;
 
+				
+				if (IsJPsi)
+                {
+                        float MC_factor_1 = MCEVENT.getFloat("ptarget", 0);
+                        float MC_factor_2 = MCEVENT.getFloat("pbeam", 0);
+                        float MC_factor_3 = MCEVENT.getFloat("ebeam", 0);
+                        w = MC_factor_1 * MC_factor_2 * MC_factor_3;
+                }
+					
+
 				ev.Set_Weight(w);
 
 				if (IsGrape || IsTCSGen)
