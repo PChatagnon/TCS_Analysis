@@ -24,6 +24,8 @@ public:
         float M_Gen_2;
         float Pt_Frac_Gen;
         float Q2_Gen;
+        float real_flux_Gen;
+        float virtual_flux_Gen;
 
         //MC weight
 
@@ -100,6 +102,9 @@ public:
                 cm = CM(Electron_2, Positron, Proton);
                 theta_Gen = cm.theta;
                 phi_Gen = cm.phi;
+
+                real_flux_Gen = n_real(ebeam, vPhoton.E());
+                virtual_flux_Gen = n_virtual(ebeam, vPhoton.E(), 0.02);
         }
 };
 

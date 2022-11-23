@@ -433,6 +433,9 @@ public:
                 xi = qp2 / (2 * (s - mp * mp) - qp2);
                 L0 = qp2 * qp2 * sin(cm.theta * TMath::DegToRad()) * sin(cm.theta * TMath::DegToRad()) / 4.;
                 L = (((qp2 - t) * (qp2 - t)) - (b * b)) / 4.;
+
+                real_flux = n_real(ebeam, Epho);
+                virtual_flux = n_virtual(ebeam, Epho, 0.02);
         }
 
         void Get_Polarization_Transfer()
@@ -482,12 +485,6 @@ public:
         {
                 acc = Acc;
                 acc_error = Acc_Error;
-        }
-
-        void Set_Photon_Flux(float input_real_flux, float input_virtual_flux)
-        {
-                real_flux = input_real_flux;
-                virtual_flux = input_virtual_flux;
         }
 
         void Set_Run_Number(int input_run)

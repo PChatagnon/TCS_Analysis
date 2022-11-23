@@ -137,6 +137,7 @@ int analysisTCS_MC()
 	TFile *outFile = new TFile(Form("outputTCS_%s.root", output_file.Data()), "recreate");
 	// TFile *outFile = new TFile("outputTCS_"+output_file+".root", "recreate");
 	TTree *outT = new TTree("tree", "tree");
+	TTree *outT_Gen = new TTree("tree_Gen", "tree_Gen");
 
 	TLorentzVector tree_Electron, tree_Positron, tree_Proton, tree_Missing;
 	outT->Branch("Electron", "TLorentzVector", &tree_Electron);
@@ -148,12 +149,11 @@ int analysisTCS_MC()
 	outT->Branch("trigger_bit", &trigger_bit, "trigger_bit/I");
 
 	TString fvars[] = {
-		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
+		"evt_num", "t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
 		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology",
 		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match"};
 
-	std::map<TString, Float_t>
-		outVars;
+	std::map<TString, Float_t>outVars;
 	for (size_t i = 0; i < sizeof(fvars) / sizeof(TString); i++)
 	{
 		outVars[fvars[i]] = 0.;
@@ -161,15 +161,16 @@ int analysisTCS_MC()
 	}
 
 	TString fvars_Gen[] = {
-		"t_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen", "theta_Gen", "phi_Gen"};
+		"evt_num", "t_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen", "theta_Gen", "phi_Gen, real_flux_Gen, virtual_flux_Gen"};
 
+	std::map<TString, Float_t>outVars_Gen;
 	if (IsGrape || IsTCSGen)
 	{
 		for (size_t i = 0; i < sizeof(fvars_Gen) / sizeof(TString); i++)
 		{
 			cout<<"here\n";
-			outVars[fvars_Gen[i]] = 0.;
-			ADDVAR(&(outVars[fvars_Gen[i]]), fvars_Gen[i], "/F", outT);
+			outVars_Gen[fvars_Gen[i]] = 0.;
+			ADDVAR(&(outVars_Gen[fvars_Gen[i]]), fvars_Gen[i], "/F", outT_Gen);
 		}
 	}
 	///////////////////////////////////////////
@@ -325,8 +326,7 @@ int analysisTCS_MC()
 
 				cout << nbEvent << " events processed in " << intermediate_time << "s" << "\n";
 			}
-			// Number of total event
-			Plots.Fill_1D("evt_count", 0, 1);
+			
 			// cout << "event" << endl;
 			double w = 1; // MCfluxBH[0]*MCpsfBH[0]*MCcsBH[0];
 			int polarization;
@@ -352,8 +352,11 @@ int analysisTCS_MC()
 				hipo_event.getStructure(TRAJ);
 				hipo_event.getStructure(TRACK);
 
-				if (PART.getSize() < 1)
+				if (MCPART.getSize() < 1)
 					continue;
+
+				// Number of total event
+				Plots.Fill_1D("evt_count", 0, 1);
 
 				run = RUN.getInt("run", 0);
 				trigger_bit = RUN.getLong("trigger", 0);
@@ -369,8 +372,26 @@ int analysisTCS_MC()
 
 				ev.Set_Weight(w);
 
+				if (IsGrape || IsTCSGen)
+				{
+					outVars_Gen["t_Gen"] = MC_ev.t_Gen;
+					outVars_Gen["MMassBeam_Gen"] = MC_ev.MMassBeam_Gen;
+					outVars_Gen["Epho_Gen"] = MC_ev.Epho_Gen;
+					outVars_Gen["qp2_Gen"] = MC_ev.qp2_Gen;
+					outVars_Gen["M_Gen_1"] = MC_ev.M_Gen_1;
+					outVars_Gen["M_Gen_2"] = MC_ev.M_Gen_2;
+					outVars_Gen["Pt_Frac_Gen"] = MC_ev.Pt_Frac_Gen;
+					outVars_Gen["Q2_Gen"] = MC_ev.Q2_Gen;
+					outVars_Gen["theta_Gen"] = MC_ev.theta_Gen;
+					outVars_Gen["phi_Gen"] = MC_ev.phi_Gen;
+					outVars_Gen["real_flux_Gen"] = MC_ev.real_flux;
+					outVars_Gen["virtual_flux_Gen"] = MC_ev.virtual_flux;
+				}
+
+				outT_Gen->Fill();
+
 				///////////////////////////////////////////
-				// Filter good runs
+				// Filter good runs for data only
 				///////////////////////////////////////////
 				if (!Run_Selector.Is_Good_Run(run) && IsData && RGA_Fall2018)
 					continue;
@@ -404,9 +425,6 @@ int analysisTCS_MC()
 				///////////////////////////////////////////
 				PositronPID.Evaluate(ev.Positron);
 				ev.Set_Posi_score(PositronPID.score);
-				// cout<<"event"<<endl;
-				// cout<<PositronPID.score<<endl;
-				//  cout<<PositronPID.Accept(ev.Positron)<<endl;
 
 				if (!PositronPID.Accept(ev.Positron))
 					continue;
@@ -431,19 +449,13 @@ int analysisTCS_MC()
 				ev.Apply_MC_Correction(MomCorr);
 				///////////////////////////////////////////
 			}
-			// cout << nbevent_after_posi << endl;
-			/*if (pass_positron_cut == false)
-				cout << pass_positron_cut << endl;
-*/
+			
 
 			nbevent_after_posi++;
-			// cout << nbevent_after_posi << endl;
 
 			if (!IsHipo)
 			{
-				// cout<<"here"<<endl;
 				input_tree->GetEntry(nbEvent);
-				// cout<<"here"<<endl;
 				ev.Set_Vectors(*input_Electron, *input_Positron, *input_Proton);
 			}
 
@@ -471,13 +483,11 @@ int analysisTCS_MC()
 				{
 					if (ev.Positron.SectorCalo(ECAL, PCAL) != ev.Positron.SectorChe(HTCC))
 					{
-						// cout<<"mismatch posi"<<endl;
 						continue;
 					}
 
 					if (ev.Electron.SectorCalo(ECAL, PCAL) != ev.Electron.SectorChe(HTCC))
 					{
-						// cout<<"mismatch elec"<<endl;
 						continue;
 					}
 				}
@@ -544,19 +554,6 @@ int analysisTCS_MC()
 				outVars["positron_HTCC_ECAL_match"] = (ev.Positron.SectorCalo(ECAL, PCAL) == ev.Positron.SectorChe(HTCC)) ? 1. : 0.0;
 				outVars["electron_HTCC_ECAL_match"] = (ev.Electron.SectorCalo(ECAL, PCAL) == ev.Electron.SectorChe(HTCC)) ? 1. : 0.0;
 
-				if (IsGrape || IsTCSGen)
-				{
-					outVars["t_Gen"] = MC_ev.t_Gen;
-					outVars["MMassBeam_Gen"] = MC_ev.MMassBeam_Gen;
-					outVars["Epho_Gen"] = MC_ev.Epho_Gen;
-					outVars["qp2_Gen"] = MC_ev.qp2_Gen;
-					outVars["M_Gen_1"] = MC_ev.M_Gen_1;
-					outVars["M_Gen_2"] = MC_ev.M_Gen_2;
-					outVars["Pt_Frac_Gen"] = MC_ev.Pt_Frac_Gen;
-					outVars["Q2_Gen"] = MC_ev.Q2_Gen;
-					outVars["theta_Gen"] = MC_ev.theta_Gen;
-					outVars["phi_Gen"] = MC_ev.phi_Gen;
-				}
 
 				tree_Electron = ev.Electron.Vector;
 				tree_Positron = ev.Positron.Vector;

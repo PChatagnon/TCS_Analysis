@@ -86,7 +86,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	// Acceptance setup
 	//////////////////////////////////////////////
 
-	Acceptance Acc_TCS(TString(argv[4]), 4, 3, 3, 36, 13);
+	Acceptance Acc_TCS(TString(argv[argc - 3]), 4, 3, 3, 36, 13);
 	Acc_TCS.Draw_Acc();
 	Acc_TCS.Draw_Error();
 
@@ -132,7 +132,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 
 	///////////////////////////////////////////
 	// Setup the TTree output
-	TString output_file = (TString)(argv[6]);
+	TString output_file = (TString)(argv[argc - 1]);
 	TFile *outFile = new TFile(Form("outputTCS_%s.root", output_file.Data()), "recreate");
 	//TFile *outFile = new TFile("outputTCS_"+output_file+".root", "recreate");
 	TTree *outT = new TTree("tree", "tree");
@@ -193,7 +193,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	////////////////////////////////////////////
 	// Get file name
 	////////////////////////////////////////////
-	for (Int_t i = 3; i < (argc - 2); i++)
+	for (Int_t i = 3; i < (argc - 3); i++)
 	{
 		if (TString(argv[i]).Contains("MC"))
 		{
@@ -206,7 +206,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 			nameFiles = TString(argv[i]);
 		}
 
-		if (TString(argv[3]).Contains(".root"))
+		if (TString(argv[i]).Contains(".root"))
 		{
 			IsHipo = false;
 			nameFiles = TString(argv[i]);
