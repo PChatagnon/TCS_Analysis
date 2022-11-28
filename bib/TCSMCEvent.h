@@ -42,7 +42,7 @@ public:
                 vBeam.SetPxPyPzE(0., 0., ebeam, ebeam);
         }
 
-        void Set_MC_Particles(hipo::bank MCEVENT, hipo::bank MCPART, bool IsGrape)
+        void Set_MC_Particles(hipo::bank MCEVENT, hipo::bank MCPART, bool IsGrape, bool IsJPsi)
         {
 
                 if (IsGrape)
@@ -53,7 +53,7 @@ public:
                         Proton.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), mp);
                 }
 
-                if (!IsGrape)
+                if (!IsGrape && !JPsi)
                 {
                         Electron_2.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), me);
                         Positron.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), me);
@@ -69,15 +69,19 @@ public:
                         w = MCpsf * MCcs * flux;
                 }
 
-               /*if (IsJPsi)
+                if (IsJPsi)
                 {
+                        Electron_2.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), me);
+                        Positron.SetXYZM(MCPART.getFloat("px", 2), MCPART.getFloat("py", 2), MCPART.getFloat("pz", 2), me);
+                        Proton.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), mp);
+                        
                         float MC_factor_1 = MCEVENT.getFloat("ptarget", 0);
                         float MC_factor_2 = MCEVENT.getFloat("pbeam", 0);
                         float MC_factor_3 = MCEVENT.getFloat("ebeam", 0);
                         w = MC_factor_1 * MC_factor_2 * MC_factor_3;
                 }
 
-                if (Weighted_simu)
+                /*if (Weighted_simu)
                 {
                         w = MCEVENT.getFloat("weight", 0);
                 }*/

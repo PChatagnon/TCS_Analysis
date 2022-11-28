@@ -161,10 +161,10 @@ int analysisTCS_MC()
 	}
 
 	TString fvars_Gen[] = {
-		"weight", "evt_num", "t_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen", "theta_Gen", "phi_Gen, real_flux_Gen, virtual_flux_Gen"};
+		"weight", "evt_num", "t_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen", "theta_Gen", "phi_Gen", "real_flux_Gen", "virtual_flux_Gen"};
 
 	std::map<TString, Float_t>outVars_Gen;
-	if (IsGrape || IsTCSGen)
+	if (IsGrape || IsTCSGen || IsJPsi)
 	{
 		for (size_t i = 0; i < sizeof(fvars_Gen) / sizeof(TString); i++)
 		{
@@ -364,7 +364,7 @@ int analysisTCS_MC()
 				ev.Set_nb_part(np_input);
 				ev.Set_trigger_bit(trigger_bit);
 
-				MC_ev.Set_MC_Particles(MCEVENT, MCPART, IsGrape);
+				MC_ev.Set_MC_Particles(MCEVENT, MCPART, IsGrape, IsJPsi);
 				MC_ev.Get_Kinematics();
 
 				if (IsTCSGen)
@@ -382,7 +382,7 @@ int analysisTCS_MC()
 
 				ev.Set_Weight(w);
 
-				if (IsGrape || IsTCSGen)
+				if (IsGrape || IsTCSGen || IsJPsi)
 				{
 					outVars_Gen["t_Gen"] = MC_ev.t_Gen;
 					outVars_Gen["MMassBeam_Gen"] = MC_ev.MMassBeam_Gen;
@@ -398,7 +398,6 @@ int analysisTCS_MC()
 					outVars_Gen["virtual_flux_Gen"] = MC_ev.virtual_flux_Gen;
 					outVars_Gen["evt_num"] = nbEvent;
 					outVars_Gen["weight"] = w;
-
 				}
 
 				outT_Gen->Fill();
