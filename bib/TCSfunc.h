@@ -458,4 +458,15 @@ double n_virtual(double Eb, double Eg, double Q2_max)
 	return (1 / Eb) * alpha / (PI * x) * ((1 - x + x * x / 2) * log(Q2_max / Q2_min) - (1 - x));
 }
 
+double Lambda( double x, double y, double z )
+{
+  return (x - y - z)*(x - y - z) - 4*y*z;
+}
+
+//From Byukling Kayanti Formula (5.14) Page 86
+double T_min( double ma_2, double mb_2, double m1_2, double m2_2, double s) // arguments are squares of masses of particles in the reaction a+b->1+2, and s is the square of the total c.m. energy i.e. (a+b)^2
+{
+  return ma_2 + m1_2 - (1/(2*s))*( (s + ma_2 - mb_2)*(s + m1_2 - m2_2) - sqrt( Lambda(s, ma_2, mb_2)*Lambda(s, m1_2, m2_2) ) );
+}
+
 #endif

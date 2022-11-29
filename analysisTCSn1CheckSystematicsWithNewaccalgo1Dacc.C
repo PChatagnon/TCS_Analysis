@@ -147,7 +147,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 	outT->Branch("trigger_bit", &trigger_bit, "trigger_bit/I");
 
 	TString fvars[] = {
-		"t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
+		"t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
 		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology", 
 		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match"};
 
@@ -534,6 +534,7 @@ int analysisTCSn1CheckSystematicsWithNewaccalgo1Dacc()
 				outVars["e_p"] = ev.Electron.Vector.P();
 				outVars["prot_p"] = ev.Proton.Vector.P();
 				outVars["t"] = ev.t;
+				outVars["t_min"] = ev.t_min;
 				outVars["MMassBeam"] = ev.MMassBeam;
 				outVars["Epho"] = ev.Epho;
 				outVars["qp2"] = ev.qp2;

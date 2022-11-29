@@ -149,7 +149,7 @@ int analysisTCS_MC()
 	outT->Branch("trigger_bit", &trigger_bit, "trigger_bit/I");
 
 	TString fvars[] = {
-		"evt_num", "t", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
+		"evt_num", "t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
 		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology",
 		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match"};
 
@@ -161,7 +161,7 @@ int analysisTCS_MC()
 	}
 
 	TString fvars_Gen[] = {
-		"weight", "evt_num", "t_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen", "theta_Gen", "phi_Gen", "real_flux_Gen", "virtual_flux_Gen"};
+		"weight", "evt_num", "t_Gen", "t_min_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen", "theta_Gen", "phi_Gen", "real_flux_Gen", "virtual_flux_Gen"};
 
 	std::map<TString, Float_t>outVars_Gen;
 	if (IsGrape || IsTCSGen || IsJPsi)
@@ -385,6 +385,7 @@ int analysisTCS_MC()
 				if (IsGrape || IsTCSGen || IsJPsi)
 				{
 					outVars_Gen["t_Gen"] = MC_ev.t_Gen;
+					outVars_Gen["t_min_Gen"] = MC_ev.t_min_Gen;
 					outVars_Gen["MMassBeam_Gen"] = MC_ev.MMassBeam_Gen;
 					outVars_Gen["Epho_Gen"] = MC_ev.Epho_Gen;
 					outVars_Gen["qp2_Gen"] = MC_ev.qp2_Gen;
@@ -541,6 +542,7 @@ int analysisTCS_MC()
 				outVars["e_p"] = ev.Electron.Vector.P();
 				outVars["prot_p"] = ev.Proton.Vector.P();
 				outVars["t"] = ev.t;
+				outVars["t_min"] = ev.t_min;
 				outVars["MMassBeam"] = ev.MMassBeam;
 				outVars["Epho"] = ev.Epho;
 				outVars["qp2"] = ev.qp2;

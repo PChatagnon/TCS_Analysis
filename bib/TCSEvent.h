@@ -39,6 +39,7 @@ public:
 
         // Kinematic variables
         float t;
+        float t_min;
         float MMassBeam;
         float Epho;
         float qp2;
@@ -433,6 +434,9 @@ public:
                 xi = qp2 / (2 * (s - mp * mp) - qp2);
                 L0 = qp2 * qp2 * sin(cm.theta * TMath::DegToRad()) * sin(cm.theta * TMath::DegToRad()) / 4.;
                 L = (((qp2 - t) * (qp2 - t)) - (b * b)) / 4.;
+
+                t_min = T_min( 0.0, mp*mp, mp*mp, qp2, s)
+
 
                 real_flux = n_real(ebeam, Epho);
                 virtual_flux = n_virtual(ebeam, Epho, 0.02);

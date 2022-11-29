@@ -17,6 +17,7 @@ public:
 
         // Kinematic variables
         float t_Gen;
+        float t_min_Gen;
         float MMassBeam_Gen;
         float Epho_Gen;
         float qp2_Gen;
@@ -53,7 +54,7 @@ public:
                         Proton.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), mp);
                 }
 
-                if (!IsGrape && !JPsi)
+                if (!IsGrape && !IsJPsi)
                 {
                         Electron_2.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), me);
                         Positron.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), me);
@@ -74,7 +75,7 @@ public:
                         Electron_2.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), me);
                         Positron.SetXYZM(MCPART.getFloat("px", 2), MCPART.getFloat("py", 2), MCPART.getFloat("pz", 2), me);
                         Proton.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), mp);
-                        
+
                         float MC_factor_1 = MCEVENT.getFloat("ptarget", 0);
                         float MC_factor_2 = MCEVENT.getFloat("pbeam", 0);
                         float MC_factor_3 = MCEVENT.getFloat("ebeam", 0);
@@ -101,6 +102,7 @@ public:
                 M_Gen_1 = sqrt((Positron + Electron_1).M2());
                 Pt_Frac_Gen = vMissing.Pt() / vMissing.P();
                 Q2_Gen = 2 * ebeam * vMissing.E() * (1. - cos(vMissing.Theta()));
+                t_min_Gen = T_min( 0.0, mp*mp, mp*mp, M_Gen_2*M_Gen_2, (vPhoton+vRestProton).M2())
 
                 // Angular variables
                 cm = CM(Electron_2, Positron, Proton);
