@@ -435,7 +435,7 @@ public:
                 L0 = qp2 * qp2 * sin(cm.theta * TMath::DegToRad()) * sin(cm.theta * TMath::DegToRad()) / 4.;
                 L = (((qp2 - t) * (qp2 - t)) - (b * b)) / 4.;
 
-                t_min = T_min( 0.0, mp*mp, mp*mp, qp2, s)
+                t_min = T_min( 0.0, mp*mp, qp2, mp*mp, s);
 
 
                 real_flux = n_real(ebeam, Epho);

@@ -102,7 +102,7 @@ public:
                 M_Gen_1 = sqrt((Positron + Electron_1).M2());
                 Pt_Frac_Gen = vMissing.Pt() / vMissing.P();
                 Q2_Gen = 2 * ebeam * vMissing.E() * (1. - cos(vMissing.Theta()));
-                t_min_Gen = T_min( 0.0, mp*mp, mp*mp, M_Gen_2*M_Gen_2, (vPhoton+vRestProton).M2())
+                t_min_Gen = T_min( 0.0, mp*mp, M_Gen_2*M_Gen_2, mp*mp, (vPhoton+vRestProton).M2());
 
                 // Angular variables
                 cm = CM(Electron_2, Positron, Proton);

@@ -57,15 +57,8 @@ public:
                         float vt = PART.getFloat("vt", i);
                         
 
-                        if (pid == 11)
+                        if (pid == 11 && status > 2000)
                         {
-
-                                if (status < 2000)
-                                        continue;
-                                
-                                if (recem>1)
-                                        continue;
-
                                 Electron[recem].Vector.SetXYZM(px, py, pz, me);
                                 Electron[recem].index = i;
                                 Electron[recem].pid = 11;
@@ -98,10 +91,8 @@ public:
 
         void Compute_SF()
         {
-                
                 electron_1_SF = ((Electron[0].Energy(ECAL, PCAL) + Electron[0].Energy(ECAL, ECIN) + Electron[0].Energy(ECAL, ECOUT))) / Electron[0].Vector.P();
                 electron_2_SF = ((Electron[1].Energy(ECAL, PCAL) + Electron[1].Energy(ECAL, ECIN) + Electron[1].Energy(ECAL, ECOUT))) / Electron[1].Vector.P();
-                //positron_SF = ((Positron.Energy(ECAL, PCAL) + Positron.Energy(ECAL, ECIN) + Positron.Energy(ECAL, ECOUT))) / Positron.Vector.P();
         }
 
         void Set_Nphe_HTCC()
@@ -114,14 +105,8 @@ public:
         {
                 Electron[0] = ApplyECcuts(Electron[0], CALO);
                 Electron[1] = ApplyECcuts(Electron[1], CALO);
-                //Positron = ApplyECcuts(Positron, CALO);
                 Proton = ApplyECcuts(Proton, CALO);
         }
-
-        /*bool pass_EC_cut()
-        {
-                return (Electron.passEC && Positron.passEC && Proton.passEC && PionM.passEC);
-        }*/
 
         void Associate_detector_resp(hipo::bank CHE, hipo::bank SCIN, hipo::bank CALO)
         {

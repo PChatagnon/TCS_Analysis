@@ -65,7 +65,7 @@ int analysisTCS_EE()
 	outT->Branch("Proton", "TLorentzVector", &tree_Proton);
 
 	TString fvars[] = {
-		"run", "M", "Pt_Frac", "MMass", "electron_1_SF", "electron_2_SF", "electron_1_Nphe", "electron_2_Nphe", "status_electron_1", "status_electron_2", "status_proton","PID_electron_1","PID_electron_2"};
+		"run", "M", "Pt_Frac", "Q2", "MMass", "electron_1_SF", "electron_2_SF", "electron_1_Nphe", "electron_2_Nphe", "status_electron_1", "status_electron_2", "status_proton","PID_electron_1","PID_electron_2"};
 
 	std::map<TString, Float_t>
 		outVars;
@@ -177,14 +177,17 @@ int analysisTCS_EE()
 
 				outVars["run"] = run;
 
-
 				PositronPID.Evaluate(ev.Electron[0]);
 				outVars["PID_electron_1"] = PositronPID.score;
 				PositronPID.Evaluate(ev.Electron[1]);
 				outVars["PID_electron_2"] = PositronPID.score;
 
-				outVars["Pt_Frac"] = ((ev.vBeam + ev.vRestProton - ev.Electron[0].Vector - ev.Electron[1].Vector - ev.Proton.Vector).Pt()) / ((ev.vBeam + ev.vRestProton - ev.Electron[0].Vector - ev.Electron[1].Vector - ev.Proton.Vector).P());
-				outVars["MMass"] = (ev.vBeam + ev.vRestProton - ev.Electron[0].Vector - ev.Electron[1].Vector - ev.Proton.Vector).M2();
+				
+                TLorentzVector vMissing = ev.vBeam - (ev.Proton.Vector + ev.Electron[0].Vector + ev.Electron[1].Vector - ev.vRestProton);
+				
+				outVars["Pt_Frac"] = ((vMissing).Pt()) / ((vMissing).P());
+				outVars["Q2"] =  2 * ebeam * vMissing.E() * (1. - cos(vMissing.Theta()));
+				outVars["MMass"] = (vMissing).M2();
 				outVars["M"] = (ev.Electron[0].Vector+ev.Electron[1].Vector).M();
 				outVars["electron_1_SF"] = ev.electron_1_SF;
 				outVars["electron_2_SF"] = ev.electron_2_SF;
