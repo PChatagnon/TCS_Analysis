@@ -153,7 +153,9 @@ int analysisTCS_MC()
 	TString fvars[] = {
 		"evt_num", "t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
 		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology",
-		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match"};
+		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
+		"lead_lep_p","sub_lead_lep_p"
+		};
 
 	std::map<TString, Float_t> outVars;
 	for (size_t i = 0; i < sizeof(fvars) / sizeof(TString); i++)
@@ -324,7 +326,7 @@ int analysisTCS_MC()
 
 		outFile->cd();
 
-		while (((reader.next() && IsHipo) || (nbEvent < nentries && !IsHipo)) && nbEvent < 100000)
+		while (((reader.next() && IsHipo) || (nbEvent < nentries && !IsHipo)) /*&& nbEvent < 100000*/)
 		{
 
 			nbEvent++;
@@ -579,6 +581,8 @@ int analysisTCS_MC()
 				outVars["electron_HTCCt"] = ev.Electron.TimeChe(HTCC);
 				outVars["positron_HTCC_ECAL_match"] = (ev.Positron.SectorCalo(ECAL, PCAL) == ev.Positron.SectorChe(HTCC)) ? 1. : 0.0;
 				outVars["electron_HTCC_ECAL_match"] = (ev.Electron.SectorCalo(ECAL, PCAL) == ev.Electron.SectorChe(HTCC)) ? 1. : 0.0;
+				outVars["lead_lep_p"] = (ev.Positron.P() > ev.Electron.P()) ? ev.Positron.P() : ev.Electron.P();
+				outVars["sub_lead_lep_p"] = (ev.Positron.P() > ev.Electron.P()) ? ev.Electron.P() : ev.Positron.P();
 
 				tree_Electron = ev.Electron.Vector;
 				tree_Positron = ev.Positron.Vector;
