@@ -163,12 +163,16 @@ int analysisTCS_EE()
 				ev.Set_Nphe_HTCC();
 				ev.Compute_SF();
 
+				/*
 				if ((ev.Electron[0].Energy(ECAL, PCAL) + ev.Electron[0].Energy(ECAL, ECIN)) / ev.Electron[0].Vector.P() < 0.2)
 					continue;
 				if ((ev.Electron[1].Energy(ECAL, PCAL) + ev.Electron[1].Energy(ECAL, ECIN)) / ev.Electron[1].Vector.P() < 0.2)
 					continue;
 				if (ev.Proton.chi2 > 3.0)
 					continue;
+				*/
+
+				
 
 				float run = (float)RUN.getInt("run", 0);
 				if (!Run_Selector.Is_Good_Run(run))

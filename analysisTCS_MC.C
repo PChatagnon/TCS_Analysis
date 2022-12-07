@@ -56,7 +56,9 @@ int analysisTCS_MC()
 	bool IsData = true;
 	bool IsHipo = true;
 
-	bool IsTCSGen = true;
+	bool IsEE_BG = false;
+
+	bool IsTCSGen = false;
 	bool IsGrape = false;
 	bool IsJPsi = false;
 	bool Weighted_simu = false;
@@ -153,7 +155,7 @@ int analysisTCS_MC()
 		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology",
 		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match"};
 
-	std::map<TString, Float_t>outVars;
+	std::map<TString, Float_t> outVars;
 	for (size_t i = 0; i < sizeof(fvars) / sizeof(TString); i++)
 	{
 		outVars[fvars[i]] = 0.;
@@ -163,12 +165,12 @@ int analysisTCS_MC()
 	TString fvars_Gen[] = {
 		"weight", "evt_num", "t_Gen", "t_min_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen", "theta_Gen", "phi_Gen", "real_flux_Gen", "virtual_flux_Gen"};
 
-	std::map<TString, Float_t>outVars_Gen;
+	std::map<TString, Float_t> outVars_Gen;
 	if (IsGrape || IsTCSGen || IsJPsi)
 	{
 		for (size_t i = 0; i < sizeof(fvars_Gen) / sizeof(TString); i++)
 		{
-			cout<<"here\n";
+			cout << "here\n";
 			outVars_Gen[fvars_Gen[i]] = 0.;
 			ADDVAR(&(outVars_Gen[fvars_Gen[i]]), fvars_Gen[i], "/F", outT_Gen);
 		}
@@ -210,7 +212,7 @@ int analysisTCS_MC()
 	////////////////////////////////////////////
 	for (Int_t i = 3; i < (argc - 3); i++)
 	{
-		if (TString(argv[i]).Contains("MC"))
+		if (TString(argv[i]).Contains("MC") || IsGrape || IsTCSGen || IsJPsi)
 		{
 			IsData = false;
 		}
@@ -233,16 +235,23 @@ int analysisTCS_MC()
 		}
 
 		////////////////////////////////////////////
-		cout << "////////////////////////////////////////////" << "\n";
+		cout << "////////////////////////////////////////////"
+			 << "\n";
 		if (IsData)
-			cout << "Running on Data" << "\n";
+			cout << "Running on Data"
+				 << "\n";
 		else if (IsTCSGen)
-			cout << "Running on TCSGen Simulation" << "\n";
+			cout << "Running on TCSGen Simulation"
+				 << "\n";
 		else if (IsGrape)
-			cout << "Running on Grape Simulation" << "\n";
+			cout << "Running on Grape Simulation"
+				 << "\n";
 		else if (IsJPsi)
-			cout << "Running on JPsi Simulation" << "\n";
-		cout << "////////////////////////////////////////////" << "\n";
+			cout << "Running on JPsi Simulation"
+				 << "\n";
+		cout << "Is hipo ? " << IsHipo << "\n";
+		cout << "////////////////////////////////////////////"
+			 << "\n";
 		////////////////////////////////////////////
 
 		////////////////////////////////////////////
@@ -315,7 +324,7 @@ int analysisTCS_MC()
 
 		outFile->cd();
 
-		while (((reader.next() && IsHipo) || (nbEvent < nentries && !IsHipo)) /*&& nbEvent < 10000*/)
+		while (((reader.next() && IsHipo) || (nbEvent < nentries && !IsHipo)) && nbEvent < 100000)
 		{
 
 			nbEvent++;
@@ -324,9 +333,10 @@ int analysisTCS_MC()
 				time(&intermediate);
 				double intermediate_time = difftime(intermediate, begin);
 
-				cout << nbEvent << " events processed in " << intermediate_time << "s" << "\n";
+				cout << nbEvent << " events processed in " << intermediate_time << "s"
+					 << "\n";
 			}
-			
+
 			// cout << "event" << endl;
 			double w = 1; // MCfluxBH[0]*MCpsfBH[0]*MCcsBH[0];
 			int polarization;
@@ -352,7 +362,7 @@ int analysisTCS_MC()
 				hipo_event.getStructure(TRAJ);
 				hipo_event.getStructure(TRACK);
 
-				if (MCPART.getSize() < 1)
+				if (MCPART.getSize() < 1 && (!IsData))
 					continue;
 
 				// Number of total event
@@ -364,26 +374,26 @@ int analysisTCS_MC()
 				ev.Set_nb_part(np_input);
 				ev.Set_trigger_bit(trigger_bit);
 
-				MC_ev.Set_MC_Particles(MCEVENT, MCPART, IsGrape, IsJPsi);
-				MC_ev.Get_Kinematics();
+				if (!IsData)
+				{
 
-				if (IsTCSGen)
-					w = MC_ev.w;
+					MC_ev.Set_MC_Particles(MCEVENT, MCPART, IsGrape, IsJPsi);
+					MC_ev.Get_Kinematics();
 
-				
-				if (IsJPsi)
-                {
-                        float MC_factor_1 = MCEVENT.getFloat("ptarget", 0);
-                        float MC_factor_2 = MCEVENT.getFloat("pbeam", 0);
-                        float MC_factor_3 = MCEVENT.getFloat("ebeam", 0);
-                        w = MC_factor_1 * MC_factor_2 * MC_factor_3;
-                }
+					if (IsTCSGen)
+						w = MC_ev.w;
+
+					if (IsJPsi)
+					{
+						float MC_factor_1 = MCEVENT.getFloat("ptarget", 0);
+						float MC_factor_2 = MCEVENT.getFloat("pbeam", 0);
+						float MC_factor_3 = MCEVENT.getFloat("ebeam", 0);
+						w = MC_factor_1 * MC_factor_2 * MC_factor_3;
+					}
+
+					ev.Set_Weight(w);
 					
 
-				ev.Set_Weight(w);
-
-				if (IsGrape || IsTCSGen || IsJPsi)
-				{
 					outVars_Gen["t_Gen"] = MC_ev.t_Gen;
 					outVars_Gen["t_min_Gen"] = MC_ev.t_min_Gen;
 					outVars_Gen["MMassBeam_Gen"] = MC_ev.MMassBeam_Gen;
@@ -399,9 +409,11 @@ int analysisTCS_MC()
 					outVars_Gen["virtual_flux_Gen"] = MC_ev.virtual_flux_Gen;
 					outVars_Gen["evt_num"] = nbEvent;
 					outVars_Gen["weight"] = w;
+
+					outT_Gen->Fill();
 				}
 
-				outT_Gen->Fill();
+				
 
 				///////////////////////////////////////////
 				// Filter good runs for data only
@@ -412,7 +424,7 @@ int analysisTCS_MC()
 				///////////////////////////////////////////
 				// Get Particles and cut on event topology
 				///////////////////////////////////////////
-				ev.Set_Particles(PART);
+				ev.Set_Particles(PART, IsEE_BG);
 				if (!ev.pass_topology_cut())
 				{
 					continue;
@@ -439,8 +451,8 @@ int analysisTCS_MC()
 				PositronPID.Evaluate(ev.Positron);
 				ev.Set_Posi_score(PositronPID.score);
 
-				if (!PositronPID.Accept(ev.Positron))
-					continue;
+				/*if (!PositronPID.Accept(ev.Positron)) //!!!!!!!!!!!!!!!! Positron cut removed to have consistent lepton ID
+					continue;*/
 
 				PositronPID.Evaluate(ev.Electron);
 				ev.Set_Elec_score(PositronPID.score);
@@ -462,7 +474,6 @@ int analysisTCS_MC()
 				ev.Apply_MC_Correction(MomCorr);
 				///////////////////////////////////////////
 			}
-			
 
 			nbevent_after_posi++;
 
@@ -569,7 +580,6 @@ int analysisTCS_MC()
 				outVars["positron_HTCC_ECAL_match"] = (ev.Positron.SectorCalo(ECAL, PCAL) == ev.Positron.SectorChe(HTCC)) ? 1. : 0.0;
 				outVars["electron_HTCC_ECAL_match"] = (ev.Electron.SectorCalo(ECAL, PCAL) == ev.Electron.SectorChe(HTCC)) ? 1. : 0.0;
 
-
 				tree_Electron = ev.Electron.Vector;
 				tree_Positron = ev.Positron.Vector;
 				tree_Proton = ev.Proton.Vector;
@@ -655,7 +665,8 @@ int analysisTCS_MC()
 							AFB_vs_t2.AddEvent(-ev.t, ev.phi, ev.theta, AccValue, AccError, ev.w, CorrVolume1, CorrVolume2);
 
 						if (AccValue <= 0.0)
-							cout << "Acc Value bellow zero : problem" << "\n";
+							cout << "Acc Value bellow zero : problem"
+								 << "\n";
 					}
 				}
 

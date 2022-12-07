@@ -118,7 +118,7 @@ public:
                 w = w_in;
         }
 
-        void Set_Particles(hipo::bank PART)
+        void Set_Particles(hipo::bank PART, bool IsEE_BG)
         {
 
                 for (int i = 0; i < np; i++)
@@ -136,7 +136,7 @@ public:
                         float vy = PART.getFloat("vy", i);
                         float vz = PART.getFloat("vz", i);
                         float vt = PART.getFloat("vt", i);
-                        if (pid == -11)
+                        if (pid == -11 || (IsEE_BG && pid==11 && recem==1 && status > 2000))
                         {
                                 Positron.Vector.SetXYZM(px, py, pz, me);
                                 Positron.index = i;
