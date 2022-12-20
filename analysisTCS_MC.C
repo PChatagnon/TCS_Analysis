@@ -427,6 +427,11 @@ int analysisTCS_MC()
 				// Get Particles and cut on event topology
 				///////////////////////////////////////////
 				ev.Set_Particles(PART, IsEE_BG);
+
+				if(ev.recem==1 && ev.recp==1)Plots.Fill_1D("efficiency", 0, 1);
+				if(ev.recep==1 && ev.recp==1)Plots.Fill_1D("efficiency", 1, 1);
+				if(ev.recem==1 && ev.recep==1)Plots.Fill_1D("efficiency", 2, 1);
+
 				if (!ev.pass_topology_cut())
 				{
 					continue;
@@ -581,8 +586,8 @@ int analysisTCS_MC()
 				outVars["electron_HTCCt"] = ev.Electron.TimeChe(HTCC);
 				outVars["positron_HTCC_ECAL_match"] = (ev.Positron.SectorCalo(ECAL, PCAL) == ev.Positron.SectorChe(HTCC)) ? 1. : 0.0;
 				outVars["electron_HTCC_ECAL_match"] = (ev.Electron.SectorCalo(ECAL, PCAL) == ev.Electron.SectorChe(HTCC)) ? 1. : 0.0;
-				outVars["lead_lep_p"] = (ev.Positron.P() > ev.Electron.P()) ? ev.Positron.P() : ev.Electron.P();
-				outVars["sub_lead_lep_p"] = (ev.Positron.P() > ev.Electron.P()) ? ev.Electron.P() : ev.Positron.P();
+				outVars["lead_lep_p"] = (ev.Positron.Vector.P() > ev.Electron.Vector.P()) ? ev.Positron.Vector.P() : ev.Electron.Vector.P();
+				outVars["sub_lead_lep_p"] = (ev.Positron.Vector.P() > ev.Electron.Vector.P()) ? ev.Electron.Vector.P() : ev.Positron.Vector.P();
 
 				tree_Electron = ev.Electron.Vector;
 				tree_Positron = ev.Positron.Vector;

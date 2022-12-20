@@ -151,7 +151,7 @@ public:
                                 recep++;
                         }
 
-                        if ((pid == 11 && !IsEE_BG) || (IsEE_BG && pid==11 && recem==1 && status > 2000))
+                        if ((pid == 11 && !IsEE_BG) || (IsEE_BG && pid==11 && recem==0 && status > 2000))
                         {
                                 if (status > 2000)
                                 {
@@ -227,7 +227,7 @@ public:
 
         bool pass_topology_cut()
         {
-                return (recem >= 1 && recep == 1 && recp == 1);
+                return (recem == 1 && recep == 1 && recp == 1);
         }
 
         void show_topology()
