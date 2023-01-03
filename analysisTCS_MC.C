@@ -154,7 +154,7 @@ int analysisTCS_MC()
 		"evt_num", "t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
 		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology",
 		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
-		"lead_lep_p","sub_lead_lep_p"
+		"lead_lep_p","sub_lead_lep_p","lead_lep_theta","sub_lead_lep_theta"
 		};
 
 	std::map<TString, Float_t> outVars;
@@ -588,6 +588,8 @@ int analysisTCS_MC()
 				outVars["electron_HTCC_ECAL_match"] = (ev.Electron.SectorCalo(ECAL, PCAL) == ev.Electron.SectorChe(HTCC)) ? 1. : 0.0;
 				outVars["lead_lep_p"] = (ev.Positron.Vector.P() > ev.Electron.Vector.P()) ? ev.Positron.Vector.P() : ev.Electron.Vector.P();
 				outVars["sub_lead_lep_p"] = (ev.Positron.Vector.P() > ev.Electron.Vector.P()) ? ev.Electron.Vector.P() : ev.Positron.Vector.P();
+				outVars["lead_lep_theta"] = (ev.Positron.Vector.P() > ev.Electron.Vector.P()) ? ev.Positron.Vector.Theta() : ev.Electron.Vector.Theta();
+				outVars["sub_lead_lep_theta"] = (ev.Positron.Vector.P() > ev.Electron.Vector.P()) ? ev.Electron.Vector.Theta() : ev.Positron.Vector.Theta();
 
 				tree_Electron = ev.Electron.Vector;
 				tree_Positron = ev.Positron.Vector;
