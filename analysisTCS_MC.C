@@ -65,7 +65,9 @@ int analysisTCS_MC()
 
 	bool HTCCSectorCut = false;
 
-	bool RGA_Fall2018 = false;
+	bool RGA_Fall2018 = false; // inbending or outbending in the end
+
+	
 
 	Int_t argc = gApplication->Argc();
 	char **argv = gApplication->Argv();
@@ -154,6 +156,9 @@ int analysisTCS_MC()
 		"evt_num", "t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
 		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology",
 		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
+		"vx_elec","vy_elec","vz_elec",
+		"vx_posi","vy_posi","vz_posi",
+		"vx_prot","vy_prot","vz_prot",
 		"lead_lep_p","sub_lead_lep_p","lead_lep_theta","sub_lead_lep_theta"
 		};
 
@@ -165,7 +170,9 @@ int analysisTCS_MC()
 	}
 
 	TString fvars_Gen[] = {
-		"weight", "evt_num", "t_Gen", "t_min_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen", "theta_Gen", "phi_Gen", "real_flux_Gen", "virtual_flux_Gen"};
+		"weight", "evt_num", "t_Gen", "t_min_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen", 
+		"vz_elec_Gen","vz_posi_Gen","vz_prot_Gen",
+		"theta_Gen", "phi_Gen", "real_flux_Gen", "virtual_flux_Gen"};
 
 	std::map<TString, Float_t> outVars_Gen;
 	if (IsGrape || IsTCSGen || IsJPsi)
@@ -185,8 +192,30 @@ int analysisTCS_MC()
 	///////////////////////////////////////////
 	// TMVA PID for Positron
 	///////////////////////////////////////////
-	PositronIdentification PositronPID("MLP method", "TMVAClassification_MLP6D.weights.xml", InputParameters.MLPscoreCut, InputParameters.MLPMomCut);
-	PositronPID.InitializePositronIdentification();
+	//PositronIdentification PositronPID("MLP method", "TMVAClassification_MLP6D.weights.xml", InputParameters.MLPscoreCut, InputParameters.MLPMomCut);
+	//PositronPID.InitializePositronIdentification();
+
+	TString positron_bdt_weights;
+	TString electron_bdt_weights;
+
+	if(RGA_Fall2018)
+	{
+		positron_bdt_weights = "ML_weights/TMVAClassification_BDT_posi_inbending.weights.xml";
+		electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_inbending.weights.xml";
+	}
+	else
+	{
+		positron_bdt_weights = "ML_weights/TMVAClassification_BDT_posi_outbending.weights.xml";
+		electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_outbending.weights.xml";
+	}
+
+	PositronIdentification PositronPID("BDT", positron_bdt_weights, 0.0 , 4.0);
+	PositronPID.InitializeBDT_new_PositronIdentification();
+
+	PositronIdentification ElectronPID("BDT", electron_bdt_weights, 0.0 , 4.0);
+	ElectronPID.InitializeBDT_new_PositronIdentification();
+
+	
 
 	///////////////////////////////////////////
 	// Plots
@@ -411,6 +440,10 @@ int analysisTCS_MC()
 					outVars_Gen["virtual_flux_Gen"] = MC_ev.virtual_flux_Gen;
 					outVars_Gen["evt_num"] = nbEvent;
 					outVars_Gen["weight"] = w;
+					outVars_Gen["vz_elec_Gen"] = MC_ev.vz_elec_Gen;
+					outVars_Gen["vz_posi_Gen"] = MC_ev.vz_posi_Gen;
+					outVars_Gen["vz_prot_Gen"] = MC_ev.vz_prot_Gen;
+					
 
 					outT_Gen->Fill();
 				}
@@ -455,14 +488,16 @@ int analysisTCS_MC()
 				///////////////////////////////////////////
 				// TMVA
 				///////////////////////////////////////////
-				PositronPID.Evaluate(ev.Positron);
+				//PositronPID.Evaluate(ev.Positron);
+				//ev.Set_Posi_score(PositronPID.score);
+				PositronPID.Evaluate_BDT_new(ev.Positron);
 				ev.Set_Posi_score(PositronPID.score);
 
 				/*if (!PositronPID.Accept(ev.Positron)) //!!!!!!!!!!!!!!!! Positron cut removed to have consistent lepton ID
 					continue;*/
 
-				PositronPID.Evaluate(ev.Electron);
-				ev.Set_Elec_score(PositronPID.score);
+				ElectronPID.Evaluate_BDT_new(ev.Electron);
+				ev.Set_Elec_score(ElectronPID.score);
 				///////////////////////////////////////////
 
 				// Number of events after positron cuts
@@ -590,6 +625,15 @@ int analysisTCS_MC()
 				outVars["sub_lead_lep_p"] = (ev.Positron.Vector.P() > ev.Electron.Vector.P()) ? ev.Electron.Vector.P() : ev.Positron.Vector.P();
 				outVars["lead_lep_theta"] = (ev.Positron.Vector.P() > ev.Electron.Vector.P()) ? ev.Positron.Vector.Theta() : ev.Electron.Vector.Theta();
 				outVars["sub_lead_lep_theta"] = (ev.Positron.Vector.P() > ev.Electron.Vector.P()) ? ev.Electron.Vector.Theta() : ev.Positron.Vector.Theta();
+				outVars["vx_elec"] = ev.Electron.vertex.x;
+				outVars["vy_elec"] = ev.Electron.vertex.y;
+				outVars["vz_elec"] = ev.Electron.vertex.z;
+				outVars["vx_posi"] = ev.Positron.vertex.x;
+				outVars["vy_posi"] = ev.Positron.vertex.y;
+				outVars["vz_posi"] = ev.Positron.vertex.z;
+				outVars["vx_prot"] = ev.Proton.vertex.z;
+				outVars["vy_prot"] = ev.Proton.vertex.z;
+				outVars["vz_prot"] = ev.Proton.vertex.z;
 
 				tree_Electron = ev.Electron.Vector;
 				tree_Positron = ev.Positron.Vector;

@@ -28,6 +28,11 @@ public:
         float real_flux_Gen;
         float virtual_flux_Gen;
 
+        //MC vertex
+        float vz_elec_Gen;
+        float vz_posi_Gen;
+        float vz_prot_Gen;
+
         //MC weight
 
         float w;
@@ -52,6 +57,10 @@ public:
                         Electron_2.SetXYZM(MCPART.getFloat("px", 3), MCPART.getFloat("py", 3), MCPART.getFloat("pz", 3), me);
                         Positron.SetXYZM(MCPART.getFloat("px", 2), MCPART.getFloat("py", 2), MCPART.getFloat("pz", 2), me);
                         Proton.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), mp);
+
+                        vz_elec_Gen = MCPART.getFloat("vz", 3);
+                        vz_posi_Gen = MCPART.getFloat("vz", 2);
+                        vz_prot_Gen = MCPART.getFloat("vz", 0);
                 }
 
                 if (!IsGrape && !IsJPsi)
@@ -60,6 +69,9 @@ public:
                         Positron.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), me);
                         Proton.SetXYZM(MCPART.getFloat("px", 2), MCPART.getFloat("py", 2), MCPART.getFloat("pz", 2), mp);
                         
+                        vz_elec_Gen = MCPART.getFloat("vz", 0);
+                        vz_posi_Gen = MCPART.getFloat("vz", 1);
+                        vz_prot_Gen = MCPART.getFloat("vz", 2);
 
                         float Egamma_gen = (Electron_2 + Positron + Proton - vRestProton).E();
                         float flux = n_real(ebeam, Egamma_gen);
