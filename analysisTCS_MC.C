@@ -159,6 +159,8 @@ int analysisTCS_MC()
 		"vx_elec","vy_elec","vz_elec",
 		"vx_posi","vy_posi","vz_posi",
 		"vx_prot","vy_prot","vz_prot",
+		"PCAL_x_elec","PCAL_y_elec",
+		"PCAL_x_posi","PCAL_y_posi",
 		"lead_lep_p","sub_lead_lep_p","lead_lep_theta","sub_lead_lep_theta"
 		};
 
@@ -634,6 +636,10 @@ int analysisTCS_MC()
 				outVars["vx_prot"] = ev.Proton.vertex.z;
 				outVars["vy_prot"] = ev.Proton.vertex.z;
 				outVars["vz_prot"] = ev.Proton.vertex.z;
+				outVars["PCAL_x_elec"] = ev.Electron.X_PCAL();
+				outVars["PCAL_y_elec"] = ev.Electron.Y_PCAL();
+				outVars["PCAL_x_posi"] = ev.Positron.X_PCAL();
+				outVars["PCAL_y_posi"] = ev.Positron.Y_PCAL();
 
 				tree_Electron = ev.Electron.Vector;
 				tree_Positron = ev.Positron.Vector;

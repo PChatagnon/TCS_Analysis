@@ -174,6 +174,30 @@ public:
                 return Y;
         }
 
+        float X_CALO(int layer)
+        {
+                float X = 0;
+                for (int i = 0; i < Calorimeter.size(); i++)
+                {
+                        if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
+                                X = Calorimeter[i].x;
+                                break;
+                }
+                return X;
+        }
+
+        float Y_CALO(int layer)
+        {
+                float Y = 0;
+                for (int i = 0; i < Calorimeter.size(); i++)
+                {
+                        if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
+                                Y = Calorimeter[i].y;
+                                break;
+                }
+                return Y;
+        }
+
         float Energy(int det, int layer)
         {
                 float en = 0.;
