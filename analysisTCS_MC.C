@@ -59,14 +59,14 @@ int analysisTCS_MC()
 	bool IsEE_BG = false;
 
 	bool IsTCSGen = false;
-	bool IsGrape = false;
+	bool IsGrape = true;
 	bool IsJPsi = false;
 	bool Weighted_simu = false;
 
 	bool HTCCSectorCut = false;
 
 	bool RGA_Fall2018 = false; // inbending or outbending in the end
-
+	bool inbending = true;
 	
 
 	Int_t argc = gApplication->Argc();
@@ -200,15 +200,28 @@ int analysisTCS_MC()
 	TString positron_bdt_weights;
 	TString electron_bdt_weights;
 
-	if(RGA_Fall2018)
+	if(inbending)
 	{
+
+		if(IsEE_BG){
+		positron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_inbending.weights.xml";
+        electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_inbending.weights.xml";
+		}
+		else {
 		positron_bdt_weights = "ML_weights/TMVAClassification_BDT_posi_inbending.weights.xml";
 		electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_inbending.weights.xml";
+		}
 	}
 	else
 	{
+		if(IsEE_BG){
+		positron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_outbending.weights.xml";
+        electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_outbending.weights.xml";
+        }
+		else {
 		positron_bdt_weights = "ML_weights/TMVAClassification_BDT_posi_outbending.weights.xml";
 		electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_outbending.weights.xml";
+		}
 	}
 
 	PositronIdentification PositronPID("BDT", positron_bdt_weights, 0.0 , 4.0);
@@ -636,10 +649,10 @@ int analysisTCS_MC()
 				outVars["vx_prot"] = ev.Proton.vertex.z;
 				outVars["vy_prot"] = ev.Proton.vertex.z;
 				outVars["vz_prot"] = ev.Proton.vertex.z;
-				outVars["PCAL_x_elec"] = ev.Electron.X_PCAL();
-				outVars["PCAL_y_elec"] = ev.Electron.Y_PCAL();
-				outVars["PCAL_x_posi"] = ev.Positron.X_PCAL();
-				outVars["PCAL_y_posi"] = ev.Positron.Y_PCAL();
+				outVars["PCAL_x_elec"] = ev.Electron.X_CALO(PCAL);
+				outVars["PCAL_y_elec"] = ev.Electron.Y_CALO(PCAL);
+				outVars["PCAL_x_posi"] = ev.Positron.X_CALO(PCAL);
+				outVars["PCAL_y_posi"] = ev.Positron.Y_CALO(PCAL);
 
 				tree_Electron = ev.Electron.Vector;
 				tree_Positron = ev.Positron.Vector;
