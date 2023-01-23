@@ -26,6 +26,8 @@
 #include "bib/TCSEvent.h"
 #include "bib/TCSMCEvent.h"
 #include "bib/TCSRunSelector.h"
+#include "bib/InputParser.h"
+
 
 #include "reader.h"
 
@@ -53,24 +55,48 @@ int analysisTCS_MC()
 
 	Parameters InputParameters("InputOptions/InputOptionsTCS_Standard.txt");
 
+	Int_t argc = gApplication->Argc();
+	char **argv = gApplication->Argv();
+	Input input(argc, argv);
+
 	bool IsData = true;
 	bool IsHipo = true;
 
 	bool IsEE_BG = false;
+	IsEE_BG = input.cmdOptionExists("-IsEE_BG");
 
 	bool IsTCSGen = false;
-	bool IsGrape = true;
+	IsTCSGen = input.cmdOptionExists("-IsTCSGen");
+	bool IsGrape = false;
+	IsGrape = input.cmdOptionExists("-IsGrape");
 	bool IsJPsi = false;
+	IsJPsi = input.cmdOptionExists("-IsJPsi");
 	bool Weighted_simu = false;
 
 	bool HTCCSectorCut = false;
 
 	bool RGA_Fall2018 = false; // inbending or outbending in the end
-	bool inbending = true;
-	
+	RGA_Fall2018 = input.cmdOptionExists("-RGA_Fall2018");
 
-	Int_t argc = gApplication->Argc();
-	char **argv = gApplication->Argv();
+	bool inbending = true;
+	inbending = !input.cmdOptionExists("-outbending");
+
+	if(input.cmdOptionExists("-usage")){
+		cout<<"Use as : clas12root -l analysisTCS_MC.C -a NewacceptanceTCS_newSimuLargeStats.root -o ouputname -f files -ef -inbending\n"
+	}
+	
+	cout << "////////////////////////////////////////////"<< "\n";
+	cout<<"Run with the following options : "<<"\n";
+	cout<<"Inbending : "<<inbending<<"\n";
+	cout<<"RGA_Fall2018 : "<<RGA_Fall2018<<"\n";
+	cout<<"IsTCSGen : "<<IsTCSGen<<"\n";
+	cout<<"IsGrape : "<<IsGrape<<"\n";
+	cout<<"IsJPsi : "<<IsJPsi<<"\n";
+	cout<<"IsEE_BG : "<<IsEE_BG<<"\n";
+	cout << "////////////////////////////////////////////"<< "\n";
+
+
+
 	double nbrecEvent = 0;
 	int nbf = 0;
 	double nEventTCS = 0;
@@ -91,7 +117,9 @@ int analysisTCS_MC()
 	// Acceptance setup
 	//////////////////////////////////////////////
 
-	Acceptance Acc_TCS(TString(argv[argc - 3]), 4, 3, 3, 36, 13);
+	//Acceptance Acc_TCS(TString(argv[3]), 4, 3, 3, 36, 13);
+	Acceptance Acc_TCS(TString(input.getCmdOption("-a")), 4, 3, 3, 36, 13);
+
 	Acc_TCS.Draw_Acc();
 	Acc_TCS.Draw_Error();
 
@@ -137,7 +165,7 @@ int analysisTCS_MC()
 
 	///////////////////////////////////////////
 	// Setup the TTree output
-	TString output_file = (TString)(argv[argc - 1]);
+	TString output_file = (TString)(input.getCmdOption("-o"));//argv[4]);
 	TFile *outFile = new TFile(Form("outputTCS_%s.root", output_file.Data()), "recreate");
 	// TFile *outFile = new TFile("outputTCS_"+output_file+".root", "recreate");
 	TTree *outT = new TTree("tree", "tree");
@@ -156,6 +184,7 @@ int analysisTCS_MC()
 		"evt_num", "t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
 		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology",
 		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
+		"status_elec","status_posi","status_prot",
 		"vx_elec","vy_elec","vz_elec",
 		"vx_posi","vy_posi","vz_posi",
 		"vx_prot","vy_prot","vz_prot",
@@ -246,7 +275,7 @@ int analysisTCS_MC()
 	double sigmaFD = 1.207;
 	double sigmaCD = 1.972;
 
-	int seed = atoi(argv[5]);
+	int seed = 0;
 	TRandom *polarizationGene = new TRandom(seed);
 	TRandom3 *ChoiceEvent = new TRandom3(seed);
 
@@ -256,7 +285,10 @@ int analysisTCS_MC()
 	////////////////////////////////////////////
 	// Get file name
 	////////////////////////////////////////////
-	for (Int_t i = 3; i < (argc - 3); i++)
+	//for (Int_t i = 6; i < (argc); i++)
+//cout<<input.getCmdIndex("-f")<<"\n";
+		//cout<<input.getCmdIndex("-ef")<<"\n";
+	for(Int_t i = input.getCmdIndex("-f")+2; i < input.getCmdIndex("-ef")+1; i++)
 	{
 		if (TString(argv[i]).Contains("MC") || IsGrape || IsTCSGen || IsJPsi)
 		{
@@ -269,7 +301,7 @@ int analysisTCS_MC()
 			nameFiles = TString(argv[i]);
 		}
 
-		if (TString(argv[3]).Contains(".root"))
+		if (TString(argv[5]).Contains(".root"))
 		{
 			IsHipo = false;
 			nameFiles = TString(argv[i]);
@@ -295,9 +327,17 @@ int analysisTCS_MC()
 		else if (IsJPsi)
 			cout << "Running on JPsi Simulation"
 				 << "\n";
+		cout<<TString(argv[i])<<"\n";
 		cout << "Is hipo ? " << IsHipo << "\n";
-		cout << "////////////////////////////////////////////"
-			 << "\n";
+		cout << "////////////////////////////////////////////"<< "\n";
+		cout<<"Run with the following options : "<<"\n";
+		cout<<"Inbending : "<<inbending<<"\n";
+		cout<<"RGA_Fall2018 : "<<RGA_Fall2018<<"\n";
+		cout<<"IsTCSGen : "<<IsTCSGen<<"\n";
+		cout<<"IsGrape : "<<IsGrape<<"\n";
+		cout<<"IsJPsi : "<<IsJPsi<<"\n";
+		cout<<"IsEE_BG : "<<IsEE_BG<<"\n";
+		cout << "////////////////////////////////////////////"<< "\n";
 		////////////////////////////////////////////
 
 		////////////////////////////////////////////
@@ -479,6 +519,8 @@ int analysisTCS_MC()
 				if(ev.recem==1 && ev.recp==1)Plots.Fill_1D("efficiency", 0, 1);
 				if(ev.recep==1 && ev.recp==1)Plots.Fill_1D("efficiency", 1, 1);
 				if(ev.recem==1 && ev.recep==1)Plots.Fill_1D("efficiency", 2, 1);
+				if(ev.recem==1 && ev.recp==1 && ev.Proton.status%1000==2)Plots.Fill_1D("efficiency", 3, 1);
+				if(ev.recep==1 && ev.recp==1 && ev.Proton.status%1000==4)Plots.Fill_1D("efficiency", 4, 1);
 
 				if (!ev.pass_topology_cut())
 				{
@@ -640,6 +682,9 @@ int analysisTCS_MC()
 				outVars["sub_lead_lep_p"] = (ev.Positron.Vector.P() > ev.Electron.Vector.P()) ? ev.Electron.Vector.P() : ev.Positron.Vector.P();
 				outVars["lead_lep_theta"] = (ev.Positron.Vector.P() > ev.Electron.Vector.P()) ? ev.Positron.Vector.Theta() : ev.Electron.Vector.Theta();
 				outVars["sub_lead_lep_theta"] = (ev.Positron.Vector.P() > ev.Electron.Vector.P()) ? ev.Electron.Vector.Theta() : ev.Positron.Vector.Theta();
+				outVars["status_elec"] = ev.Electron.status;
+				outVars["status_posi"] = ev.Positron.status;
+				outVars["status_prot"] = ev.Proton.status;
 				outVars["vx_elec"] = ev.Electron.vertex.x;
 				outVars["vy_elec"] = ev.Electron.vertex.y;
 				outVars["vz_elec"] = ev.Electron.vertex.z;
