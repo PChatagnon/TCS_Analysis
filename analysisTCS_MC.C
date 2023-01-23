@@ -520,7 +520,10 @@ int analysisTCS_MC()
 				if(ev.recep==1 && ev.recp==1)Plots.Fill_1D("efficiency", 1, 1);
 				if(ev.recem==1 && ev.recep==1)Plots.Fill_1D("efficiency", 2, 1);
 				if(ev.recem==1 && ev.recp==1 && ev.Proton.status>2000 && ev.Proton.status<4000)Plots.Fill_1D("efficiency", 3, 1);
-				if(ev.recep==1 && ev.recp==1 && ev.Proton.status>4000)Plots.Fill_1D("efficiency", 4, 1);
+				if(ev.recem==1 && ev.recp==1 && ev.Proton.status>4000)Plots.Fill_1D("efficiency", 4, 1);
+				if(ev.recep==1 && ev.recp==1 && ev.Proton.status>2000 && ev.Proton.status<4000)Plots.Fill_1D("efficiency", 5, 1);
+				if(ev.recep==1 && ev.recp==1 && ev.Proton.status>4000)Plots.Fill_1D("efficiency", 6, 1);
+
 
 				if (!ev.pass_topology_cut())
 				{
