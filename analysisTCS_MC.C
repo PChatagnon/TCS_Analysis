@@ -82,7 +82,7 @@ int analysisTCS_MC()
 	inbending = !input.cmdOptionExists("-outbending");
 
 	if(input.cmdOptionExists("-usage")){
-		cout<<"Use as : clas12root -l analysisTCS_MC.C -a NewacceptanceTCS_newSimuLargeStats.root -o ouputname -f files -ef -inbending\n"
+		cout<<"Use as : clas12root -l analysisTCS_MC.C -a NewacceptanceTCS_newSimuLargeStats.root -o ouputname -f files -ef -inbending\n";
 	}
 	
 	cout << "////////////////////////////////////////////"<< "\n";
@@ -519,8 +519,8 @@ int analysisTCS_MC()
 				if(ev.recem==1 && ev.recp==1)Plots.Fill_1D("efficiency", 0, 1);
 				if(ev.recep==1 && ev.recp==1)Plots.Fill_1D("efficiency", 1, 1);
 				if(ev.recem==1 && ev.recep==1)Plots.Fill_1D("efficiency", 2, 1);
-				if(ev.recem==1 && ev.recp==1 && ev.Proton.status%1000==2)Plots.Fill_1D("efficiency", 3, 1);
-				if(ev.recep==1 && ev.recp==1 && ev.Proton.status%1000==4)Plots.Fill_1D("efficiency", 4, 1);
+				if(ev.recem==1 && ev.recp==1 && ev.Proton.status>2000 && ev.Proton.status<4000)Plots.Fill_1D("efficiency", 3, 1);
+				if(ev.recep==1 && ev.recp==1 && ev.Proton.status>4000)Plots.Fill_1D("efficiency", 4, 1);
 
 				if (!ev.pass_topology_cut())
 				{
@@ -533,6 +533,9 @@ int analysisTCS_MC()
 
 				// Number of events after topology cuts
 				Plots.Fill_1D("evt_count", 1, 1);
+
+				if(ev.Proton.status>2000 && ev.Proton.status<4000)Plots.Fill_1D("evt_count", 2, 1);
+				if(ev.Proton.status>4000)Plots.Fill_1D("evt_count", 3, 1);
 
 				///////////////////////////////////////////
 				// Associate detector responses and do EC cuts
@@ -558,7 +561,7 @@ int analysisTCS_MC()
 				///////////////////////////////////////////
 
 				// Number of events after positron cuts
-				Plots.Fill_1D("evt_count", 2, 1);
+				Plots.Fill_1D("evt_count", 4, 1);
 
 				///////////////////////////////////////////
 				// Radiative correction
@@ -723,7 +726,7 @@ int analysisTCS_MC()
 				{
 					outVars["analysis_stage"] = 1.0;
 					// Number of events after exclusivity cuts
-					Plots.Fill_1D("evt_count", 3, 1);
+					Plots.Fill_1D("evt_count", 5, 1);
 
 					Plots.Fill_1D("EM1", ev.M, w);
 
