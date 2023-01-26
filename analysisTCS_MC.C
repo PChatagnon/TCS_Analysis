@@ -215,6 +215,11 @@ int analysisTCS_MC()
 			ADDVAR(&(outVars_Gen[fvars_Gen[i]]), fvars_Gen[i], "/F", outT_Gen);
 		}
 	}
+
+	TLorentzVector gen_Electron, gen_Positron, gen_Proton;
+	outT_Gen->Branch("gen_Electron", "TLorentzVector", &gen_Electron);
+	outT_Gen->Branch("gen_Positron", "TLorentzVector", &gen_Positron);
+	outT_Gen->Branch("gen_Proton", "TLorentzVector", &gen_Proton);
 	///////////////////////////////////////////
 
 	int nbtc = 0;
@@ -498,6 +503,10 @@ int analysisTCS_MC()
 					outVars_Gen["vz_elec_Gen"] = MC_ev.vz_elec_Gen;
 					outVars_Gen["vz_posi_Gen"] = MC_ev.vz_posi_Gen;
 					outVars_Gen["vz_prot_Gen"] = MC_ev.vz_prot_Gen;
+
+					gen_Electron = MC_ev.Electron_2;
+					gen_Positron = MC_ev.Positron;
+					gen_Proton = MC_ev.Proton;
 					
 
 					outT_Gen->Fill();
