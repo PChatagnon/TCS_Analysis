@@ -188,6 +188,7 @@ int analysisTCS_MC()
 		"vx_elec","vy_elec","vz_elec",
 		"vx_posi","vy_posi","vz_posi",
 		"vx_prot","vy_prot","vz_prot",
+		"chi2_proton",
 		"PCAL_x_elec","PCAL_y_elec",
 		"PCAL_x_posi","PCAL_y_posi",
 		"lead_lep_p","sub_lead_lep_p","lead_lep_theta","sub_lead_lep_theta"
@@ -216,10 +217,10 @@ int analysisTCS_MC()
 		}
 	}
 
-	TLorentzVector gen_Electron, gen_Positron, gen_Proton;
+	/*TLorentzVector gen_Electron, gen_Positron, gen_Proton;
 	outT_Gen->Branch("gen_Electron", "TLorentzVector", &gen_Electron);
 	outT_Gen->Branch("gen_Positron", "TLorentzVector", &gen_Positron);
-	outT_Gen->Branch("gen_Proton", "TLorentzVector", &gen_Proton);
+	outT_Gen->Branch("gen_Proton", "TLorentzVector", &gen_Proton);*/
 	///////////////////////////////////////////
 
 	int nbtc = 0;
@@ -504,9 +505,9 @@ int analysisTCS_MC()
 					outVars_Gen["vz_posi_Gen"] = MC_ev.vz_posi_Gen;
 					outVars_Gen["vz_prot_Gen"] = MC_ev.vz_prot_Gen;
 
-					gen_Electron = MC_ev.Electron_2;
+					/*gen_Electron = MC_ev.Electron_2;
 					gen_Positron = MC_ev.Positron;
-					gen_Proton = MC_ev.Proton;
+					gen_Proton = MC_ev.Proton;*/
 					
 
 					outT_Gen->Fill();
@@ -713,6 +714,7 @@ int analysisTCS_MC()
 				outVars["PCAL_y_elec"] = ev.Electron.Y_CALO(PCAL);
 				outVars["PCAL_x_posi"] = ev.Positron.X_CALO(PCAL);
 				outVars["PCAL_y_posi"] = ev.Positron.Y_CALO(PCAL);
+				outVars["chi2_proton"] = ev.Proton.chi2;
 
 				tree_Electron = ev.Electron.Vector;
 				tree_Positron = ev.Positron.Vector;
