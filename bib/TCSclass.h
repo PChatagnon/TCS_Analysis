@@ -198,6 +198,55 @@ public:
                 return Y;
         }
 
+        float U_CALO(int layer)
+        {
+                float Y = 0;
+                for (int i = 0; i < Calorimeter.size(); i++)
+                {
+                        if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
+                                Y = Calorimeter[i].u;
+                                break;
+                }
+                return Y;
+        }
+
+        float V_CALO(int layer)
+        {
+                float Y = 0;
+                for (int i = 0; i < Calorimeter.size(); i++)
+                {
+                        if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
+                                Y = Calorimeter[i].v;
+                                break;
+                }
+                return Y;
+        }
+
+        float W_CALO(int layer)
+        {
+                float Y = 0;
+                for (int i = 0; i < Calorimeter.size(); i++)
+                {
+                        if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
+                                Y = Calorimeter[i].w;
+                                break;
+                }
+                return Y;
+        }
+
+        float SECTOR_CALO(int layer)
+        {
+                float Y = 0;
+                for (int i = 0; i < Calorimeter.size(); i++)
+                {
+                        if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
+                                Y = Calorimeter[i].sector;
+                                break;
+                }
+                return Y;
+        }
+
+
         float Energy(int det, int layer)
         {
                 float en = 0.;

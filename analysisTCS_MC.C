@@ -193,7 +193,7 @@ int analysisTCS_MC()
 		"vx_prot","vy_prot","vz_prot",
 		"chi2_proton",
 		"PCAL_x_elec","PCAL_y_elec",
-		"PCAL_U_elec","PCAL_V_elec","PCAL_W_elec",
+		"PCAL_sector_elec", "PCAL_U_elec","PCAL_V_elec","PCAL_W_elec",
 		"PCAL_x_posi","PCAL_y_posi",
 		"lead_lep_p","sub_lead_lep_p","lead_lep_theta","sub_lead_lep_theta"
 		};
@@ -724,6 +724,7 @@ int analysisTCS_MC()
 				outVars["PCAL_U_elec"] = ev.Electron.U_CALO(PCAL);
 				outVars["PCAL_V_elec"] = ev.Electron.V_CALO(PCAL);
 				outVars["PCAL_W_elec"] = ev.Electron.W_CALO(PCAL);
+				outVars["PCAL_sector_elec"] = ev.Electron.SECTOR_CALO(PCAL);
 				}
 
 				tree_Electron = ev.Electron.Vector;
