@@ -81,6 +81,9 @@ int analysisTCS_MC()
 	bool inbending = true;
 	inbending = !input.cmdOptionExists("-outbending");
 
+	bool PCAL_study = false;
+	PCAL_study = input.cmdOptionExists("-PCAL");
+
 	if(input.cmdOptionExists("-usage")){
 		cout<<"Use as : clas12root -l analysisTCS_MC.C -a NewacceptanceTCS_newSimuLargeStats.root -o ouputname -f files -ef -inbending\n";
 	}
@@ -190,6 +193,7 @@ int analysisTCS_MC()
 		"vx_prot","vy_prot","vz_prot",
 		"chi2_proton",
 		"PCAL_x_elec","PCAL_y_elec",
+		"PCAL_U_elec","PCAL_V_elec","PCAL_W_elec",
 		"PCAL_x_posi","PCAL_y_posi",
 		"lead_lep_p","sub_lead_lep_p","lead_lep_theta","sub_lead_lep_theta"
 		};
@@ -715,6 +719,12 @@ int analysisTCS_MC()
 				outVars["PCAL_x_posi"] = ev.Positron.X_CALO(PCAL);
 				outVars["PCAL_y_posi"] = ev.Positron.Y_CALO(PCAL);
 				outVars["chi2_proton"] = ev.Proton.chi2;
+
+				if(PCAL_study){
+				outVars["PCAL_U_elec"] = ev.Electron.U_CALO(PCAL);
+				outVars["PCAL_V_elec"] = ev.Electron.V_CALO(PCAL);
+				outVars["PCAL_W_elec"] = ev.Electron.W_CALO(PCAL);
+				}
 
 				tree_Electron = ev.Electron.Vector;
 				tree_Positron = ev.Positron.Vector;
