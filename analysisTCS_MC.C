@@ -28,7 +28,6 @@
 #include "bib/TCSRunSelector.h"
 #include "bib/InputParser.h"
 
-
 #include "reader.h"
 
 #include <ctime> // time_t
@@ -84,21 +83,29 @@ int analysisTCS_MC()
 	bool PCAL_study = false;
 	PCAL_study = input.cmdOptionExists("-PCAL");
 
-	if(input.cmdOptionExists("-usage")){
-		cout<<"Use as : clas12root -l analysisTCS_MC.C -a NewacceptanceTCS_newSimuLargeStats.root -o ouputname -f files -ef -inbending\n";
+	if (input.cmdOptionExists("-energy"))
+	{
+		ebeam = std::stof(input.getCmdOption("-energy"));
 	}
-	
-	cout << "////////////////////////////////////////////"<< "\n";
-	cout<<"Run with the following options : "<<"\n";
-	cout<<"Inbending : "<<inbending<<"\n";
-	cout<<"RGA_Fall2018 : "<<RGA_Fall2018<<"\n";
-	cout<<"IsTCSGen : "<<IsTCSGen<<"\n";
-	cout<<"IsGrape : "<<IsGrape<<"\n";
-	cout<<"IsJPsi : "<<IsJPsi<<"\n";
-	cout<<"IsEE_BG : "<<IsEE_BG<<"\n";
-	cout << "////////////////////////////////////////////"<< "\n";
+	cout<<"Run with energy "<<ebeam<<" GeV\n";
 
+	if (input.cmdOptionExists("-usage"))
+	{
+		cout << "Use as : clas12root -l analysisTCS_MC.C -a NewacceptanceTCS_newSimuLargeStats.root -o ouputname -f files -ef -inbending\n";
+	}
 
+	cout << "////////////////////////////////////////////"
+		 << "\n";
+	cout << "Run with the following options : "
+		 << "\n";
+	cout << "Inbending : " << inbending << "\n";
+	cout << "RGA_Fall2018 : " << RGA_Fall2018 << "\n";
+	cout << "IsTCSGen : " << IsTCSGen << "\n";
+	cout << "IsGrape : " << IsGrape << "\n";
+	cout << "IsJPsi : " << IsJPsi << "\n";
+	cout << "IsEE_BG : " << IsEE_BG << "\n";
+	cout << "////////////////////////////////////////////"
+		 << "\n";
 
 	double nbrecEvent = 0;
 	int nbf = 0;
@@ -120,7 +127,7 @@ int analysisTCS_MC()
 	// Acceptance setup
 	//////////////////////////////////////////////
 
-	//Acceptance Acc_TCS(TString(argv[3]), 4, 3, 3, 36, 13);
+	// Acceptance Acc_TCS(TString(argv[3]), 4, 3, 3, 36, 13);
 	Acceptance Acc_TCS(TString(input.getCmdOption("-a")), 4, 3, 3, 36, 13);
 
 	Acc_TCS.Draw_Acc();
@@ -168,7 +175,7 @@ int analysisTCS_MC()
 
 	///////////////////////////////////////////
 	// Setup the TTree output
-	TString output_file = (TString)(input.getCmdOption("-o"));//argv[4]);
+	TString output_file = (TString)(input.getCmdOption("-o")); // argv[4]);
 	TFile *outFile = new TFile(Form("outputTCS_%s.root", output_file.Data()), "recreate");
 	// TFile *outFile = new TFile("outputTCS_"+output_file+".root", "recreate");
 	TTree *outT = new TTree("tree", "tree");
@@ -187,16 +194,15 @@ int analysisTCS_MC()
 		"evt_num", "t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
 		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology",
 		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
-		"status_elec","status_posi","status_prot",
-		"vx_elec","vy_elec","vz_elec",
-		"vx_posi","vy_posi","vz_posi",
-		"vx_prot","vy_prot","vz_prot",
+		"status_elec", "status_posi", "status_prot",
+		"vx_elec", "vy_elec", "vz_elec",
+		"vx_posi", "vy_posi", "vz_posi",
+		"vx_prot", "vy_prot", "vz_prot",
 		"chi2_proton",
-		"PCAL_x_elec","PCAL_y_elec",
-		"PCAL_sector_elec", "PCAL_U_elec","PCAL_V_elec","PCAL_W_elec",
-		"PCAL_x_posi","PCAL_y_posi",
-		"lead_lep_p","sub_lead_lep_p","lead_lep_theta","sub_lead_lep_theta"
-		};
+		"PCAL_x_elec", "PCAL_y_elec",
+		"PCAL_sector_elec", "PCAL_U_elec", "PCAL_V_elec", "PCAL_W_elec",
+		"PCAL_x_posi", "PCAL_y_posi",
+		"lead_lep_p", "sub_lead_lep_p", "lead_lep_theta", "sub_lead_lep_theta"};
 
 	std::map<TString, Float_t> outVars;
 	for (size_t i = 0; i < sizeof(fvars) / sizeof(TString); i++)
@@ -206,8 +212,8 @@ int analysisTCS_MC()
 	}
 
 	TString fvars_Gen[] = {
-		"weight", "evt_num", "t_Gen", "t_min_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen", 
-		"vz_elec_Gen","vz_posi_Gen","vz_prot_Gen",
+		"weight", "evt_num", "t_Gen", "t_min_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen",
+		"vz_elec_Gen", "vz_posi_Gen", "vz_prot_Gen",
 		"theta_Gen", "phi_Gen", "real_flux_Gen", "virtual_flux_Gen"};
 
 	std::map<TString, Float_t> outVars_Gen;
@@ -233,43 +239,45 @@ int analysisTCS_MC()
 	///////////////////////////////////////////
 	// TMVA PID for Positron
 	///////////////////////////////////////////
-	//PositronIdentification PositronPID("MLP method", "TMVAClassification_MLP6D.weights.xml", InputParameters.MLPscoreCut, InputParameters.MLPMomCut);
-	//PositronPID.InitializePositronIdentification();
+	// PositronIdentification PositronPID("MLP method", "TMVAClassification_MLP6D.weights.xml", InputParameters.MLPscoreCut, InputParameters.MLPMomCut);
+	// PositronPID.InitializePositronIdentification();
 
 	TString positron_bdt_weights;
 	TString electron_bdt_weights;
 
-	if(inbending)
+	if (inbending)
 	{
 
-		if(IsEE_BG){
-		positron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_inbending.weights.xml";
-        electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_inbending.weights.xml";
+		if (IsEE_BG)
+		{
+			positron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_inbending.weights.xml";
+			electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_inbending.weights.xml";
 		}
-		else {
-		positron_bdt_weights = "ML_weights/TMVAClassification_BDT_posi_inbending.weights.xml";
-		electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_inbending.weights.xml";
+		else
+		{
+			positron_bdt_weights = "ML_weights/TMVAClassification_BDT_posi_inbending.weights.xml";
+			electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_inbending.weights.xml";
 		}
 	}
 	else
 	{
-		if(IsEE_BG){
-		positron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_outbending.weights.xml";
-        electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_outbending.weights.xml";
-        }
-		else {
-		positron_bdt_weights = "ML_weights/TMVAClassification_BDT_posi_outbending.weights.xml";
-		electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_outbending.weights.xml";
+		if (IsEE_BG)
+		{
+			positron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_outbending.weights.xml";
+			electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_outbending.weights.xml";
+		}
+		else
+		{
+			positron_bdt_weights = "ML_weights/TMVAClassification_BDT_posi_outbending.weights.xml";
+			electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_outbending.weights.xml";
 		}
 	}
 
-	PositronIdentification PositronPID("BDT", positron_bdt_weights, 0.0 , 4.0);
+	PositronIdentification PositronPID("BDT", positron_bdt_weights, 0.0, 4.0);
 	PositronPID.InitializeBDT_new_PositronIdentification();
 
-	PositronIdentification ElectronPID("BDT", electron_bdt_weights, 0.0 , 4.0);
+	PositronIdentification ElectronPID("BDT", electron_bdt_weights, 0.0, 4.0);
 	ElectronPID.InitializeBDT_new_PositronIdentification();
-
-	
 
 	///////////////////////////////////////////
 	// Plots
@@ -295,10 +303,10 @@ int analysisTCS_MC()
 	////////////////////////////////////////////
 	// Get file name
 	////////////////////////////////////////////
-	//for (Int_t i = 6; i < (argc); i++)
-//cout<<input.getCmdIndex("-f")<<"\n";
-		//cout<<input.getCmdIndex("-ef")<<"\n";
-	for(Int_t i = input.getCmdIndex("-f")+2; i < input.getCmdIndex("-ef")+1; i++)
+	// for (Int_t i = 6; i < (argc); i++)
+	// cout<<input.getCmdIndex("-f")<<"\n";
+	// cout<<input.getCmdIndex("-ef")<<"\n";
+	for (Int_t i = input.getCmdIndex("-f") + 2; i < input.getCmdIndex("-ef") + 1; i++)
 	{
 		if (TString(argv[i]).Contains("MC") || IsGrape || IsTCSGen || IsJPsi)
 		{
@@ -337,17 +345,20 @@ int analysisTCS_MC()
 		else if (IsJPsi)
 			cout << "Running on JPsi Simulation"
 				 << "\n";
-		cout<<TString(argv[i])<<"\n";
+		cout << TString(argv[i]) << "\n";
 		cout << "Is hipo ? " << IsHipo << "\n";
-		cout << "////////////////////////////////////////////"<< "\n";
-		cout<<"Run with the following options : "<<"\n";
-		cout<<"Inbending : "<<inbending<<"\n";
-		cout<<"RGA_Fall2018 : "<<RGA_Fall2018<<"\n";
-		cout<<"IsTCSGen : "<<IsTCSGen<<"\n";
-		cout<<"IsGrape : "<<IsGrape<<"\n";
-		cout<<"IsJPsi : "<<IsJPsi<<"\n";
-		cout<<"IsEE_BG : "<<IsEE_BG<<"\n";
-		cout << "////////////////////////////////////////////"<< "\n";
+		cout << "////////////////////////////////////////////"
+			 << "\n";
+		cout << "Run with the following options : "
+			 << "\n";
+		cout << "Inbending : " << inbending << "\n";
+		cout << "RGA_Fall2018 : " << RGA_Fall2018 << "\n";
+		cout << "IsTCSGen : " << IsTCSGen << "\n";
+		cout << "IsGrape : " << IsGrape << "\n";
+		cout << "IsJPsi : " << IsJPsi << "\n";
+		cout << "IsEE_BG : " << IsEE_BG << "\n";
+		cout << "////////////////////////////////////////////"
+			 << "\n";
 		////////////////////////////////////////////
 
 		////////////////////////////////////////////
@@ -488,7 +499,6 @@ int analysisTCS_MC()
 					}
 
 					ev.Set_Weight(w);
-					
 
 					outVars_Gen["t_Gen"] = MC_ev.t_Gen;
 					outVars_Gen["t_min_Gen"] = MC_ev.t_min_Gen;
@@ -512,12 +522,9 @@ int analysisTCS_MC()
 					/*gen_Electron = MC_ev.Electron_2;
 					gen_Positron = MC_ev.Positron;
 					gen_Proton = MC_ev.Proton;*/
-					
 
 					outT_Gen->Fill();
 				}
-
-				
 
 				///////////////////////////////////////////
 				// Filter good runs for data only
@@ -530,14 +537,20 @@ int analysisTCS_MC()
 				///////////////////////////////////////////
 				ev.Set_Particles(PART, IsEE_BG);
 
-				if(ev.recem==1 && ev.recp==1 && abs(ev.Proton.chi2)<5.)Plots.Fill_1D("efficiency", 0, 1);
-				if(ev.recep==1 && ev.recp==1 && abs(ev.Proton.chi2)<5.)Plots.Fill_1D("efficiency", 1, 1);
-				if(ev.recem==1 && ev.recep==1)Plots.Fill_1D("efficiency", 2, 1);
-				if(ev.recem==1 && ev.recp==1 && ev.Proton.status>2000 && ev.Proton.status<4000 && abs(ev.Proton.chi2)<5.)Plots.Fill_1D("efficiency", 3, 1);
-				if(ev.recem==1 && ev.recp==1 && ev.Proton.status>4000 && abs(ev.Proton.chi2)<5.)Plots.Fill_1D("efficiency", 4, 1);
-				if(ev.recep==1 && ev.recp==1 && ev.Proton.status>2000 && ev.Proton.status<4000 && abs(ev.Proton.chi2)<5.)Plots.Fill_1D("efficiency", 5, 1);
-				if(ev.recep==1 && ev.recp==1 && ev.Proton.status>4000 && abs(ev.Proton.chi2)<5.)Plots.Fill_1D("efficiency", 6, 1);
-
+				if (ev.recem == 1 && ev.recp == 1 && abs(ev.Proton.chi2) < 5.)
+					Plots.Fill_1D("efficiency", 0, 1);
+				if (ev.recep == 1 && ev.recp == 1 && abs(ev.Proton.chi2) < 5.)
+					Plots.Fill_1D("efficiency", 1, 1);
+				if (ev.recem == 1 && ev.recep == 1)
+					Plots.Fill_1D("efficiency", 2, 1);
+				if (ev.recem == 1 && ev.recp == 1 && ev.Proton.status > 2000 && ev.Proton.status < 4000 && abs(ev.Proton.chi2) < 5.)
+					Plots.Fill_1D("efficiency", 3, 1);
+				if (ev.recem == 1 && ev.recp == 1 && ev.Proton.status > 4000 && abs(ev.Proton.chi2) < 5.)
+					Plots.Fill_1D("efficiency", 4, 1);
+				if (ev.recep == 1 && ev.recp == 1 && ev.Proton.status > 2000 && ev.Proton.status < 4000 && abs(ev.Proton.chi2) < 5.)
+					Plots.Fill_1D("efficiency", 5, 1);
+				if (ev.recep == 1 && ev.recp == 1 && ev.Proton.status > 4000 && abs(ev.Proton.chi2) < 5.)
+					Plots.Fill_1D("efficiency", 6, 1);
 
 				if (!ev.pass_topology_cut())
 				{
@@ -551,8 +564,10 @@ int analysisTCS_MC()
 				// Number of events after topology cuts
 				Plots.Fill_1D("evt_count", 1, 1);
 
-				if(ev.Proton.status>2000 && ev.Proton.status<4000 && abs(ev.Proton.chi2)<5.)Plots.Fill_1D("evt_count", 2, 1);
-				if(ev.Proton.status>4000 && abs(ev.Proton.chi2)<5.)Plots.Fill_1D("evt_count", 3, 1);
+				if (ev.Proton.status > 2000 && ev.Proton.status < 4000 && abs(ev.Proton.chi2) < 5.)
+					Plots.Fill_1D("evt_count", 2, 1);
+				if (ev.Proton.status > 4000 && abs(ev.Proton.chi2) < 5.)
+					Plots.Fill_1D("evt_count", 3, 1);
 
 				///////////////////////////////////////////
 				// Associate detector responses and do EC cuts
@@ -565,8 +580,8 @@ int analysisTCS_MC()
 				///////////////////////////////////////////
 				// TMVA
 				///////////////////////////////////////////
-				//PositronPID.Evaluate(ev.Positron);
-				//ev.Set_Posi_score(PositronPID.score);
+				// PositronPID.Evaluate(ev.Positron);
+				// ev.Set_Posi_score(PositronPID.score);
 				PositronPID.Evaluate_BDT_new(ev.Positron);
 				ev.Set_Posi_score(PositronPID.score);
 
@@ -720,11 +735,12 @@ int analysisTCS_MC()
 				outVars["PCAL_y_posi"] = ev.Positron.Y_CALO(PCAL);
 				outVars["chi2_proton"] = ev.Proton.chi2;
 
-				if(PCAL_study){
-				outVars["PCAL_U_elec"] = ev.Electron.U_CALO(PCAL);
-				outVars["PCAL_V_elec"] = ev.Electron.V_CALO(PCAL);
-				outVars["PCAL_W_elec"] = ev.Electron.W_CALO(PCAL);
-				outVars["PCAL_sector_elec"] = ev.Electron.SECTOR_CALO(PCAL);
+				if (PCAL_study)
+				{
+					outVars["PCAL_U_elec"] = ev.Electron.U_CALO(PCAL);
+					outVars["PCAL_V_elec"] = ev.Electron.V_CALO(PCAL);
+					outVars["PCAL_W_elec"] = ev.Electron.W_CALO(PCAL);
+					outVars["PCAL_sector_elec"] = ev.Electron.SECTOR_CALO(PCAL);
 				}
 
 				tree_Electron = ev.Electron.Vector;
@@ -757,7 +773,7 @@ int analysisTCS_MC()
 
 					if (
 
-						ev.Epho < 10.6
+						ev.Epho < ebeam
 
 						&& ev.Epho > 4.
 
