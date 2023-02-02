@@ -202,7 +202,9 @@ int analysisTCS_MC()
 		"PCAL_x_elec", "PCAL_y_elec",
 		"PCAL_sector_elec", "PCAL_U_elec", "PCAL_V_elec", "PCAL_W_elec",
 		"PCAL_x_posi", "PCAL_y_posi",
-		"lead_lep_p", "sub_lead_lep_p", "lead_lep_theta", "sub_lead_lep_theta"};
+		"lead_lep_p", "sub_lead_lep_p", "lead_lep_theta", "sub_lead_lep_theta",
+		"Triangular_Cut_elec", "Triangular_Cut_elec"
+		};
 
 	std::map<TString, Float_t> outVars;
 	for (size_t i = 0; i < sizeof(fvars) / sizeof(TString); i++)
@@ -605,7 +607,7 @@ int analysisTCS_MC()
 				///////////////////////////////////////////
 				// Momentum MC correction
 				///////////////////////////////////////////
-				ev.Apply_MC_Correction(MomCorr);
+				//ev.Apply_MC_Correction(MomCorr);
 				///////////////////////////////////////////
 			}
 
@@ -734,6 +736,8 @@ int analysisTCS_MC()
 				outVars["PCAL_x_posi"] = ev.Positron.X_CALO(PCAL);
 				outVars["PCAL_y_posi"] = ev.Positron.Y_CALO(PCAL);
 				outVars["chi2_proton"] = ev.Proton.chi2;
+				outVars["Triangular_Cut_elec"] = ((ev.Electron.Energy(ECAL, PCAL)/Electron.P()) + (ev.Electron.Energy(ECAL, ECIN)/Electron.P()));
+				outVars["Triangular_Cut_posi"] = ((ev.Positron.Energy(ECAL, PCAL)/Positron.P()) + (ev.Positron.Energy(ECAL, ECIN)/Positron.P()));
 
 				if (PCAL_study)
 				{
