@@ -192,7 +192,7 @@ int analysisTCS_MC()
 
 	TString fvars[] = {
 		"evt_num", "t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
-		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "run", "analysis_stage", "topology",
+		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "virtual_flux_Frixione", "run", "analysis_stage", "topology",
 		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
 		"status_elec", "status_posi", "status_prot",
 		"vx_elec", "vy_elec", "vz_elec",
@@ -203,7 +203,7 @@ int analysisTCS_MC()
 		"PCAL_sector_elec", "PCAL_U_elec", "PCAL_V_elec", "PCAL_W_elec",
 		"PCAL_x_posi", "PCAL_y_posi",
 		"lead_lep_p", "sub_lead_lep_p", "lead_lep_theta", "sub_lead_lep_theta",
-		"Triangular_Cut_elec", "Triangular_Cut_elec"
+		"Triangular_Cut_elec", "Triangular_Cut_posi"
 		};
 
 	std::map<TString, Float_t> outVars;
@@ -216,7 +216,7 @@ int analysisTCS_MC()
 	TString fvars_Gen[] = {
 		"weight", "evt_num", "t_Gen", "t_min_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen",
 		"vz_elec_Gen", "vz_posi_Gen", "vz_prot_Gen",
-		"theta_Gen", "phi_Gen", "real_flux_Gen", "virtual_flux_Gen"};
+		"theta_Gen", "phi_Gen", "real_flux_Gen", "virtual_flux_Gen", "virtual_flux_Frixione_Gen"};
 
 	std::map<TString, Float_t> outVars_Gen;
 	if (IsGrape || IsTCSGen || IsJPsi)
@@ -515,6 +515,7 @@ int analysisTCS_MC()
 					outVars_Gen["phi_Gen"] = MC_ev.phi_Gen;
 					outVars_Gen["real_flux_Gen"] = MC_ev.real_flux_Gen;
 					outVars_Gen["virtual_flux_Gen"] = MC_ev.virtual_flux_Gen;
+					outVars_Gen["virtual_flux_Frixione_Gen"] = MC_ev.virtual_flux_Frixione_Gen;
 					outVars_Gen["evt_num"] = nbEvent;
 					outVars_Gen["weight"] = w;
 					outVars_Gen["vz_elec_Gen"] = MC_ev.vz_elec_Gen;
@@ -706,6 +707,7 @@ int analysisTCS_MC()
 				outVars["weight"] = ev.w;
 				outVars["real_flux"] = ev.real_flux;
 				outVars["virtual_flux"] = ev.virtual_flux;
+				outVars["virtual_flux_Frixione"] = ev.virtual_flux_Frixione;
 				outVars["run"] = ev.run;
 				outVars["analysis_stage"] = 0.0;
 				outVars["topology"] = (float)ev.topology();
@@ -736,8 +738,8 @@ int analysisTCS_MC()
 				outVars["PCAL_x_posi"] = ev.Positron.X_CALO(PCAL);
 				outVars["PCAL_y_posi"] = ev.Positron.Y_CALO(PCAL);
 				outVars["chi2_proton"] = ev.Proton.chi2;
-				outVars["Triangular_Cut_elec"] = ((ev.Electron.Energy(ECAL, PCAL)/Electron.P()) + (ev.Electron.Energy(ECAL, ECIN)/Electron.P()));
-				outVars["Triangular_Cut_posi"] = ((ev.Positron.Energy(ECAL, PCAL)/Positron.P()) + (ev.Positron.Energy(ECAL, ECIN)/Positron.P()));
+				outVars["Triangular_Cut_elec"] = ((ev.Electron.Energy(ECAL, PCAL)/ev.Electron.Vector.P()) + (ev.Electron.Energy(ECAL, ECIN)/ev.Electron.Vector.P()));
+				outVars["Triangular_Cut_posi"] = ((ev.Positron.Energy(ECAL, PCAL)/ev.Positron.Vector.P()) + (ev.Positron.Energy(ECAL, ECIN)/ev.Positron.Vector.P()));
 
 				if (PCAL_study)
 				{

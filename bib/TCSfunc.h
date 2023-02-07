@@ -458,15 +458,44 @@ double n_virtual(double Eb, double Eg, double Q2_max)
 	return (1 / Eb) * alpha / (PI * x) * ((1 - x + x * x / 2) * log(Q2_max / Q2_min) - (1 - x));
 }
 
-double Lambda( double x, double y, double z )
+double Lambda(double x, double y, double z)
 {
-  return (x - y - z)*(x - y - z) - 4*y*z;
+	return (x - y - z) * (x - y - z) - 4 * y * z;
 }
 
-//From Byukling Kayanti Formula (5.14) Page 86
-double T_min( double ma_2, double mb_2, double m1_2, double m2_2, double s) // arguments are squares of masses of particles in the reaction a+b->1+2, and s is the square of the total c.m. energy i.e. (a+b)^2
+// From Byukling Kayanti Formula (5.14) Page 86
+double T_min(double ma_2, double mb_2, double m1_2, double m2_2, double s) // arguments are squares of masses of particles in the reaction a+b->1+2, and s is the square of the total c.m. energy i.e. (a+b)^2
 {
-  return ma_2 + m1_2 - (1/(2*s))*( (s + ma_2 - mb_2)*(s + m1_2 - m2_2) - sqrt( Lambda(s, ma_2, mb_2)*Lambda(s, m1_2, m2_2) ) );
+	return ma_2 + m1_2 - (1 / (2 * s)) * ((s + ma_2 - mb_2) * (s + m1_2 - m2_2) - sqrt(Lambda(s, ma_2, mb_2) * Lambda(s, m1_2, m2_2)));
 }
+
+double Frixione_wThreshold(Double_t eg)
+{
+	auto Eb = ebeam;	 // electron beam energy
+	auto thr = 8.2; // production threshold (8.2 GeV for J/psi)
+	
+
+	constexpr double alpha = 1. / 137.;
+
+	double y = eg / Eb;
+	constexpr double me = 0.00051;
+	constexpr double Mp = 0.9383;
+	double q2_max = -1 * me * me * y * y / (1 - y);
+	double r = 2 * Mp * eg;
+	double Wmin2 = ((thr + Mp) * (thr + Mp) - thr * thr);
+	double q2_min = -(r + Mp * Mp - Wmin2);
+	auto flux = (1.005 / Eb) * alpha / (2 * TMath::Pi()) * (2 * me * me * y * (1 / q2_max - 1 / q2_min) + (1 + (1 - y) * (1 - y)) / y * log(q2_min / q2_max));
+
+	if (flux == TMath::Infinity())
+		return 0;
+	if (TMath::IsNaN(flux))
+		return 0;
+
+	if (flux < 0)
+		return 0;
+
+	return flux;
+}
+
 
 #endif

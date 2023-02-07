@@ -78,6 +78,7 @@ public:
         // Photon flux
         float real_flux;
         float virtual_flux;
+        float virtual_flux_Frixione;
 
         // run number and trigger bit
         float run;
@@ -440,6 +441,7 @@ public:
 
                 real_flux = n_real(ebeam, Epho);
                 virtual_flux = n_virtual(ebeam, Epho, 0.02);
+                virtual_flux_Frixione = Frixione_wThreshold(Epho);
         }
 
         void Get_Polarization_Transfer()

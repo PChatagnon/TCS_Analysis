@@ -27,6 +27,7 @@ public:
         float Q2_Gen;
         float real_flux_Gen;
         float virtual_flux_Gen;
+        float virtual_flux_Frixione_Gen;
 
         //MC vertex
         float vz_elec_Gen;
@@ -123,6 +124,7 @@ public:
 
                 real_flux_Gen = n_real(ebeam, vPhoton.E());
                 virtual_flux_Gen = n_virtual(ebeam, vPhoton.E(), 0.02);
+                virtual_flux_Frixione_Gen = Frixione_wThreshold(vPhoton.E());
         }
 };
 
