@@ -58,29 +58,25 @@ int analysisTCS_MC()
 	char **argv = gApplication->Argv();
 	Input input(argc, argv);
 
-	bool IsData = true;
-	bool IsHipo = true;
+	//bool IsData = true;
+	//bool IsHipo = true;
+	//bool IsEE_BG = false;
+	//bool IsTCSGen = false;
+	//bool IsGrape = false;
+	//bool IsJPsi = false;
+	//bool Weighted_simu = false;
+	//bool HTCCSectorCut = false;
+	//bool RGA_Fall2018 = false; // inbending or outbending in the end
+	//bool inbending = true;
+	//bool PCAL_study = false;
 
-	bool IsEE_BG = false;
+	/////////Parse command line/////////////
 	IsEE_BG = input.cmdOptionExists("-IsEE_BG");
-
-	bool IsTCSGen = false;
 	IsTCSGen = input.cmdOptionExists("-IsTCSGen");
-	bool IsGrape = false;
 	IsGrape = input.cmdOptionExists("-IsGrape");
-	bool IsJPsi = false;
 	IsJPsi = input.cmdOptionExists("-IsJPsi");
-	bool Weighted_simu = false;
-
-	bool HTCCSectorCut = false;
-
-	bool RGA_Fall2018 = false; // inbending or outbending in the end
 	RGA_Fall2018 = input.cmdOptionExists("-RGA_Fall2018");
-
-	bool inbending = true;
 	inbending = !input.cmdOptionExists("-outbending");
-
-	bool PCAL_study = false;
 	PCAL_study = input.cmdOptionExists("-PCAL");
 
 	if (input.cmdOptionExists("-energy"))
@@ -93,6 +89,7 @@ int analysisTCS_MC()
 	{
 		cout << "Use as : clas12root -l analysisTCS_MC.C -a NewacceptanceTCS_newSimuLargeStats.root -o ouputname -f files -ef -inbending\n";
 	}
+	/////////End parse command line/////////////
 
 	cout << "////////////////////////////////////////////"
 		 << "\n";

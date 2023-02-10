@@ -471,9 +471,13 @@ double T_min(double ma_2, double mb_2, double m1_2, double m2_2, double s) // ar
 
 double Frixione_wThreshold(Double_t eg)
 {
-	auto Eb = ebeam;	 // electron beam energy
-	auto thr = 8.2; // production threshold (8.2 GeV for J/psi)
-	
+	auto Eb = ebeam; // electron beam energy
+	auto thr;
+
+	if (IsJPsi)
+		thr = 8.2; // production threshold (8.2 GeV for J/psi)
+	else
+		thr = 0.0;
 
 	constexpr double alpha = 1. / 137.;
 
@@ -496,6 +500,5 @@ double Frixione_wThreshold(Double_t eg)
 
 	return flux;
 }
-
 
 #endif

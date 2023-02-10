@@ -18,6 +18,25 @@ const int PCAL = 1;
 const int ECIN = 4;
 const int ECOUT = 7;
 
+////////////////////Configuration booleans
+bool IsData = true;
+bool IsHipo = true;
+
+bool IsEE_BG = false;
+bool IsTCSGen = false;
+bool IsGrape = false;
+bool IsJPsi = false;
+bool Weighted_simu = false;
+
+bool HTCCSectorCut = false;
+bool PCAL_study = false;
+
+bool RGA_Fall2018 = false; // inbending or outbending in the end
+bool inbending = true;
+////////////////////
+
+	
+
 class Track
 {
 
