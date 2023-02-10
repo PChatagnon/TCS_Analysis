@@ -58,17 +58,17 @@ int analysisTCS_MC()
 	char **argv = gApplication->Argv();
 	Input input(argc, argv);
 
-	//bool IsData = true;
-	//bool IsHipo = true;
-	//bool IsEE_BG = false;
-	//bool IsTCSGen = false;
-	//bool IsGrape = false;
-	//bool IsJPsi = false;
-	//bool Weighted_simu = false;
-	//bool HTCCSectorCut = false;
-	//bool RGA_Fall2018 = false; // inbending or outbending in the end
-	//bool inbending = true;
-	//bool PCAL_study = false;
+	// bool IsData = true;
+	// bool IsHipo = true;
+	// bool IsEE_BG = false;
+	// bool IsTCSGen = false;
+	// bool IsGrape = false;
+	// bool IsJPsi = false;
+	// bool Weighted_simu = false;
+	// bool HTCCSectorCut = false;
+	// bool RGA_Fall2018 = false; // inbending or outbending in the end
+	// bool inbending = true;
+	// bool PCAL_study = false;
 
 	/////////Parse command line/////////////
 	IsEE_BG = input.cmdOptionExists("-IsEE_BG");
@@ -78,16 +78,29 @@ int analysisTCS_MC()
 	RGA_Fall2018 = input.cmdOptionExists("-RGA_Fall2018");
 	inbending = !input.cmdOptionExists("-outbending");
 	PCAL_study = input.cmdOptionExists("-PCAL");
+	Lepton_ID_check = input.cmdOptionExists("-Lepton_ID_check");
 
 	if (input.cmdOptionExists("-energy"))
 	{
 		ebeam = std::stof(input.getCmdOption("-energy"));
 	}
-	cout<<"Run with energy "<<ebeam<<" GeV\n";
+	cout << "Run with energy " << ebeam << " GeV\n";
 
 	if (input.cmdOptionExists("-usage"))
 	{
 		cout << "Use as : clas12root -l analysisTCS_MC.C -a NewacceptanceTCS_newSimuLargeStats.root -o ouputname -f files -ef -inbending\n";
+		cout << "Options available:\n";
+		cout << "-IsEE_BG\n";
+		cout << "-IsTCSGen\n";
+		cout << "-IsGrape\n";
+		cout << "-IsJPsi\n";
+		cout << "-RGA_Fall2018\n";
+		cout << "-outbending\n";
+		cout << "-PCAL\n";
+		cout << "-Lepton_ID_check\n";
+		cout << "-energy\n";
+
+		gApplication->Terminate();
 	}
 	/////////End parse command line/////////////
 
@@ -187,7 +200,41 @@ int analysisTCS_MC()
 	int trigger_bit;
 	outT->Branch("trigger_bit", &trigger_bit, "trigger_bit/I");
 
-	TString fvars[] = {
+	std::vector<TString> fvars = {
+		"evt_num", "t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
+		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "virtual_flux_Frixione", "run", "analysis_stage", "topology",
+		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
+		"status_elec", "status_posi", "status_prot",
+		"vx_elec", "vy_elec", "vz_elec",
+		"vx_posi", "vy_posi", "vz_posi",
+		"vx_prot", "vy_prot", "vz_prot",
+		"chi2_proton",
+		"lead_lep_p", "sub_lead_lep_p", "lead_lep_theta", "sub_lead_lep_theta",
+		"Triangular_Cut_elec", "Triangular_Cut_posi"};
+
+	if (PCAL_study)
+	{
+		fvars.insert(fvars.end(), { "PCAL_x_elec", "PCAL_y_elec",
+			"PCAL_sector_elec", "PCAL_U_elec", "PCAL_V_elec", "PCAL_W_elec",
+			"PCAL_x_posi", "PCAL_y_posi",});
+	}
+	if (Lepton_ID_check)
+	{
+
+		fvars.insert(fvars.end(), { "SFPCAL_elec", "SFECIN_elec", "SFECOUT_elec",
+			"SFPCAL_posi", "SFECIN_posi", "SFECOUT_posi",
+			"M2PCAL_elec", "M2ECIN_elec", "M2ECOUT_elec",
+			"M2PCAL_posi", "M2ECIN_posi", "M2ECOUT_posi"});
+	}
+
+	std::map<TString, Float_t> outVars;
+	for (size_t i = 0; i < fvars.size(); i++)
+	{
+		outVars[fvars[i]] = 0.;
+		ADDVAR(&(outVars[fvars[i]]), fvars[i], "/F", outT);
+	}
+
+	/*TString fvars[] = {
 		"evt_num", "t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
 		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "virtual_flux_Frixione", "run", "analysis_stage", "topology",
 		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
@@ -200,15 +247,18 @@ int analysisTCS_MC()
 		"PCAL_sector_elec", "PCAL_U_elec", "PCAL_V_elec", "PCAL_W_elec",
 		"PCAL_x_posi", "PCAL_y_posi",
 		"lead_lep_p", "sub_lead_lep_p", "lead_lep_theta", "sub_lead_lep_theta",
-		"Triangular_Cut_elec", "Triangular_Cut_posi"
-		};
+		"Triangular_Cut_elec", "Triangular_Cut_posi",
+		"SFPCAL_elec", "SFECIN_elec", "SFECOUT_elec",
+		"SFPCAL_posi", "SFECIN_posi", "SFECOUT_posi",
+		"M2PCAL_elec", "M2ECIN_elec", "M2ECOUT_elec",
+		"M2PCAL_posi", "M2ECIN_posi", "M2ECOUT_posi"};*/
 
-	std::map<TString, Float_t> outVars;
+	/*std::map<TString, Float_t> outVars;
 	for (size_t i = 0; i < sizeof(fvars) / sizeof(TString); i++)
 	{
 		outVars[fvars[i]] = 0.;
 		ADDVAR(&(outVars[fvars[i]]), fvars[i], "/F", outT);
-	}
+	}*/
 
 	TString fvars_Gen[] = {
 		"weight", "evt_num", "t_Gen", "t_min_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen",
@@ -238,8 +288,6 @@ int analysisTCS_MC()
 	///////////////////////////////////////////
 	// TMVA PID for Positron
 	///////////////////////////////////////////
-	// PositronIdentification PositronPID("MLP method", "TMVAClassification_MLP6D.weights.xml", InputParameters.MLPscoreCut, InputParameters.MLPMomCut);
-	// PositronPID.InitializePositronIdentification();
 
 	TString positron_bdt_weights;
 	TString electron_bdt_weights;
@@ -605,7 +653,7 @@ int analysisTCS_MC()
 				///////////////////////////////////////////
 				// Momentum MC correction
 				///////////////////////////////////////////
-				//ev.Apply_MC_Correction(MomCorr);
+				// ev.Apply_MC_Correction(MomCorr);
 				///////////////////////////////////////////
 			}
 
@@ -735,8 +783,8 @@ int analysisTCS_MC()
 				outVars["PCAL_x_posi"] = ev.Positron.X_CALO(PCAL);
 				outVars["PCAL_y_posi"] = ev.Positron.Y_CALO(PCAL);
 				outVars["chi2_proton"] = ev.Proton.chi2;
-				outVars["Triangular_Cut_elec"] = ((ev.Electron.Energy(ECAL, PCAL)/ev.Electron.Vector.P()) + (ev.Electron.Energy(ECAL, ECIN)/ev.Electron.Vector.P()));
-				outVars["Triangular_Cut_posi"] = ((ev.Positron.Energy(ECAL, PCAL)/ev.Positron.Vector.P()) + (ev.Positron.Energy(ECAL, ECIN)/ev.Positron.Vector.P()));
+				outVars["Triangular_Cut_elec"] = ((ev.Electron.Energy(ECAL, PCAL) / ev.Electron.Vector.P()) + (ev.Electron.Energy(ECAL, ECIN) / ev.Electron.Vector.P()));
+				outVars["Triangular_Cut_posi"] = ((ev.Positron.Energy(ECAL, PCAL) / ev.Positron.Vector.P()) + (ev.Positron.Energy(ECAL, ECIN) / ev.Positron.Vector.P()));
 
 				if (PCAL_study)
 				{
@@ -744,6 +792,25 @@ int analysisTCS_MC()
 					outVars["PCAL_V_elec"] = ev.Electron.V_CALO(PCAL);
 					outVars["PCAL_W_elec"] = ev.Electron.W_CALO(PCAL);
 					outVars["PCAL_sector_elec"] = ev.Electron.SECTOR_CALO(PCAL);
+				}
+
+				if (Lepton_ID_check)
+				{
+					outVars["SFPCAL_elec"] = (ev.Electron.Energy(ECAL, PCAL)) / ev.Electron.Vector.P();
+					outVars["SFECIN_elec"] = (ev.Electron.Energy(ECAL, ECIN)) / ev.Electron.Vector.P();
+					outVars["SFECOUT_elec"] = (ev.Electron.Energy(ECAL, ECOUT)) / ev.Electron.Vector.P();
+
+					outVars["SFPCAL_posi"] = (ev.Positron.Energy(ECAL, PCAL)) / ev.Positron.Vector.P();
+					outVars["SFECIN_posi"] = (ev.Positron.Energy(ECAL, ECIN)) / ev.Positron.Vector.P();
+					outVars["SFECOUT_posi"] = (ev.Positron.Energy(ECAL, ECOUT)) / ev.Positron.Vector.P();
+
+					outVars["M2PCAL_elec"] = ev.Electron.M2_ECAL(PCAL);
+					outVars["M2ECIN_elec"] = ev.Electron.M2_ECAL(ECIN);
+					outVars["M2ECOUT_elec"] = ev.Electron.M2_ECAL(ECOUT);
+
+					outVars["M2PCAL_posi"] = ev.Positron.M2_ECAL(PCAL);
+					outVars["M2ECIN_posi"] = ev.Positron.M2_ECAL(ECIN);
+					outVars["M2ECOUT_posi"] = ev.Positron.M2_ECAL(ECOUT);
 				}
 
 				tree_Electron = ev.Electron.Vector;

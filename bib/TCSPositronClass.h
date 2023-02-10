@@ -62,29 +62,9 @@ public:
                 SFECIN = (vLepton.Energy(ECAL, ECIN)) / vLepton.Vector.P();
                 SFECOUT = (vLepton.Energy(ECAL, ECOUT)) / vLepton.Vector.P();
 
-                double M2PCAL = -1.;
-                double M2ECIN = -1.;
-                double M2ECOUT = -1.;
-
-                for (int i = 0; i < vLepton.Calorimeter.size(); i++)
-                {
-                        if (PCAL == vLepton.Calorimeter[i].layer)
-                        {
-                                M2PCAL = (vLepton.Calorimeter[i].m2u + vLepton.Calorimeter[i].m2v + vLepton.Calorimeter[i].m2w) / 3.;
-                        }
-                        if (ECIN == vLepton.Calorimeter[i].layer)
-                        {
-                                M2ECIN = (vLepton.Calorimeter[i].m2u + vLepton.Calorimeter[i].m2v + vLepton.Calorimeter[i].m2w) / 3.;
-                        }
-                        if (ECOUT == vLepton.Calorimeter[i].layer)
-                        {
-                                M2ECOUT = (vLepton.Calorimeter[i].m2u + vLepton.Calorimeter[i].m2v + vLepton.Calorimeter[i].m2w) / 3.;
-                        }
-                }
-
-                m2PCAL = M2PCAL;
-                m2ECIN = M2ECIN;
-                m2ECOUT = M2ECOUT;
+                m2PCAL = vLepton.M2_ECAL(PCAL);
+                m2ECIN = vLepton.M2_ECAL(ECIN);
+                m2ECOUT = vLepton.M2_ECAL(ECOUT);
                 
                 score = PositronIdentificationReader->EvaluateMVA(methodName);
         }
@@ -96,29 +76,9 @@ public:
                 SFECIN = (vLepton.Energy(ECAL, ECIN)) / vLepton.Vector.P();
                 SFECOUT = (vLepton.Energy(ECAL, ECOUT)) / vLepton.Vector.P();
 
-                double M2PCAL = -1.;
-                double M2ECIN = -1.;
-                double M2ECOUT = -1.;
-
-                for (int i = 0; i < vLepton.Calorimeter.size(); i++)
-                {
-                        if (PCAL == vLepton.Calorimeter[i].layer)
-                        {
-                                M2PCAL = (vLepton.Calorimeter[i].m2u + vLepton.Calorimeter[i].m2v + vLepton.Calorimeter[i].m2w) / 3.;
-                        }
-                        if (ECIN == vLepton.Calorimeter[i].layer)
-                        {
-                                M2ECIN = (vLepton.Calorimeter[i].m2u + vLepton.Calorimeter[i].m2v + vLepton.Calorimeter[i].m2w) / 3.;
-                        }
-                        if (ECOUT == vLepton.Calorimeter[i].layer)
-                        {
-                                M2ECOUT = (vLepton.Calorimeter[i].m2u + vLepton.Calorimeter[i].m2v + vLepton.Calorimeter[i].m2w) / 3.;
-                        }
-                }
-
-                m2PCAL = M2PCAL;
-                m2ECIN = M2ECIN;
-                m2ECOUT = M2ECOUT;
+                m2PCAL = vLepton.M2_ECAL(PCAL);
+                m2ECIN = vLepton.M2_ECAL(ECIN);
+                m2ECOUT = vLepton.M2_ECAL(ECOUT);
 
                 P = vLepton.Vector.P();
                 Theta = vLepton.Vector.Theta();

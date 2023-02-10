@@ -30,6 +30,7 @@ bool Weighted_simu = false;
 
 bool HTCCSectorCut = false;
 bool PCAL_study = false;
+bool Lepton_ID_check = false;
 
 bool RGA_Fall2018 = false; // inbending or outbending in the end
 bool inbending = true;
@@ -279,6 +280,20 @@ public:
                 }
                 return en;
         }
+
+        float M2_ECAL(int layer)
+        {
+                float m2 = -1.0;
+                for (int i = 0; i < Calorimeter.size(); i++)
+                {
+                        if (layer == Calorimeter[i].layer)
+                        {
+                                m2 = (Calorimeter[i].m2u + Calorimeter[i].m2v + Calorimeter[i].m2w) / 3.;
+                        }
+                }
+                return m2;
+        }
+        
 };
 
 class ThetaPhi
