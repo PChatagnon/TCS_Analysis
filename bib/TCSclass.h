@@ -13,6 +13,7 @@ const bool SFdist = true;
 const int LTCC = 16;
 const int HTCC = 15;
 const int ECAL = 7;
+const int DC = 6;
 
 const int PCAL = 1;
 const int ECIN = 4;
@@ -31,16 +32,14 @@ bool Weighted_simu = false;
 bool HTCCSectorCut = false;
 bool PCAL_study = false;
 bool Lepton_ID_check = false;
+bool DC_Traj_check = false;
 
 bool RGA_Fall2018 = false; // inbending or outbending in the end
 bool inbending = true;
 ////////////////////
 
-	
-
 class Track
 {
-
 public:
         int detector = 0;
         int pindex = 0;
@@ -50,6 +49,18 @@ public:
         float y = 0.;
         float z = 0.;
         float chi2 = 0.0;
+};
+
+class Traj
+{
+
+public:
+        int detector = 0;
+        int pindex = 0;
+        int layer = 0;
+        float x = -10000.;
+        float y = -10000.;
+        float z = -10000.;
 };
 
 class CalorimeterResp
@@ -100,12 +111,16 @@ public:
         int status;
         float chi2;
         bool passEC = true;
+        bool passR1 = true;
+        bool passR2 = true;
+        bool passR3 = true;
         vertex vertex;
         TLorentzVector Vector;
         ScinResp Scintillator;
 
         vector<CalorimeterResp> Calorimeter;
         vector<CheResp> Cherenkov;
+        vector<Traj> Trajs;
 
         float nphe(int det)
         {
@@ -125,7 +140,6 @@ public:
                 {
                         if (det == Cherenkov[i].detector)
                                 time = Cherenkov[i].time;
-                                
                 }
                 return time;
         }
@@ -201,7 +215,7 @@ public:
                 {
                         if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
                                 X = Calorimeter[i].x;
-                                break;
+                        break;
                 }
                 return X;
         }
@@ -213,7 +227,7 @@ public:
                 {
                         if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
                                 Y = Calorimeter[i].y;
-                                break;
+                        break;
                 }
                 return Y;
         }
@@ -225,7 +239,7 @@ public:
                 {
                         if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
                                 Y = Calorimeter[i].u;
-                                break;
+                        break;
                 }
                 return Y;
         }
@@ -237,7 +251,7 @@ public:
                 {
                         if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
                                 Y = Calorimeter[i].v;
-                                break;
+                        break;
                 }
                 return Y;
         }
@@ -249,7 +263,7 @@ public:
                 {
                         if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
                                 Y = Calorimeter[i].w;
-                                break;
+                        break;
                 }
                 return Y;
         }
@@ -261,11 +275,10 @@ public:
                 {
                         if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
                                 Y = Calorimeter[i].sector;
-                                break;
+                        break;
                 }
                 return Y;
         }
-
 
         float Energy(int det, int layer)
         {
@@ -293,7 +306,32 @@ public:
                 }
                 return m2;
         }
-        
+
+        void Associate_DC_traj_to_Particle(hipo::bank TRAJ)
+        {
+                
+                for (int t = 0; t < TRAJ.getRows(); t++)
+                {
+                        Traj new_Traj;
+                        int TRAJ_detector = TRAJ.getInt("detector", t);
+                        int TRAJ_pindex = TRAJ.getInt("pindex", t);
+                        int TRAJ_layer = TRAJ.getInt("layer", t);
+                        float TRAJ_X = TRAJ.getFloat("x", t);
+                        float TRAJ_Y = TRAJ.getFloat("y", t);
+                        float TRAJ_Z = TRAJ.getFloat("z", t);
+
+                        if (TRAJ_pindex == index && TRAJ_detector == DC)
+                        { 
+                                new_Traj.detector = TRAJ_detector;
+                                new_Traj.pindex = TRAJ_pindex;
+                                new_Traj.layer = TRAJ_layer;
+                                new_Traj.x = TRAJ_X;
+                                new_Traj.y = TRAJ_Y;
+                                new_Traj.z = TRAJ_Z;  
+                                Trajs.push_back(new_Traj);
+                        }
+                }  
+        }
 };
 
 class ThetaPhi

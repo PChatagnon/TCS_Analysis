@@ -391,6 +391,13 @@ public:
                 Proton = Particles[2];
         }
 
+        void Associate_DC_traj(hipo::bank TRAJ)
+        {
+                Electron.Associate_DC_traj_to_Particle(TRAJ);
+                Positron.Associate_DC_traj_to_Particle(TRAJ);
+                Proton.Associate_DC_traj_to_Particle(TRAJ);  
+        }
+
         void Apply_Radiative_Correction(bool is_apply_corr)
         {
                 if (is_apply_corr)

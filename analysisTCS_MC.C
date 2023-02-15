@@ -58,18 +58,6 @@ int analysisTCS_MC()
 	char **argv = gApplication->Argv();
 	Input input(argc, argv);
 
-	// bool IsData = true;
-	// bool IsHipo = true;
-	// bool IsEE_BG = false;
-	// bool IsTCSGen = false;
-	// bool IsGrape = false;
-	// bool IsJPsi = false;
-	// bool Weighted_simu = false;
-	// bool HTCCSectorCut = false;
-	// bool RGA_Fall2018 = false; // inbending or outbending in the end
-	// bool inbending = true;
-	// bool PCAL_study = false;
-
 	/////////Parse command line/////////////
 	IsEE_BG = input.cmdOptionExists("-IsEE_BG");
 	IsTCSGen = input.cmdOptionExists("-IsTCSGen");
@@ -79,12 +67,13 @@ int analysisTCS_MC()
 	inbending = !input.cmdOptionExists("-outbending");
 	PCAL_study = input.cmdOptionExists("-PCAL");
 	Lepton_ID_check = input.cmdOptionExists("-Lepton_ID_check");
+	DC_Traj_check = input.cmdOptionExists("-DC_Traj_check");
+	/////////////////////////////////////////
 
 	if (input.cmdOptionExists("-energy"))
 	{
 		ebeam = std::stof(input.getCmdOption("-energy"));
 	}
-	cout << "Run with energy " << ebeam << " GeV\n";
 
 	if (input.cmdOptionExists("-usage"))
 	{
@@ -98,6 +87,7 @@ int analysisTCS_MC()
 		cout << "-outbending\n";
 		cout << "-PCAL\n";
 		cout << "-Lepton_ID_check\n";
+		cout << "-DC_Traj_check\n";
 		cout << "-energy\n";
 
 		gApplication->Terminate();
@@ -114,6 +104,9 @@ int analysisTCS_MC()
 	cout << "IsGrape : " << IsGrape << "\n";
 	cout << "IsJPsi : " << IsJPsi << "\n";
 	cout << "IsEE_BG : " << IsEE_BG << "\n";
+	cout << "Lepton ID check : " << Lepton_ID_check << "\n";
+	cout << "PCAL var. : " << PCAL_study << "\n";
+	cout << "Run with energy " << ebeam << " GeV\n";
 	cout << "////////////////////////////////////////////"
 		 << "\n";
 
@@ -214,17 +207,37 @@ int analysisTCS_MC()
 
 	if (PCAL_study)
 	{
-		fvars.insert(fvars.end(), { "PCAL_x_elec", "PCAL_y_elec",
-			"PCAL_sector_elec", "PCAL_U_elec", "PCAL_V_elec", "PCAL_W_elec",
-			"PCAL_x_posi", "PCAL_y_posi",});
+		fvars.insert(fvars.end(), {
+									  "PCAL_x_elec",
+									  "PCAL_y_elec",
+									  "PCAL_sector_elec",
+									  "PCAL_U_elec",
+									  "PCAL_V_elec",
+									  "PCAL_W_elec",
+									  "PCAL_x_posi",
+									  "PCAL_y_posi",
+								  });
 	}
 	if (Lepton_ID_check)
 	{
+		fvars.insert(fvars.end(), {"SFPCAL_elec", "SFECIN_elec", "SFECOUT_elec",
+								   "SFPCAL_posi", "SFECIN_posi", "SFECOUT_posi",
+								   "M2PCAL_elec", "M2ECIN_elec", "M2ECOUT_elec",
+								   "M2PCAL_posi", "M2ECIN_posi", "M2ECOUT_posi"});
+	}
+	if (DC_Traj_check)
+	{
+		fvars.insert(fvars.end(), {"DC_R1_elec_x", "DC_R1_elec_y", "DC_R1_elec_z",
+								   "DC_R1_posi_x", "DC_R1_posi_y", "DC_R1_posi_z",
+								   "DC_R1_prot_x", "DC_R1_prot_y", "DC_R1_prot_z",
 
-		fvars.insert(fvars.end(), { "SFPCAL_elec", "SFECIN_elec", "SFECOUT_elec",
-			"SFPCAL_posi", "SFECIN_posi", "SFECOUT_posi",
-			"M2PCAL_elec", "M2ECIN_elec", "M2ECOUT_elec",
-			"M2PCAL_posi", "M2ECIN_posi", "M2ECOUT_posi"});
+								   "DC_R2_elec_x", "DC_R2_elec_y", "DC_R2_elec_z",
+								   "DC_R2_posi_x", "DC_R2_posi_y", "DC_R2_posi_z",
+								   "DC_R2_prot_x", "DC_R2_prot_y", "DC_R2_prot_z",
+
+								   "DC_R3_elec_x", "DC_R3_elec_y", "DC_R3_elec_z",
+								   "DC_R3_posi_x", "DC_R3_posi_y", "DC_R3_posi_z",
+								   "DC_R3_prot_x", "DC_R3_prot_y", "DC_R3_prot_z"});
 	}
 
 	std::map<TString, Float_t> outVars;
@@ -233,32 +246,6 @@ int analysisTCS_MC()
 		outVars[fvars[i]] = 0.;
 		ADDVAR(&(outVars[fvars[i]]), fvars[i], "/F", outT);
 	}
-
-	/*TString fvars[] = {
-		"evt_num", "t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
-		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "virtual_flux_Frixione", "run", "analysis_stage", "topology",
-		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
-		"status_elec", "status_posi", "status_prot",
-		"vx_elec", "vy_elec", "vz_elec",
-		"vx_posi", "vy_posi", "vz_posi",
-		"vx_prot", "vy_prot", "vz_prot",
-		"chi2_proton",
-		"PCAL_x_elec", "PCAL_y_elec",
-		"PCAL_sector_elec", "PCAL_U_elec", "PCAL_V_elec", "PCAL_W_elec",
-		"PCAL_x_posi", "PCAL_y_posi",
-		"lead_lep_p", "sub_lead_lep_p", "lead_lep_theta", "sub_lead_lep_theta",
-		"Triangular_Cut_elec", "Triangular_Cut_posi",
-		"SFPCAL_elec", "SFECIN_elec", "SFECOUT_elec",
-		"SFPCAL_posi", "SFECIN_posi", "SFECOUT_posi",
-		"M2PCAL_elec", "M2ECIN_elec", "M2ECOUT_elec",
-		"M2PCAL_posi", "M2ECIN_posi", "M2ECOUT_posi"};*/
-
-	/*std::map<TString, Float_t> outVars;
-	for (size_t i = 0; i < sizeof(fvars) / sizeof(TString); i++)
-	{
-		outVars[fvars[i]] = 0.;
-		ADDVAR(&(outVars[fvars[i]]), fvars[i], "/F", outT);
-	}*/
 
 	TString fvars_Gen[] = {
 		"weight", "evt_num", "t_Gen", "t_min_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen",
@@ -270,7 +257,6 @@ int analysisTCS_MC()
 	{
 		for (size_t i = 0; i < sizeof(fvars_Gen) / sizeof(TString); i++)
 		{
-			cout << "here\n";
 			outVars_Gen[fvars_Gen[i]] = 0.;
 			ADDVAR(&(outVars_Gen[fvars_Gen[i]]), fvars_Gen[i], "/F", outT_Gen);
 		}
@@ -622,6 +608,7 @@ int analysisTCS_MC()
 				///////////////////////////////////////////
 				ev.Apply_EC_Cuts(CALO);
 				ev.Associate_detector_resp(CHE, SCIN);
+				ev.Associate_DC_traj(TRAJ);
 				ev.Set_Nphe_HTCC();
 				///////////////////////////////////////////
 
@@ -811,6 +798,51 @@ int analysisTCS_MC()
 					outVars["M2PCAL_posi"] = ev.Positron.M2_ECAL(PCAL);
 					outVars["M2ECIN_posi"] = ev.Positron.M2_ECAL(ECIN);
 					outVars["M2ECOUT_posi"] = ev.Positron.M2_ECAL(ECOUT);
+				}
+				
+				if (DC_Traj_check)
+				{
+					outVars["DC_R1_elec_x"] = ev.Electron.Trajs[0].x;
+					outVars["DC_R1_elec_y"] = ev.Electron.Trajs[0].y;
+					outVars["DC_R1_elec_z"] = ev.Electron.Trajs[0].z;
+					outVars["DC_R1_posi_x"] = ev.Positron.Trajs[0].x;
+					outVars["DC_R1_posi_y"] = ev.Positron.Trajs[0].y;
+					outVars["DC_R1_posi_z"] = ev.Positron.Trajs[0].z;
+
+					if (ev.Proton.status < 3000)
+					{
+						outVars["DC_R1_prot_x"] = ev.Proton.Trajs[0].x;
+						outVars["DC_R1_prot_y"] = ev.Proton.Trajs[0].y;
+						outVars["DC_R1_prot_z"] = ev.Proton.Trajs[0].z;
+					}
+
+					outVars["DC_R2_elec_x"] = ev.Electron.Trajs[1].x;
+					outVars["DC_R2_elec_y"] = ev.Electron.Trajs[1].y;
+					outVars["DC_R2_elec_z"] = ev.Electron.Trajs[1].z;
+					outVars["DC_R2_posi_x"] = ev.Positron.Trajs[1].x;
+					outVars["DC_R2_posi_y"] = ev.Positron.Trajs[1].y;
+					outVars["DC_R2_posi_z"] = ev.Positron.Trajs[1].z;
+
+					if (ev.Proton.status < 3000)
+					{
+						outVars["DC_R2_prot_x"] = ev.Proton.Trajs[1].x;
+						outVars["DC_R2_prot_y"] = ev.Proton.Trajs[1].y;
+						outVars["DC_R2_prot_z"] = ev.Proton.Trajs[1].z;
+					}
+
+					outVars["DC_R3_elec_x"] = ev.Electron.Trajs[2].x;
+					outVars["DC_R3_elec_y"] = ev.Electron.Trajs[2].y;
+					outVars["DC_R3_elec_z"] = ev.Electron.Trajs[2].z;
+					outVars["DC_R3_posi_x"] = ev.Positron.Trajs[2].x;
+					outVars["DC_R3_posi_y"] = ev.Positron.Trajs[2].y;
+					outVars["DC_R3_posi_z"] = ev.Positron.Trajs[2].z;
+
+					if (ev.Proton.status < 3000)
+					{
+						outVars["DC_R3_prot_x"] = ev.Proton.Trajs[2].x;
+						outVars["DC_R3_prot_y"] = ev.Proton.Trajs[2].y;
+						outVars["DC_R3_prot_z"] = ev.Proton.Trajs[2].z;
+					}
 				}
 
 				tree_Electron = ev.Electron.Vector;
