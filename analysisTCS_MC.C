@@ -195,7 +195,7 @@ int analysisTCS_MC()
 
 	std::vector<TString> fvars = {
 		"evt_num", "t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
-		"weight", "acc", "acc_error", "real_flux", "virtual_flux", "virtual_flux_Frixione", "run", "analysis_stage", "topology",
+		"weight", "acc", "acc_error", "real_flux_Gen", "virtual_flux_Gen", "virtual_flux_Frixione_Gen", "run", "analysis_stage", "topology",
 		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
 		"status_elec", "status_posi", "status_prot",
 		"vx_elec", "vy_elec", "vz_elec",
@@ -737,9 +737,6 @@ int analysisTCS_MC()
 				outVars["positron_score"] = ev.positron_score;
 				outVars["electron_score"] = ev.electron_score;
 				outVars["weight"] = ev.w;
-				outVars["real_flux"] = ev.real_flux;
-				outVars["virtual_flux"] = ev.virtual_flux;
-				outVars["virtual_flux_Frixione"] = ev.virtual_flux_Frixione;
 				outVars["run"] = ev.run;
 				outVars["analysis_stage"] = 0.0;
 				outVars["topology"] = (float)ev.topology();
@@ -773,6 +770,13 @@ int analysisTCS_MC()
 				outVars["Triangular_Cut_elec"] = ((ev.Electron.Energy(ECAL, PCAL) / ev.Electron.Vector.P()) + (ev.Electron.Energy(ECAL, ECIN) / ev.Electron.Vector.P()));
 				outVars["Triangular_Cut_posi"] = ((ev.Positron.Energy(ECAL, PCAL) / ev.Positron.Vector.P()) + (ev.Positron.Energy(ECAL, ECIN) / ev.Positron.Vector.P()));
 
+				if (!IsData)
+				{
+					outVars["real_flux_Gen"] = MC_ev.real_flux_Gen;
+					outVars["virtual_flux_Gen"] = MC_ev.virtual_flux_Gen;
+					outVars["virtual_flux_Frixione_Gen"] = MC_ev.virtual_flux_Frixione_Gen;
+				}
+
 				if (PCAL_study)
 				{
 					outVars["PCAL_U_elec"] = ev.Electron.U_CALO(PCAL);
@@ -799,7 +803,7 @@ int analysisTCS_MC()
 					outVars["M2ECIN_posi"] = ev.Positron.M2_ECAL(ECIN);
 					outVars["M2ECOUT_posi"] = ev.Positron.M2_ECAL(ECOUT);
 				}
-				
+
 				if (DC_Traj_check)
 				{
 					outVars["DC_R1_elec_x"] = ev.Electron.Trajs[0].x;
