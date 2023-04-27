@@ -772,7 +772,7 @@ int analysisTCS_MC()
 				outVars["chi2_proton"] = ev.Proton.chi2;
 				outVars["Triangular_Cut_elec"] = ((ev.Electron.Energy(ECAL, PCAL) / ev.Electron.Vector.P()) + (ev.Electron.Energy(ECAL, ECIN) / ev.Electron.Vector.P()));
 				outVars["Triangular_Cut_posi"] = ((ev.Positron.Energy(ECAL, PCAL) / ev.Positron.Vector.P()) + (ev.Positron.Energy(ECAL, ECIN) / ev.Positron.Vector.P()));
-				outVars["CM_gamma_energy"] = CM_gamma_energy(ev.Electron, ev.Positron, ev.Proton);
+				outVars["CM_gamma_energy"] = CM_gamma_energy(ev.Electron, ev.Positron, ev.Proton, ev.Q2);
 				outVars["CM_gamma_energy_2"] = CM_gamma_energy_2(ev.Electron, ev.Positron, ev.Proton);
 				outVars["E_k"] = CM_E_k(ev.Electron, ev.Positron, ev.Proton);
 				outVars["E_k_2"] = CM_E_k_2(ev.Electron, ev.Positron, ev.Proton, ev.Q2);

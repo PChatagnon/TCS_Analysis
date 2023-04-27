@@ -135,7 +135,7 @@ ThetaPhi CM(Particle vElectron, Particle vPositron, Particle vProton)
 	return CM;
 }
 
-double CM_gamma_energy(Particle vElectron, Particle vPositron, Particle vProton)
+double CM_gamma_energy(Particle vElectron, Particle vPositron, Particle vProton, double Q2)
 {
 
 	TLorentzVector vRestProton;
@@ -200,7 +200,7 @@ double CM_gamma_energy(Particle vElectron, Particle vPositron, Particle vProton)
 	//cout<<"Denominateur 2 "<< 2.* (vPhoton.E())  <<endl;
 
 
-	double energy_gamma = sqrt( (vProton.Vector.E()-vRestProton.E())*(vProton.Vector.E()-vRestProton.E())  - ((vProton.Vector-vRestProton).M2()) + vPhoton.M2());
+	double energy_gamma = sqrt( (vProton.Vector.E()-vRestProton.E())*(vProton.Vector.E()-vRestProton.E())  - ((vProton.Vector-vRestProton).M2()) + (-Q2));
 	return energy_gamma;
 }
 
