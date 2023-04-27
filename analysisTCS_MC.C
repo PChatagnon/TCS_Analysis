@@ -205,7 +205,7 @@ int analysisTCS_MC()
 		"lead_lep_p", "sub_lead_lep_p", "lead_lep_theta", "sub_lead_lep_theta",
 		"Triangular_Cut_elec", "Triangular_Cut_posi",
 		"CM_gamma_energy", "CM_gamma_energy_2",
-		"Q2_true", "E_k"
+		"Q2_true", "E_k", "E_k_2"
 		};
 
 	if (PCAL_study)
@@ -775,6 +775,7 @@ int analysisTCS_MC()
 				outVars["CM_gamma_energy"] = CM_gamma_energy(ev.Electron, ev.Positron, ev.Proton);
 				outVars["CM_gamma_energy_2"] = CM_gamma_energy_2(ev.Electron, ev.Positron, ev.Proton);
 				outVars["E_k"] = CM_E_k(ev.Electron, ev.Positron, ev.Proton);
+				outVars["E_k_2"] = CM_E_k_2(ev.Electron, ev.Positron, ev.Proton, ev.Q2);
 				outVars["Q2_true"] = ev.Q2_true;
 
 				if (!IsData)
