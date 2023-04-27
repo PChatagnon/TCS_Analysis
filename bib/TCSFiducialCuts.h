@@ -151,7 +151,7 @@ bool pass_Dead_Paddle_PCAL(int sector, float U, float V, float W)
 	}
 	else if (sector == 6)
 	{
-		return !( (W>170. && V<194.) );
+		return !( (W>170. && W<194.) );
 	}
 	else
 		return true;

@@ -274,6 +274,76 @@ double CM_gamma_energy_2(Particle vElectron, Particle vPositron, Particle vProto
 }
 
 
+double CM_E_k(Particle vElectron, Particle vPositron, Particle vProton)
+{
+
+	TLorentzVector vRestProton;
+	TLorentzVector vPhoton;
+	TLorentzVector vProtonLF;
+	TLorentzVector vElectronLF;
+	TLorentzVector vPositronLF;
+	TLorentzVector vRestProtonLF;
+	TLorentzVector vPhotonLF;
+	TLorentzVector vLepton;
+	TLorentzVector vIncoming;
+
+	ThetaPhi CM;
+
+	double phiCM;
+	double thetaCM;
+	double Pi = 3.14159265359;
+
+	TLorentzVector vBeam;
+	vBeam.SetPxPyPzE(0, 0, 10.6, 10.6);
+	vRestProton.SetPxPyPzE(0, 0, 0, 0.938);
+	vPhoton = vProton.Vector + vPositron.Vector + vElectron.Vector - vRestProton;
+	phiCM = 0.0;
+	thetaCM = 0.0;
+
+	vIncoming = vProton.Vector + vPositron.Vector + vElectron.Vector;
+	vPhoton.Boost(-vIncoming.BoostVector());
+	vRestProton.Boost(-vIncoming.BoostVector());
+	vProton.Vector.Boost(-vIncoming.BoostVector());
+	vElectron.Vector.Boost(-vIncoming.BoostVector());
+	vPositron.Vector.Boost(-vIncoming.BoostVector());
+	if (vProton.Vector.X() == 0 && vProton.Vector.Y() == 0 && vProton.Vector.Z() == 0)
+		cout << "problem1" << endl;
+
+	// cout<<"problem proton"<<endl;
+	// cout<<"Incoming "<< vIncoming.X()<<" "<<vIncoming.Y()<<" "<<vIncoming.Z()<<" "<<endl;
+	// cout<<"proton "<< vProton.Vector.X()<<" "<<vProton.Vector.Y()<<" "<<vProton.Vector.Z()<<" "<<vProton.Vector.M()<<" "<<endl;
+	vPhoton.Rotate(Pi + vProton.Vector.Angle(vBeam.Vect().Unit()), vProton.Vector.Vect().Cross(vBeam.Vect().Unit()));
+	vElectron.Vector.Rotate(Pi + vProton.Vector.Angle(vBeam.Vect().Unit()), vProton.Vector.Vect().Cross(vBeam.Vect().Unit()));
+	vPositron.Vector.Rotate(Pi + vProton.Vector.Angle(vBeam.Vect().Unit()), vProton.Vector.Vect().Cross(vBeam.Vect().Unit()));
+	vRestProton.Rotate(Pi + vProton.Vector.Angle(vBeam.Vect().Unit()), vProton.Vector.Vect().Cross(vBeam.Vect().Unit()));
+	vProton.Vector.Rotate(Pi + vProton.Vector.Angle(vBeam.Vect().Unit()), vProton.Vector.Vect().Cross(vBeam.Vect().Unit()));
+	// cout<<"problem proton1"<<endl;
+	vElectron.Vector.RotateZ(-vRestProton.Phi());
+	vPositron.Vector.RotateZ(-vRestProton.Phi());
+	vProton.Vector.RotateZ(-vRestProton.Phi());
+	vPhoton.RotateZ(-vRestProton.Phi());
+	vRestProton.RotateZ(-vRestProton.Phi());
+
+
+	vLepton = vPositron.Vector + vElectron.Vector;
+	vElectron.Vector.Boost(-vLepton.BoostVector());
+	vProton.Vector.Boost(-vLepton.BoostVector());
+	vPhoton.Boost(-vLepton.BoostVector());
+	vRestProton.Boost(-vLepton.BoostVector());
+	vPositron.Vector.Boost(-vLepton.BoostVector());
+
+	
+
+	//cout<<"Energy proton prime "<<vProton.Vector.E()<<" Energy proton target "<<vRestProton.E()<<" -t "<<(vProton.Vector-vRestProton).M2()<<endl;
+	//cout<<"Denominateur 1 "<< (2.)*sqrt( (vProton.Vector.E()-vRestProton.E())*(vProton.Vector.E()-vRestProton.E())  - ((vProton.Vector-vRestProton).M2()) + vPhoton.M2()) <<endl;
+	//cout<<"Denominateur 2 "<< 2.* (vPhoton.E())  <<endl;
+
+
+	double E_k = sqrt( (vProton.Vector.E()-vRestProton.E())*(vProton.Vector.E()-vRestProton.E())  - (vProton.Vector-vRestProton).M2() ) - sqrt( (vProton.Vector.E()-vRestProton.E())*(vProton.Vector.E()-vRestProton.E())  - (vProton.Vector-vRestProton).M2() + vPhoton.M2());
+	return E_k;
+}
+
+
 int bint(double t, double limit[3])
 {
 

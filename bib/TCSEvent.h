@@ -47,6 +47,7 @@ public:
         float xi;
         float Pt_Frac;
         float Q2;
+        float Q2_true;
 
         // Angular variables
         ThetaPhi cm;
@@ -430,6 +431,7 @@ public:
                 M = sqrt(qp2);
                 Pt_Frac = vMissing.Pt() / vMissing.P();
                 Q2 = 2 * ebeam * vMissing.E() * (1. - cos(vMissing.Theta()));
+                Q2_true = vPhoton.M2();
 
                 // Angular variables
                 cm = CM(Electron, Positron, Proton);
