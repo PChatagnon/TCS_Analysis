@@ -203,7 +203,9 @@ int analysisTCS_MC()
 		"vx_prot", "vy_prot", "vz_prot",
 		"chi2_proton",
 		"lead_lep_p", "sub_lead_lep_p", "lead_lep_theta", "sub_lead_lep_theta",
-		"Triangular_Cut_elec", "Triangular_Cut_posi"};
+		"Triangular_Cut_elec", "Triangular_Cut_posi",
+		"CM_gamma_energy", "CM_gamma_energy_2",
+		};
 
 	if (PCAL_study)
 	{
@@ -520,16 +522,16 @@ int analysisTCS_MC()
 					MC_ev.Set_MC_Particles(MCEVENT, MCPART, IsGrape, IsJPsi);
 					MC_ev.Get_Kinematics();
 
-					if (IsTCSGen)
+					if (IsTCSGen || IsJPsi)
 						w = MC_ev.w;
 
-					if (IsJPsi)
+					/*if (IsJPsi)
 					{
 						float MC_factor_1 = MCEVENT.getFloat("ptarget", 0);
 						float MC_factor_2 = MCEVENT.getFloat("pbeam", 0);
 						float MC_factor_3 = MCEVENT.getFloat("ebeam", 0);
 						w = MC_factor_1 * MC_factor_2 * MC_factor_3;
-					}
+					}*/
 
 					ev.Set_Weight(w);
 
@@ -769,6 +771,8 @@ int analysisTCS_MC()
 				outVars["chi2_proton"] = ev.Proton.chi2;
 				outVars["Triangular_Cut_elec"] = ((ev.Electron.Energy(ECAL, PCAL) / ev.Electron.Vector.P()) + (ev.Electron.Energy(ECAL, ECIN) / ev.Electron.Vector.P()));
 				outVars["Triangular_Cut_posi"] = ((ev.Positron.Energy(ECAL, PCAL) / ev.Positron.Vector.P()) + (ev.Positron.Energy(ECAL, ECIN) / ev.Positron.Vector.P()));
+				outVars["CM_gamma_energy"] = CM_gamma_energy(ev.Electron, ev.Positron, ev.Proton);
+				outVars["CM_gamma_energy_2"] = CM_gamma_energy_2(ev.Electron, ev.Positron, ev.Proton);
 
 				if (!IsData)
 				{
