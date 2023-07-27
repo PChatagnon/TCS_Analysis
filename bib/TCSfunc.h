@@ -21,7 +21,7 @@ ThetaPhi CM(TLorentzVector vElectron, TLorentzVector vPositron, TLorentzVector v
 	double Pi = 3.14159265359;
 
 	TLorentzVector vBeam;
-	vBeam.SetPxPyPzE(0, 0, 10.6, 10.6);
+	vBeam.SetPxPyPzE(0, 0, ebeam, ebeam);
 	vRestProton.SetPxPyPzE(0, 0, 0, 0.938);
 	vPhoton = vProton + vPositron + vElectron - vRestProton;
 	phiCM = 0.0;
@@ -84,7 +84,7 @@ ThetaPhi CM(Particle vElectron, Particle vPositron, Particle vProton)
 	double Pi = 3.14159265359;
 
 	TLorentzVector vBeam;
-	vBeam.SetPxPyPzE(0, 0, 10.6, 10.6);
+	vBeam.SetPxPyPzE(0, 0, ebeam, ebeam);
 	vRestProton.SetPxPyPzE(0, 0, 0, 0.938);
 	vPhoton = vProton.Vector + vPositron.Vector + vElectron.Vector - vRestProton;
 	phiCM = 0.0;
@@ -155,7 +155,7 @@ double CM_gamma_energy(Particle vElectron, Particle vPositron, Particle vProton,
 	double Pi = 3.14159265359;
 
 	TLorentzVector vBeam;
-	vBeam.SetPxPyPzE(0, 0, 10.6, 10.6);
+	vBeam.SetPxPyPzE(0, 0, ebeam, ebeam);
 	vRestProton.SetPxPyPzE(0, 0, 0, 0.938);
 	vPhoton = vProton.Vector + vPositron.Vector + vElectron.Vector - vRestProton;
 	phiCM = 0.0;
@@ -224,7 +224,7 @@ double CM_gamma_energy_2(Particle vElectron, Particle vPositron, Particle vProto
 	double Pi = 3.14159265359;
 
 	TLorentzVector vBeam;
-	vBeam.SetPxPyPzE(0, 0, 10.6, 10.6);
+	vBeam.SetPxPyPzE(0, 0, ebeam, ebeam);
 	vRestProton.SetPxPyPzE(0, 0, 0, 0.938);
 	vPhoton = vProton.Vector + vPositron.Vector + vElectron.Vector - vRestProton;
 	phiCM = 0.0;
@@ -294,7 +294,7 @@ double CM_E_k(Particle vElectron, Particle vPositron, Particle vProton)
 	double Pi = 3.14159265359;
 
 	TLorentzVector vBeam;
-	vBeam.SetPxPyPzE(0, 0, 10.6, 10.6);
+	vBeam.SetPxPyPzE(0, 0, ebeam, ebeam);
 	vRestProton.SetPxPyPzE(0, 0, 0, 0.938);
 	vPhoton = vProton.Vector + vPositron.Vector + vElectron.Vector - vRestProton;
 	phiCM = 0.0;
@@ -363,7 +363,7 @@ double CM_E_k_2(Particle vElectron, Particle vPositron, Particle vProton, double
 	double Pi = 3.14159265359;
 
 	TLorentzVector vBeam;
-	vBeam.SetPxPyPzE(0, 0, 10.6, 10.6);
+	vBeam.SetPxPyPzE(0, 0, ebeam, ebeam);
 	vRestProton.SetPxPyPzE(0, 0, 0, 0.938);
 	vPhoton = vProton.Vector + vPositron.Vector + vElectron.Vector - vRestProton;
 	phiCM = 0.0;

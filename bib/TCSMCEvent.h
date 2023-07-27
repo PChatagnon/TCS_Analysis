@@ -89,6 +89,16 @@ public:
                         Positron.SetXYZM(MCPART.getFloat("px", 2), MCPART.getFloat("py", 2), MCPART.getFloat("pz", 2), me);
                         Proton.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), mp);
 
+                        
+                        if(true){
+                        MCPART.show();
+                        cout<<"Electron"<<endl;
+                        cout<<(Electron_2).Px()<<" "<<(Electron_2).Py()<<" "<<(Electron_2).Pz()<<" "<<(Electron_2).E()<<" "<<endl;
+                        cout<<"Positron"<<endl;
+                        cout<<(Positron).Px()<<" "<<(Positron).Py()<<" "<<(Positron).Pz()<<" "<<(Positron).E()<<" "<<endl;
+                        cout<<(Electron_2+Positron).M()<<endl;
+                        }
+
                         float MC_factor_1 = MCEVENT.getFloat("ptarget", 0);
                         float MC_factor_2 = MCEVENT.getFloat("pbeam", 0);
                         float MC_factor_3 = MCEVENT.getFloat("ebeam", 0);

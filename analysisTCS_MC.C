@@ -194,7 +194,8 @@ int analysisTCS_MC()
 	outT->Branch("trigger_bit", &trigger_bit, "trigger_bit/I");
 
 	std::vector<TString> fvars = {
-		"evt_num", "t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "positron_SF", "electron_SF", "positron_score", "electron_score",
+		"evt_num", "t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "helicity", "polaT",
+		"positron_SF", "electron_SF", "positron_score", "electron_score",
 		"weight", "acc", "acc_error", "real_flux_Gen", "virtual_flux_Gen", "virtual_flux_Frixione_Gen", "run", "analysis_stage", "topology",
 		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
 		"status_elec", "status_posi", "status_prot",
@@ -658,7 +659,7 @@ int analysisTCS_MC()
 			if (IsData && IsHipo)
 			{
 				polarization = EVENT.getInt("helicity", 0);
-				polarization = -1. * polarization; ///// TO CHECK //////
+				//polarization = -1. * polarization; ///// TO CHECK //////
 			}
 
 			if (!IsData)
@@ -735,6 +736,8 @@ int analysisTCS_MC()
 				outVars["Q2"] = ev.Q2;
 				outVars["theta"] = ev.theta;
 				outVars["phi"] = ev.phi;
+				outVars["helicity"] = ev.polarization;
+				outVars["polaT"] = ev.polaT;
 				outVars["positron_SF"] = ev.positron_SF;
 				outVars["electron_SF"] = ev.electron_SF;
 				outVars["positron_score"] = ev.positron_score;
