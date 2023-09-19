@@ -68,6 +68,7 @@ int analysisTCS_MC()
 	PCAL_study = input.cmdOptionExists("-PCAL");
 	Lepton_ID_check = input.cmdOptionExists("-Lepton_ID_check");
 	DC_Traj_check = input.cmdOptionExists("-DC_Traj_check");
+	all_Gen_vector = input.cmdOptionExists("-all_Gen_vector");
 	/////////////////////////////////////////
 
 	if (input.cmdOptionExists("-energy"))
@@ -88,6 +89,7 @@ int analysisTCS_MC()
 		cout << "-PCAL\n";
 		cout << "-Lepton_ID_check\n";
 		cout << "-DC_Traj_check\n";
+		cout << "-all_Gen_vector\n";
 		cout << "-energy\n";
 
 		gApplication->Terminate();
@@ -206,8 +208,7 @@ int analysisTCS_MC()
 		"lead_lep_p", "sub_lead_lep_p", "lead_lep_theta", "sub_lead_lep_theta",
 		"Triangular_Cut_elec", "Triangular_Cut_posi",
 		"CM_gamma_energy", "CM_gamma_energy_2",
-		"Q2_true", "E_k", "E_k_2"
-		};
+		"Q2_true", "E_k", "E_k_2"};
 
 	if (PCAL_study)
 	{
@@ -266,10 +267,14 @@ int analysisTCS_MC()
 		}
 	}
 
-	/*TLorentzVector gen_Electron, gen_Positron, gen_Proton;
-	outT_Gen->Branch("gen_Electron", "TLorentzVector", &gen_Electron);
-	outT_Gen->Branch("gen_Positron", "TLorentzVector", &gen_Positron);
-	outT_Gen->Branch("gen_Proton", "TLorentzVector", &gen_Proton);*/
+	TLorentzVector gen_Electron, gen_Positron, gen_Proton;
+
+	if (all_Gen_vector)
+	{
+		outT_Gen->Branch("gen_Electron", "TLorentzVector", &gen_Electron);
+		outT_Gen->Branch("gen_Positron", "TLorentzVector", &gen_Positron);
+		outT_Gen->Branch("gen_Proton", "TLorentzVector", &gen_Proton);
+	}
 	///////////////////////////////////////////
 
 	int nbtc = 0;
@@ -557,9 +562,12 @@ int analysisTCS_MC()
 					outVars_Gen["vz_posi_Gen"] = MC_ev.vz_posi_Gen;
 					outVars_Gen["vz_prot_Gen"] = MC_ev.vz_prot_Gen;
 
-					/*gen_Electron = MC_ev.Electron_2;
-					gen_Positron = MC_ev.Positron;
-					gen_Proton = MC_ev.Proton;*/
+					if (all_Gen_vector)
+					{
+						gen_Electron = MC_ev.Electron_2;
+						gen_Positron = MC_ev.Positron;
+						gen_Proton = MC_ev.Proton;
+					}
 
 					outT_Gen->Fill();
 				}
@@ -659,7 +667,7 @@ int analysisTCS_MC()
 			if (IsData && IsHipo)
 			{
 				polarization = EVENT.getInt("helicity", 0);
-				//polarization = -1. * polarization; ///// TO CHECK //////
+				// polarization = -1. * polarization; ///// TO CHECK //////
 			}
 
 			if (!IsData)
