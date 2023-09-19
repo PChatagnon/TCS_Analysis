@@ -33,6 +33,7 @@ bool HTCCSectorCut = false;
 bool PCAL_study = false;
 bool Lepton_ID_check = false;
 bool DC_Traj_check = false;
+bool all_Gen_vector = false;
 
 bool RGA_Fall2018 = false; // inbending or outbending in the end
 bool inbending = true;
