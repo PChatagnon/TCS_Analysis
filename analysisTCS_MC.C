@@ -583,19 +583,19 @@ int analysisTCS_MC()
 				///////////////////////////////////////////
 				ev.Set_Particles(PART, IsEE_BG);
 
-				if (ev.recem == 1 && ev.recp == 1 && abs(ev.Proton.chi2) < 5.)
+				if (ev.recem == 1 && ev.recp == 1 )
 					Plots.Fill_1D("efficiency", 0, 1);
-				if (ev.recep == 1 && ev.recp == 1 && abs(ev.Proton.chi2) < 5.)
+				if (ev.recep == 1 && ev.recp == 1 )
 					Plots.Fill_1D("efficiency", 1, 1);
 				if (ev.recem == 1 && ev.recep == 1)
 					Plots.Fill_1D("efficiency", 2, 1);
-				if (ev.recem == 1 && ev.recp == 1 && ev.Proton.status > 2000 && ev.Proton.status < 4000 && abs(ev.Proton.chi2) < 5.)
+				if (ev.recem == 1 && ev.recp == 1 && ev.Proton.status > 2000 && ev.Proton.status < 4000 )
 					Plots.Fill_1D("efficiency", 3, 1);
-				if (ev.recem == 1 && ev.recp == 1 && ev.Proton.status > 4000 && abs(ev.Proton.chi2) < 5.)
+				if (ev.recem == 1 && ev.recp == 1 && ev.Proton.status > 4000 )
 					Plots.Fill_1D("efficiency", 4, 1);
-				if (ev.recep == 1 && ev.recp == 1 && ev.Proton.status > 2000 && ev.Proton.status < 4000 && abs(ev.Proton.chi2) < 5.)
+				if (ev.recep == 1 && ev.recp == 1 && ev.Proton.status > 2000 && ev.Proton.status < 4000 )
 					Plots.Fill_1D("efficiency", 5, 1);
-				if (ev.recep == 1 && ev.recp == 1 && ev.Proton.status > 4000 && abs(ev.Proton.chi2) < 5.)
+				if (ev.recep == 1 && ev.recp == 1 && ev.Proton.status > 4000 )
 					Plots.Fill_1D("efficiency", 6, 1);
 
 				if (!ev.pass_topology_cut())
@@ -610,9 +610,9 @@ int analysisTCS_MC()
 				// Number of events after topology cuts
 				Plots.Fill_1D("evt_count", 1, 1);
 
-				if (ev.Proton.status > 2000 && ev.Proton.status < 4000 && abs(ev.Proton.chi2) < 5.)
+				if (ev.Proton.status > 2000 && ev.Proton.status < 4000 )
 					Plots.Fill_1D("evt_count", 2, 1);
-				if (ev.Proton.status > 4000 && abs(ev.Proton.chi2) < 5.)
+				if (ev.Proton.status > 4000 )
 					Plots.Fill_1D("evt_count", 3, 1);
 
 				///////////////////////////////////////////
