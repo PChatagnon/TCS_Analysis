@@ -274,6 +274,10 @@ int analysisTCS_MC()
 		outT_Gen->Branch("gen_Electron", "TLorentzVector", &gen_Electron);
 		outT_Gen->Branch("gen_Positron", "TLorentzVector", &gen_Positron);
 		outT_Gen->Branch("gen_Proton", "TLorentzVector", &gen_Proton);
+
+		outT->Branch("gen_Electron", "TLorentzVector", &gen_Electron);
+		outT->Branch("gen_Positron", "TLorentzVector", &gen_Positron);
+		outT->Branch("gen_Proton", "TLorentzVector", &gen_Proton);
 	}
 	///////////////////////////////////////////
 
