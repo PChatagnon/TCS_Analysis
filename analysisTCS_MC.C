@@ -602,6 +602,17 @@ int analysisTCS_MC()
 				if (ev.recep == 1 && ev.recp == 1 && ev.Proton.status > 4000 )
 					Plots.Fill_1D("efficiency", 6, 1);
 
+				if (ev.recem == 1)
+					Plots.Fill_1D("efficiency", 7, 1);
+				if (ev.recep == 1)
+					Plots.Fill_1D("efficiency", 8, 1);
+				if (ev.recp == 1)
+					Plots.Fill_1D("efficiency", 9, 1);
+				if (ev.recp == 1 && ev.Proton.status > 2000 && ev.Proton.status < 4000)
+					Plots.Fill_1D("efficiency", 10, 1);
+				if (ev.recp == 1 && ev.Proton.status > 4000)
+					Plots.Fill_1D("efficiency", 11, 1);
+
 				if (!ev.pass_topology_cut())
 				{
 					continue;
