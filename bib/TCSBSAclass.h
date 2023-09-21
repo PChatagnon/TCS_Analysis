@@ -13,7 +13,7 @@ public:
         TH1F *meanBSA;        // Store numerator of mean variable for each bin
         TH1F *meanBSAN;       // Store denominator of mean variable for each bin
 
-        TString outputfolder = "Plots"; // outputfolder for plots and graphs
+        TString outputfolder = "Plots_Pass2"; // outputfolder for plots and graphs
         int bin_fit;                    // number of phi bin for the fit
 
         float cut_acc = 0.05;
@@ -41,7 +41,7 @@ public:
                 meanBSAN = new TH1F("meanBSAN", "meanBSAN", bin_number, 0, bin_number);
         }
 
-        void setOutputFolder(TString input_outputfolder)
+        void SetOutputFolder(TString input_outputfolder)
         {
                 outputfolder = input_outputfolder;
         }
@@ -102,7 +102,7 @@ public:
                         numpolap->Fit("f2");
                         numpolap->SaveAs(Form("%s/Fit%s%d.root", outputfolder.Data(), variable.Data(), bin));
 
-                        double fitresult = numpolap->GetFunction("f2")->GetParameter(0);
+                        double fitresult = -1.0*numpolap->GetFunction("f2")->GetParameter(0);
                         double fiterror = numpolap->GetFunction("f2")->GetParError(0);
 
                         double bincenter = (meanBSA->GetBinContent(bin + 1)) / (meanBSAN->GetBinContent(bin + 1));

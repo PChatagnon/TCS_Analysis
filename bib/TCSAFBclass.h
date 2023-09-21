@@ -22,7 +22,7 @@ public:
         float cut_acc = 0.05;
         float cut_acc_error = 0.5;
 
-        TString outputfolder = "Plots"; // outputfolder for plots and graphs
+        TString outputfolder = "Plots_Pass2"; // outputfolder for plots and graphs
 
         TCSAFB(TString input_variable, int input_bin_number, float *input_binning_array)
         {
@@ -113,6 +113,7 @@ public:
                 AFBneg->Draw();
                 canAFB->cd(3);
                 num->Draw();
+                AFB_Graph->SaveAs(Form("%s/AFB%s.root", outputfolder.Data(), variable.Data()));
                 canAFB->SaveAs(Form("%s/canAFB%s.pdf", outputfolder.Data(), variable.Data()));
         }
 };

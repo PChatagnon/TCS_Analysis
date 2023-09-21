@@ -154,6 +154,7 @@ int analysisTCS_MC()
 	// Momentum Correction
 	//////////////////////////////////////////////
 	MomentumCorrection MomCorr;
+	Energy_loss EnergyLoss( inbending, RGA_Fall2018);
 
 	////////////////////////////////////////////
 	// Instanciate observables
@@ -661,13 +662,16 @@ int analysisTCS_MC()
 				// Radiative correction
 				///////////////////////////////////////////
 				ev.Apply_Radiative_Correction(InputParameters.RadCorr);
-				ev.Compute_SF();
+				
 				///////////////////////////////////////////
 
 				///////////////////////////////////////////
 				// Momentum MC correction
 				///////////////////////////////////////////
-				// ev.Apply_MC_Correction(MomCorr);
+				//ev.Apply_MC_Correction(MomCorr);
+				cout<<"Before correction "<<ev.Proton.Vector.P()<<endl;
+				ev.Apply_Energy_loss(EnergyLoss);
+				cout<<"After correction "<<ev.Proton.Vector.P()<<endl;
 				///////////////////////////////////////////
 			}
 
@@ -726,6 +730,7 @@ int analysisTCS_MC()
 					// Compute kinematics
 					///////////////////////////////////////////
 					ev.Get_Kinematics();
+					ev.Compute_SF();
 				}
 
 				if (!IsHipo)

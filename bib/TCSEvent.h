@@ -413,6 +413,10 @@ public:
                 Proton = MomCorr.Apply_MC_Correction(Proton);
         }
 
+        void Apply_Energy_loss(Energy_loss energy_loss){
+                energy_loss.Apply_Energy_loss(&Electron, &Positron, &Proton, Proton.status);
+        }
+
         void Apply_Central_Correction(MomentumCorrection MomCorr, bool is_apply_corr, hipo::bank TRACK, hipo::bank TRAJ)
         {
                 if (is_apply_corr)
