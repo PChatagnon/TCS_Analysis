@@ -79,6 +79,8 @@ public:
 
                         float MCpsf = MCEVENT.getFloat("pbeam", 0);
 			float MCcs = MCEVENT.getFloat("weight", 0);
+                        float MCflux = MCEVENT.getFloat("ebeam", 0);
+
                         // w = MCEVENT.getFloat("ebeam", 0) * MCEVENT.getFloat("weight", 0) * MCEVENT.getFloat("pbeam", 0);
                         w = MCpsf * MCcs * flux;
                 }

@@ -8,6 +8,7 @@
 #include "TTreeReaderArray.h"
 #include "TH2D.h"
 #include "TLorentzVector.h"
+#include "TVector3.h"
 #include "TMath.h"
 #include "TCanvas.h"
 #include "TH3F.h"
@@ -66,6 +67,7 @@ int analysisTCS_MC()
 	RGA_Fall2018 = input.cmdOptionExists("-RGA_Fall2018");
 	inbending = !input.cmdOptionExists("-outbending");
 	PCAL_study = input.cmdOptionExists("-PCAL");
+	CALO_study = input.cmdOptionExists("-CALO");
 	Lepton_ID_check = input.cmdOptionExists("-Lepton_ID_check");
 	DC_Traj_check = input.cmdOptionExists("-DC_Traj_check");
 	all_Gen_vector = input.cmdOptionExists("-all_Gen_vector");
@@ -108,6 +110,7 @@ int analysisTCS_MC()
 	cout << "IsEE_BG : " << IsEE_BG << "\n";
 	cout << "Lepton ID check : " << Lepton_ID_check << "\n";
 	cout << "PCAL var. : " << PCAL_study << "\n";
+	cout << "CALO study : " << CALO_study << "\n";
 	cout << "Run with energy " << ebeam << " GeV\n";
 	cout << "////////////////////////////////////////////"
 		 << "\n";
@@ -224,6 +227,21 @@ int analysisTCS_MC()
 									  "PCAL_y_posi",
 								  });
 	}
+
+	if (CALO_study)
+	{
+		fvars.insert(fvars.end(), {
+									  "PCAL_x_elec_rot","PCAL_y_elec_rot","PCAL_z_elec_rot",
+									  "PCAL_x_posi_rot","PCAL_y_posi_rot","PCAL_z_posi_rot",
+									  "PCAL_hx_elec_rot","PCAL_hy_elec_rot","PCAL_hz_elec_rot",
+									  "PCAL_hx_posi_rot","PCAL_hy_posi_rot","PCAL_hz_posi_rot",
+									  "ECIN_x_elec_rot","ECIN_y_elec_rot","ECIN_z_elec_rot",
+									  "ECIN_x_posi_rot","ECIN_y_posi_rot","ECIN_z_posi_rot",
+									  "ECIN_hx_elec_rot","ECIN_hy_elec_rot","ECIN_hz_elec_rot",
+									  "ECIN_hx_posi_rot","ECIN_hy_posi_rot","ECIN_hz_posi_rot"
+								  });
+	}
+
 	if (Lepton_ID_check)
 	{
 		fvars.insert(fvars.end(), {"SFPCAL_elec", "SFECIN_elec", "SFECOUT_elec",
@@ -432,7 +450,7 @@ int analysisTCS_MC()
 		{
 			reader.open(nameFiles);
 			reader.readDictionary(factory);
-			factory.show();
+			//factory.show();
 		}
 
 		if (!IsHipo)
@@ -669,9 +687,9 @@ int analysisTCS_MC()
 				// Momentum MC correction
 				///////////////////////////////////////////
 				//ev.Apply_MC_Correction(MomCorr);
-				cout<<"Before correction "<<ev.Proton.Vector.P()<<endl;
-				ev.Apply_Energy_loss(EnergyLoss);
-				cout<<"After correction "<<ev.Proton.Vector.P()<<endl;
+				//cout<<"Before correction "<<ev.Proton.Vector.P()<<endl;  /////////NEED TO BE VALIDATED/////////
+				//ev.Apply_Energy_loss(EnergyLoss);
+				//cout<<"After correction "<<ev.Proton.Vector.P()<<endl;
 				///////////////////////////////////////////
 			}
 
@@ -822,6 +840,46 @@ int analysisTCS_MC()
 					outVars["PCAL_V_elec"] = ev.Electron.V_CALO(PCAL);
 					outVars["PCAL_W_elec"] = ev.Electron.W_CALO(PCAL);
 					outVars["PCAL_sector_elec"] = ev.Electron.SECTOR_CALO(PCAL);
+				}
+
+				if(CALO_study){
+
+					cout<<"PCAL "<<endl;
+					ev.Electron.Get_local_cluster_CALO(PCAL);
+					cout<<"ECIN "<<endl;
+					ev.Electron.Get_local_cluster_CALO(ECIN);
+
+					outVars["PCAL_x_elec_rot"] = ev.Electron.cluster_local_PCAL.x;
+					outVars["PCAL_y_elec_rot"] = ev.Electron.cluster_local_PCAL.y;
+					outVars["PCAL_z_elec_rot"] = ev.Electron.cluster_local_PCAL.z;
+
+					outVars["PCAL_x_posi_rot"] = ev.Positron.cluster_local_PCAL.x;
+					outVars["PCAL_y_posi_rot"] = ev.Positron.cluster_local_PCAL.y;
+					outVars["PCAL_z_posi_rot"] = ev.Positron.cluster_local_PCAL.z;
+
+					outVars["PCAL_hx_elec_rot"] = ev.Electron.h_cluster_local_PCAL.x;
+					outVars["PCAL_hy_elec_rot"] = ev.Electron.h_cluster_local_PCAL.y;
+					outVars["PCAL_hz_elec_rot"] = ev.Electron.h_cluster_local_PCAL.z;
+									  
+					outVars["PCAL_hx_posi_rot"] = ev.Positron.h_cluster_local_PCAL.x;
+					outVars["PCAL_hy_posi_rot"] = ev.Positron.h_cluster_local_PCAL.y;
+					outVars["PCAL_hz_posi_rot"] = ev.Positron.h_cluster_local_PCAL.z;
+
+					outVars["ECIN_x_elec_rot"] = ev.Electron.cluster_local_ECIN.x;
+					outVars["ECIN_y_elec_rot"] = ev.Electron.cluster_local_ECIN.y;
+					outVars["ECIN_z_elec_rot"] = ev.Electron.cluster_local_ECIN.z;
+
+					outVars["ECIN_x_posi_rot"] = ev.Positron.cluster_local_ECIN.x;
+					outVars["ECIN_y_posi_rot"] = ev.Positron.cluster_local_ECIN.y;
+					outVars["ECIN_z_posi_rot"] = ev.Positron.cluster_local_ECIN.z;
+
+					outVars["ECIN_hx_elec_rot"] = ev.Electron.h_cluster_local_ECIN.x;
+					outVars["ECIN_hy_elec_rot"] = ev.Electron.h_cluster_local_ECIN.y;
+					outVars["ECIN_hz_elec_rot"] = ev.Electron.h_cluster_local_ECIN.z;
+									  
+					outVars["ECIN_hx_posi_rot"] = ev.Positron.h_cluster_local_ECIN.x;
+					outVars["ECIN_hy_posi_rot"] = ev.Positron.h_cluster_local_ECIN.y;
+					outVars["ECIN_hz_posi_rot"] = ev.Positron.h_cluster_local_ECIN.z;
 				}
 
 				if (Lepton_ID_check)

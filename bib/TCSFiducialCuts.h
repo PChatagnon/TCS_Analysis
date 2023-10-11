@@ -174,6 +174,9 @@ Particle ApplyECcuts(Particle particle, hipo::bank CALO)
 		float Calox = CALO.getFloat("x", c);
 		float Caloy = CALO.getFloat("y", c);
 		float Caloz = CALO.getFloat("z", c);
+		float Calohx = CALO.getFloat("hx", c);
+		float Calohy = CALO.getFloat("hy", c);
+		float Calohz = CALO.getFloat("hz", c);
 		float Calou = CALO.getFloat("lu", c);
 		float Calov = CALO.getFloat("lv", c);
 		float Calow = CALO.getFloat("lw", c);
@@ -197,6 +200,9 @@ Particle ApplyECcuts(Particle particle, hipo::bank CALO)
 			Calo.x = Calox;
 			Calo.y = Caloy;
 			Calo.z = Caloz;
+			Calo.hx = Calohx;
+			Calo.hy = Calohy;
+			Calo.hz = Calohz;
 			Calo.u = Calou;
 			Calo.v = Calov;
 			Calo.w = Calow;

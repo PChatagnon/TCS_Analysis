@@ -31,6 +31,7 @@ bool Weighted_simu = false;
 
 bool HTCCSectorCut = false;
 bool PCAL_study = false;
+bool CALO_study = false;
 bool Lepton_ID_check = false;
 bool DC_Traj_check = false;
 bool all_Gen_vector = false;
@@ -69,7 +70,7 @@ class CalorimeterResp
 
 public:
         int detector, pindex, sector, layer;
-        float energy, x, y, z, u, v, w;
+        float energy, x, y, z, hx, hy, hz, u, v, w;
         float du, dv, dw;
         float m2u, m2v, m2w;
         float m3u, m3v, m3w;
@@ -92,12 +93,26 @@ public:
         float energy = 0.0;
 };
 
-class vertex
+class Vertex
 {
 public:
         float x;
         float y;
         float z;
+
+        Vertex()
+        {
+                x = 0.0;
+                y = 0.0;
+                z = 0.0;
+        }
+
+        Vertex(float x_in, float y_in, float z_in)
+        {
+                x = x_in;
+                y = y_in;
+                z = z_in;
+        }
 };
 
 class Particle
@@ -115,13 +130,18 @@ public:
         bool passR1 = true;
         bool passR2 = true;
         bool passR3 = true;
-        vertex vertex;
+        Vertex vertex;
         TLorentzVector Vector;
         ScinResp Scintillator;
 
         vector<CalorimeterResp> Calorimeter;
         vector<CheResp> Cherenkov;
         vector<Traj> Trajs;
+
+        Vertex cluster_local_PCAL;
+        Vertex h_cluster_local_PCAL;
+        Vertex cluster_local_ECIN;
+        Vertex h_cluster_local_ECIN;
 
         float nphe(int det)
         {
@@ -233,6 +253,50 @@ public:
                 return Y;
         }
 
+        float Z_CALO(int layer)
+        {
+                float Z = 0;
+                for (int i = 0; i < Calorimeter.size(); i++)
+                {
+                        if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
+                                Z = Calorimeter[i].z;
+                        break;
+                }
+                return Z;
+        }
+
+        Vertex Cluster_CALO(int layer)
+        {
+                Vertex cluster_calo;
+                for (int i = 0; i < Calorimeter.size(); i++)
+                {
+                        if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
+                        {
+                                cluster_calo.x = Calorimeter[i].x;
+                                cluster_calo.y = Calorimeter[i].y;
+                                cluster_calo.z = Calorimeter[i].z;
+                        }
+                        break;
+                }
+                return cluster_calo;
+        }
+
+        Vertex Matched_Cluster_CALO(int layer)
+        {
+                Vertex cluster_calo;
+                for (int i = 0; i < Calorimeter.size(); i++)
+                {
+                        if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
+                        {
+                                cluster_calo.x = Calorimeter[i].hx;
+                                cluster_calo.y = Calorimeter[i].hy;
+                                cluster_calo.z = Calorimeter[i].hz;
+                        }
+                        break;
+                }
+                return cluster_calo;
+        }
+
         float U_CALO(int layer)
         {
                 float Y = 0;
@@ -310,7 +374,7 @@ public:
 
         void Associate_DC_traj_to_Particle(hipo::bank TRAJ)
         {
-                
+
                 for (int t = 0; t < TRAJ.getRows(); t++)
                 {
                         Traj new_Traj;
@@ -322,16 +386,49 @@ public:
                         float TRAJ_Z = TRAJ.getFloat("z", t);
 
                         if (TRAJ_pindex == index && TRAJ_detector == DC)
-                        { 
+                        {
                                 new_Traj.detector = TRAJ_detector;
                                 new_Traj.pindex = TRAJ_pindex;
                                 new_Traj.layer = TRAJ_layer;
                                 new_Traj.x = TRAJ_X;
                                 new_Traj.y = TRAJ_Y;
-                                new_Traj.z = TRAJ_Z;  
+                                new_Traj.z = TRAJ_Z;
                                 Trajs.push_back(new_Traj);
                         }
-                }  
+                }
+        }
+
+        void Get_local_cluster_CALO(int calo_ID)
+        {
+
+                int sector = this->SECTOR_CALO(PCAL);
+
+                Vertex cluster_CALO = Cluster_CALO(calo_ID);
+                Vertex h_cluster_CALO = Matched_Cluster_CALO(calo_ID);
+
+                if (calo_ID == PCAL)
+                {
+                        cluster_local_PCAL = Rotate_to_local(cluster_CALO, sector);
+                        h_cluster_local_PCAL = Rotate_to_local(h_cluster_CALO, sector);
+                }
+                if (calo_ID == ECIN)
+                {
+                        cluster_local_ECIN = Rotate_to_local(cluster_CALO, sector);
+                        h_cluster_local_ECIN = Rotate_to_local(h_cluster_CALO, sector);
+                }
+        }
+
+        Vertex Rotate_to_local(Vertex cluster, int sector)
+        {
+                TVector3 vector_point(cluster.x, cluster.y, cluster.z);
+                //vector_point.RotateZ(-TMath::Pi() / 3.0 * (sector - 1));
+                //vector_point.RotateY(-TMath::Pi() / 180.0 * 25);
+
+                Vertex rotated_cluster(vector_point.x(), vector_point.y(), vector_point.z());
+                cout<<"in there"<<endl;
+                cout<<cluster.x<<" "<<cluster.y<<" "<<cluster.z<<" "<<endl;
+                cout<<rotated_cluster.x<<" "<<rotated_cluster.y<<" "<<rotated_cluster.z<<" "<<endl;
+                return rotated_cluster;
         }
 };
 
