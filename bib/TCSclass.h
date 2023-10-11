@@ -270,13 +270,16 @@ public:
                 Vertex cluster_calo;
                 for (int i = 0; i < Calorimeter.size(); i++)
                 {
+                        //cout<<"requiered: "<<layer<<" "<<ECAL<<" size "<<Calorimeter.size()<<endl;
+                        //cout<<"list: "<<Calorimeter[i].layer<<" "<<Calorimeter[i].detector<<endl;
                         if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
                         {
                                 cluster_calo.x = Calorimeter[i].x;
                                 cluster_calo.y = Calorimeter[i].y;
                                 cluster_calo.z = Calorimeter[i].z;
+                                break;
                         }
-                        break;
+                        
                 }
                 return cluster_calo;
         }
@@ -291,8 +294,9 @@ public:
                                 cluster_calo.x = Calorimeter[i].hx;
                                 cluster_calo.y = Calorimeter[i].hy;
                                 cluster_calo.z = Calorimeter[i].hz;
+                                break;
                         }
-                        break;
+                        
                 }
                 return cluster_calo;
         }
@@ -413,6 +417,8 @@ public:
                 }
                 if (calo_ID == ECIN)
                 {
+                        //cout<<"Here"<<endl;
+                        //cout<<"cluster_CALO "<<cluster_CALO.x<<endl;
                         cluster_local_ECIN = Rotate_to_local(cluster_CALO, sector);
                         h_cluster_local_ECIN = Rotate_to_local(h_cluster_CALO, sector);
                 }
@@ -421,13 +427,13 @@ public:
         Vertex Rotate_to_local(Vertex cluster, int sector)
         {
                 TVector3 vector_point(cluster.x, cluster.y, cluster.z);
-                //vector_point.RotateZ(-TMath::Pi() / 3.0 * (sector - 1));
-                //vector_point.RotateY(-TMath::Pi() / 180.0 * 25);
+                vector_point.RotateZ(-TMath::Pi() / 3.0 * (sector - 1));
+                vector_point.RotateY(-TMath::Pi() / 180.0 * 25);
 
                 Vertex rotated_cluster(vector_point.x(), vector_point.y(), vector_point.z());
-                cout<<"in there"<<endl;
-                cout<<cluster.x<<" "<<cluster.y<<" "<<cluster.z<<" "<<endl;
-                cout<<rotated_cluster.x<<" "<<rotated_cluster.y<<" "<<rotated_cluster.z<<" "<<endl;
+                //cout<<"in there"<<endl;
+                //cout<<cluster.x<<" "<<cluster.y<<" "<<cluster.z<<" "<<endl;
+                //cout<<rotated_cluster.x<<" "<<rotated_cluster.y<<" "<<rotated_cluster.z<<" "<<endl;
                 return rotated_cluster;
         }
 };
