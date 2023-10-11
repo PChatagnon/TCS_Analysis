@@ -208,7 +208,7 @@ int analysisTCS_MC()
 		"vx_elec", "vy_elec", "vz_elec",
 		"vx_posi", "vy_posi", "vz_posi",
 		"vx_prot", "vy_prot", "vz_prot",
-		"chi2_proton",
+		"chi2_proton","PCAL_sector_elec","PCAL_sector_posi",
 		"lead_lep_p", "sub_lead_lep_p", "lead_lep_theta", "sub_lead_lep_theta",
 		"Triangular_Cut_elec", "Triangular_Cut_posi",
 		"CM_gamma_energy", "CM_gamma_energy_2",
@@ -219,7 +219,6 @@ int analysisTCS_MC()
 		fvars.insert(fvars.end(), {
 									  "PCAL_x_elec",
 									  "PCAL_y_elec",
-									  "PCAL_sector_elec",
 									  "PCAL_U_elec",
 									  "PCAL_V_elec",
 									  "PCAL_W_elec",
@@ -826,6 +825,8 @@ int analysisTCS_MC()
 				outVars["E_k"] = CM_E_k(ev.Electron, ev.Positron, ev.Proton);
 				outVars["E_k_2"] = CM_E_k_2(ev.Electron, ev.Positron, ev.Proton, ev.Q2);
 				outVars["Q2_true"] = ev.Q2_true;
+				outVars["PCAL_sector_elec"] = ev.Electron.SECTOR_CALO(PCAL);
+				outVars["PCAL_sector_posi"] = ev.Positron.SECTOR_CALO(PCAL);
 
 				if (!IsData)
 				{
@@ -839,15 +840,18 @@ int analysisTCS_MC()
 					outVars["PCAL_U_elec"] = ev.Electron.U_CALO(PCAL);
 					outVars["PCAL_V_elec"] = ev.Electron.V_CALO(PCAL);
 					outVars["PCAL_W_elec"] = ev.Electron.W_CALO(PCAL);
-					outVars["PCAL_sector_elec"] = ev.Electron.SECTOR_CALO(PCAL);
+					//outVars["PCAL_sector_elec"] = ev.Electron.SECTOR_CALO(PCAL);
 				}
 
 				if(CALO_study){
 
-					cout<<"PCAL "<<endl;
+					
 					ev.Electron.Get_local_cluster_CALO(PCAL);
-					cout<<"ECIN "<<endl;
 					ev.Electron.Get_local_cluster_CALO(ECIN);
+					ev.Positron.Get_local_cluster_CALO(PCAL);
+					ev.Positron.Get_local_cluster_CALO(ECIN);
+
+					//outVars["PCAL_sector_elec"] = ev.Electron.SECTOR_CALO(PCAL);
 
 					outVars["PCAL_x_elec_rot"] = ev.Electron.cluster_local_PCAL.x;
 					outVars["PCAL_y_elec_rot"] = ev.Electron.cluster_local_PCAL.y;
