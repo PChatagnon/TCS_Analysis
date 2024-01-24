@@ -431,9 +431,6 @@ public:
                 vector_point.RotateY(-TMath::Pi() / 180.0 * 25);
 
                 Vertex rotated_cluster(vector_point.x(), vector_point.y(), vector_point.z());
-                //cout<<"in there"<<endl;
-                //cout<<cluster.x<<" "<<cluster.y<<" "<<cluster.z<<" "<<endl;
-                //cout<<rotated_cluster.x<<" "<<rotated_cluster.y<<" "<<rotated_cluster.z<<" "<<endl;
                 return rotated_cluster;
         }
 };

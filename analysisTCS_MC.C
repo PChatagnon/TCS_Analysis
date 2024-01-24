@@ -31,6 +31,10 @@
 
 #include "reader.h"
 
+// QADB header and namespace
+#include "QADB.h"
+using namespace QA;
+
 #include <ctime> // time_t
 #include <cstdio>
 using namespace std;
@@ -115,6 +119,10 @@ int analysisTCS_MC()
 	cout << "////////////////////////////////////////////"
 		 << "\n";
 
+	/////////Instanciate QADB///////////
+	QADB *qa = new QADB();
+	////////////////////////////////////
+
 	double nbrecEvent = 0;
 	int nbf = 0;
 	double nEventTCS = 0;
@@ -157,7 +165,7 @@ int analysisTCS_MC()
 	// Momentum Correction
 	//////////////////////////////////////////////
 	MomentumCorrection MomCorr;
-	Energy_loss EnergyLoss( inbending, RGA_Fall2018);
+	Energy_loss EnergyLoss(inbending, RGA_Fall2018);
 
 	////////////////////////////////////////////
 	// Instanciate observables
@@ -208,7 +216,7 @@ int analysisTCS_MC()
 		"vx_elec", "vy_elec", "vz_elec",
 		"vx_posi", "vy_posi", "vz_posi",
 		"vx_prot", "vy_prot", "vz_prot",
-		"chi2_proton","PCAL_sector_elec","PCAL_sector_posi",
+		"chi2_proton", "PCAL_sector_elec", "PCAL_sector_posi",
 		"lead_lep_p", "sub_lead_lep_p", "lead_lep_theta", "sub_lead_lep_theta",
 		"Triangular_Cut_elec", "Triangular_Cut_posi",
 		"CM_gamma_energy", "CM_gamma_energy_2",
@@ -229,16 +237,14 @@ int analysisTCS_MC()
 
 	if (CALO_study)
 	{
-		fvars.insert(fvars.end(), {
-									  "PCAL_x_elec_rot","PCAL_y_elec_rot","PCAL_z_elec_rot",
-									  "PCAL_x_posi_rot","PCAL_y_posi_rot","PCAL_z_posi_rot",
-									  "PCAL_hx_elec_rot","PCAL_hy_elec_rot","PCAL_hz_elec_rot",
-									  "PCAL_hx_posi_rot","PCAL_hy_posi_rot","PCAL_hz_posi_rot",
-									  "ECIN_x_elec_rot","ECIN_y_elec_rot","ECIN_z_elec_rot",
-									  "ECIN_x_posi_rot","ECIN_y_posi_rot","ECIN_z_posi_rot",
-									  "ECIN_hx_elec_rot","ECIN_hy_elec_rot","ECIN_hz_elec_rot",
-									  "ECIN_hx_posi_rot","ECIN_hy_posi_rot","ECIN_hz_posi_rot"
-								  });
+		fvars.insert(fvars.end(), {"PCAL_x_elec_rot", "PCAL_y_elec_rot", "PCAL_z_elec_rot",
+								   "PCAL_x_posi_rot", "PCAL_y_posi_rot", "PCAL_z_posi_rot",
+								   "PCAL_hx_elec_rot", "PCAL_hy_elec_rot", "PCAL_hz_elec_rot",
+								   "PCAL_hx_posi_rot", "PCAL_hy_posi_rot", "PCAL_hz_posi_rot",
+								   "ECIN_x_elec_rot", "ECIN_y_elec_rot", "ECIN_z_elec_rot",
+								   "ECIN_x_posi_rot", "ECIN_y_posi_rot", "ECIN_z_posi_rot",
+								   "ECIN_hx_elec_rot", "ECIN_hy_elec_rot", "ECIN_hz_elec_rot",
+								   "ECIN_hx_posi_rot", "ECIN_hy_posi_rot", "ECIN_hz_posi_rot"});
 	}
 
 	if (Lepton_ID_check)
@@ -449,7 +455,7 @@ int analysisTCS_MC()
 		{
 			reader.open(nameFiles);
 			reader.readDictionary(factory);
-			//factory.show();
+			// factory.show();
 		}
 
 		if (!IsHipo)
@@ -515,6 +521,7 @@ int analysisTCS_MC()
 			MCEvent MC_ev;
 
 			int run = 0;
+			int event_nb = 0;
 			// int trigger_bit = 0;
 
 			if (IsHipo)
@@ -540,6 +547,7 @@ int analysisTCS_MC()
 				Plots.Fill_1D("evt_count", 0, 1);
 
 				run = RUN.getInt("run", 0);
+				event_nb = RUN.getInt("event", 0);
 				trigger_bit = RUN.getLong("trigger", 0);
 				int np_input = PART.getRows();
 				ev.Set_nb_part(np_input);
@@ -595,29 +603,41 @@ int analysisTCS_MC()
 				}
 
 				///////////////////////////////////////////
-				// Filter good runs for data only
+				// Filter good runs for data only using QADB
 				///////////////////////////////////////////
-				if (!Run_Selector.Is_Good_Run(run) && IsData && RGA_Fall2018)
+				// if (!Run_Selector.Is_Good_Run(run) && IsData && RGA_Fall2018)
+				bool Golden = true;
+				if(IsData)
+					Golden = qa->Golden(run, event_nb);
+				if (!Golden && IsData)
 					continue;
+
+				////////////////////////////////////////
+				/////////QA DB query for charge/////////
+				////////////////////////////////////////
+				if (IsData)
+				{
+					qa->AccumulateCharge();
+				}
 
 				///////////////////////////////////////////
 				// Get Particles and cut on event topology
 				///////////////////////////////////////////
 				ev.Set_Particles(PART, IsEE_BG);
 
-				if (ev.recem == 1 && ev.recp == 1 )
+				if (ev.recem == 1 && ev.recp == 1)
 					Plots.Fill_1D("efficiency", 0, 1);
-				if (ev.recep == 1 && ev.recp == 1 )
+				if (ev.recep == 1 && ev.recp == 1)
 					Plots.Fill_1D("efficiency", 1, 1);
 				if (ev.recem == 1 && ev.recep == 1)
 					Plots.Fill_1D("efficiency", 2, 1);
-				if (ev.recem == 1 && ev.recp == 1 && ev.Proton.status > 2000 && ev.Proton.status < 4000 )
+				if (ev.recem == 1 && ev.recp == 1 && ev.Proton.status > 2000 && ev.Proton.status < 4000)
 					Plots.Fill_1D("efficiency", 3, 1);
-				if (ev.recem == 1 && ev.recp == 1 && ev.Proton.status > 4000 )
+				if (ev.recem == 1 && ev.recp == 1 && ev.Proton.status > 4000)
 					Plots.Fill_1D("efficiency", 4, 1);
-				if (ev.recep == 1 && ev.recp == 1 && ev.Proton.status > 2000 && ev.Proton.status < 4000 )
+				if (ev.recep == 1 && ev.recp == 1 && ev.Proton.status > 2000 && ev.Proton.status < 4000)
 					Plots.Fill_1D("efficiency", 5, 1);
-				if (ev.recep == 1 && ev.recp == 1 && ev.Proton.status > 4000 )
+				if (ev.recep == 1 && ev.recp == 1 && ev.Proton.status > 4000)
 					Plots.Fill_1D("efficiency", 6, 1);
 
 				if (ev.recem == 1)
@@ -643,9 +663,9 @@ int analysisTCS_MC()
 				// Number of events after topology cuts
 				Plots.Fill_1D("evt_count", 1, 1);
 
-				if (ev.Proton.status > 2000 && ev.Proton.status < 4000 )
+				if (ev.Proton.status > 2000 && ev.Proton.status < 4000)
 					Plots.Fill_1D("evt_count", 2, 1);
-				if (ev.Proton.status > 4000 )
+				if (ev.Proton.status > 4000)
 					Plots.Fill_1D("evt_count", 3, 1);
 
 				///////////////////////////////////////////
@@ -679,16 +699,16 @@ int analysisTCS_MC()
 				// Radiative correction
 				///////////////////////////////////////////
 				ev.Apply_Radiative_Correction(InputParameters.RadCorr);
-				
+
 				///////////////////////////////////////////
 
 				///////////////////////////////////////////
 				// Momentum MC correction
 				///////////////////////////////////////////
-				//ev.Apply_MC_Correction(MomCorr);
-				//cout<<"Before correction "<<ev.Proton.Vector.P()<<endl;  /////////NEED TO BE VALIDATED/////////
-				//ev.Apply_Energy_loss(EnergyLoss);
-				//cout<<"After correction "<<ev.Proton.Vector.P()<<endl;
+				// ev.Apply_MC_Correction(MomCorr);
+				// cout<<"Before correction "<<ev.Proton.Vector.P()<<endl;  /////////NEED TO BE VALIDATED/////////
+				// ev.Apply_Energy_loss(EnergyLoss);
+				// cout<<"After correction "<<ev.Proton.Vector.P()<<endl;
 				///////////////////////////////////////////
 			}
 
@@ -840,18 +860,18 @@ int analysisTCS_MC()
 					outVars["PCAL_U_elec"] = ev.Electron.U_CALO(PCAL);
 					outVars["PCAL_V_elec"] = ev.Electron.V_CALO(PCAL);
 					outVars["PCAL_W_elec"] = ev.Electron.W_CALO(PCAL);
-					//outVars["PCAL_sector_elec"] = ev.Electron.SECTOR_CALO(PCAL);
+					// outVars["PCAL_sector_elec"] = ev.Electron.SECTOR_CALO(PCAL);
 				}
 
-				if(CALO_study){
+				if (CALO_study)
+				{
 
-					
 					ev.Electron.Get_local_cluster_CALO(PCAL);
 					ev.Electron.Get_local_cluster_CALO(ECIN);
 					ev.Positron.Get_local_cluster_CALO(PCAL);
 					ev.Positron.Get_local_cluster_CALO(ECIN);
 
-					//outVars["PCAL_sector_elec"] = ev.Electron.SECTOR_CALO(PCAL);
+					// outVars["PCAL_sector_elec"] = ev.Electron.SECTOR_CALO(PCAL);
 
 					outVars["PCAL_x_elec_rot"] = ev.Electron.cluster_local_PCAL.x;
 					outVars["PCAL_y_elec_rot"] = ev.Electron.cluster_local_PCAL.y;
@@ -864,7 +884,7 @@ int analysisTCS_MC()
 					outVars["PCAL_hx_elec_rot"] = ev.Electron.h_cluster_local_PCAL.x;
 					outVars["PCAL_hy_elec_rot"] = ev.Electron.h_cluster_local_PCAL.y;
 					outVars["PCAL_hz_elec_rot"] = ev.Electron.h_cluster_local_PCAL.z;
-									  
+
 					outVars["PCAL_hx_posi_rot"] = ev.Positron.h_cluster_local_PCAL.x;
 					outVars["PCAL_hy_posi_rot"] = ev.Positron.h_cluster_local_PCAL.y;
 					outVars["PCAL_hz_posi_rot"] = ev.Positron.h_cluster_local_PCAL.z;
@@ -880,7 +900,7 @@ int analysisTCS_MC()
 					outVars["ECIN_hx_elec_rot"] = ev.Electron.h_cluster_local_ECIN.x;
 					outVars["ECIN_hy_elec_rot"] = ev.Electron.h_cluster_local_ECIN.y;
 					outVars["ECIN_hz_elec_rot"] = ev.Electron.h_cluster_local_ECIN.z;
-									  
+
 					outVars["ECIN_hx_posi_rot"] = ev.Positron.h_cluster_local_ECIN.x;
 					outVars["ECIN_hy_posi_rot"] = ev.Positron.h_cluster_local_ECIN.y;
 					outVars["ECIN_hz_posi_rot"] = ev.Positron.h_cluster_local_ECIN.z;
@@ -1067,6 +1087,20 @@ int analysisTCS_MC()
 	outT->Write();
 	outFile->Write();
 	outFile->Close();
+
+	///////////////////////////////
+	// Output charge from QA in txt
+	///////////////////////////////
+	if (IsData)
+	{
+		std::ofstream output_txt_charge(Form("outputTCS_charge_%s.txt", output_file.Data()));
+		if (!output_txt_charge.is_open())
+		{
+			std::cerr << "Unable to open the charge file." << std::endl;
+		}
+		output_txt_charge << "Charge" << std::endl;
+		output_txt_charge << (qa->GetAccumulatedCharge()) << std::endl;
+	}
 
 	cout << "nb of file " << nbf << "\n";
 	cout << "nb of events " << nbEvent << "\n";
