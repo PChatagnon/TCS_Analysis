@@ -75,6 +75,7 @@ int analysisTCS_MC()
 	Lepton_ID_check = input.cmdOptionExists("-Lepton_ID_check");
 	DC_Traj_check = input.cmdOptionExists("-DC_Traj_check");
 	all_Gen_vector = input.cmdOptionExists("-all_Gen_vector");
+	QA_Golden = input.cmdOptionExists("-QA_Golden");
 	/////////////////////////////////////////
 
 	if (input.cmdOptionExists("-energy"))
@@ -606,10 +607,14 @@ int analysisTCS_MC()
 				// Filter good runs for data only using QADB
 				///////////////////////////////////////////
 				// if (!Run_Selector.Is_Good_Run(run) && IsData && RGA_Fall2018)
-				bool Golden = true;
-				if(IsData)
-					Golden = qa->Golden(run, event_nb);
-				if (!Golden && IsData)
+				bool Keep_run = true;
+				if (IsData)
+				{
+					Keep_run = qa->OkForAsymmetry(run, event_nb);
+					if (QA_Golden)
+						Keep_run = qa->Golden(run, event_nb);
+				}
+				if (!Keep_run && IsData)
 					continue;
 
 				////////////////////////////////////////
