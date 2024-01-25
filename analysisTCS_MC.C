@@ -69,6 +69,7 @@ int analysisTCS_MC()
 	IsGrape = input.cmdOptionExists("-IsGrape");
 	IsJPsi = input.cmdOptionExists("-IsJPsi");
 	RGA_Fall2018 = input.cmdOptionExists("-RGA_Fall2018");
+	RGA_Spring2019 = input.cmdOptionExists("-RGA_Spring2019");
 	inbending = !input.cmdOptionExists("-outbending");
 	PCAL_study = input.cmdOptionExists("-PCAL");
 	CALO_study = input.cmdOptionExists("-CALO");
@@ -92,6 +93,7 @@ int analysisTCS_MC()
 		cout << "-IsGrape\n";
 		cout << "-IsJPsi\n";
 		cout << "-RGA_Fall2018\n";
+		cout << "-RGA_Spring2019\n";
 		cout << "-outbending\n";
 		cout << "-PCAL\n";
 		cout << "-Lepton_ID_check\n";
@@ -109,6 +111,7 @@ int analysisTCS_MC()
 		 << "\n";
 	cout << "Inbending : " << inbending << "\n";
 	cout << "RGA_Fall2018 : " << RGA_Fall2018 << "\n";
+	cout << "RGA_Spring2019 : " << RGA_Spring2019 << "\n";
 	cout << "IsTCSGen : " << IsTCSGen << "\n";
 	cout << "IsGrape : " << IsGrape << "\n";
 	cout << "IsJPsi : " << IsJPsi << "\n";
@@ -313,34 +316,64 @@ int analysisTCS_MC()
 	// TMVA PID for Positron
 	///////////////////////////////////////////
 
+	//string path_ML_weights = "ML_weights";
+	string path_ML_weights = "ML_weights_pass2";
+
 	TString positron_bdt_weights;
 	TString electron_bdt_weights;
 
-	if (inbending)
+	if (inbending && RGA_Fall2018) /// Inbending Fall 2018
 	{
+
+		cout << "////////////////////////////////////////////" << "\n";
+		cout << "Weight for Inbending Fall 2018 " << ebeam << " GeV\n";
+		cout << "////////////////////////////////////////////" << "\n";
 
 		if (IsEE_BG)
 		{
-			positron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_inbending.weights.xml";
-			electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_inbending.weights.xml";
+			positron_bdt_weights = path_ML_weights + "F18inneg/TMVAClassification_BDT.weights.xml";
+			electron_bdt_weights = path_ML_weights + "F18inneg/TMVAClassification_BDT.weights.xml";
 		}
 		else
 		{
-			positron_bdt_weights = "ML_weights/TMVAClassification_BDT_posi_inbending.weights.xml";
-			electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_inbending.weights.xml";
+			positron_bdt_weights = path_ML_weights + "F18inpos/TMVAClassification_BDT.weights.xml";
+			electron_bdt_weights = path_ML_weights + "F18inneg/TMVAClassification_BDT.weights.xml";
 		}
 	}
-	else
+	else if (inbending && RGA_Spring2019) /// Inbending Spring 2019
 	{
+
+		cout << "////////////////////////////////////////////" << "\n";
+		cout << "Weight for Inbending Spring 2019 " << ebeam << " GeV\n";
+		cout << "////////////////////////////////////////////" << "\n";
+
 		if (IsEE_BG)
 		{
-			positron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_outbending.weights.xml";
-			electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_outbending.weights.xml";
+			positron_bdt_weights = path_ML_weights + "S19neg/TMVAClassification_BDT.weights.xml";
+			electron_bdt_weights = path_ML_weights + "S19neg/TMVAClassification_BDT.weights.xml";
 		}
 		else
 		{
-			positron_bdt_weights = "ML_weights/TMVAClassification_BDT_posi_outbending.weights.xml";
-			electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_outbending.weights.xml";
+			positron_bdt_weights = path_ML_weights + "S19pos/TMVAClassification_BDT.weights.xml";
+			electron_bdt_weights = path_ML_weights + "S19neg/TMVAClassification_BDT.weights.xml";
+		}
+	}
+	else if (!inbending) /// Outbending  Fall 2018
+	{
+
+		cout << "////////////////////////////////////////////" << "\n";
+		cout << "Weight for Outbending Fall 2018 " << ebeam << " GeV\n";
+		cout << "////////////////////////////////////////////" << "\n";
+
+		if (IsEE_BG)
+		{
+			positron_bdt_weights = path_ML_weights + "F18outneg/TMVAClassification_BDT.weights.xml";
+			electron_bdt_weights = path_ML_weights + "F18outneg/TMVAClassification_BDT.weights.xml";
+		}
+		else
+		{
+			positron_bdt_weights = path_ML_weights + "F18outpos/TMVAClassification_BDT.weights.xml";
+			electron_bdt_weights = path_ML_weights + "F18outneg/TMVAClassification_BDT.weights.xml";
 		}
 	}
 
