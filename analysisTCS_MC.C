@@ -331,13 +331,13 @@ int analysisTCS_MC()
 
 		if (IsEE_BG)
 		{
-			positron_bdt_weights = path_ML_weights + "F18inneg/TMVAClassification_BDT.weights.xml";
-			electron_bdt_weights = path_ML_weights + "F18inneg/TMVAClassification_BDT.weights.xml";
+			positron_bdt_weights = path_ML_weights + "/F18inneg/TMVAClassification_BDT.weights.xml";
+			electron_bdt_weights = path_ML_weights + "/F18inneg/TMVAClassification_BDT.weights.xml";
 		}
 		else
 		{
-			positron_bdt_weights = path_ML_weights + "F18inpos/TMVAClassification_BDT.weights.xml";
-			electron_bdt_weights = path_ML_weights + "F18inneg/TMVAClassification_BDT.weights.xml";
+			positron_bdt_weights = path_ML_weights + "/F18inpos/TMVAClassification_BDT.weights.xml";
+			electron_bdt_weights = path_ML_weights + "/F18inneg/TMVAClassification_BDT.weights.xml";
 		}
 	}
 	else if (inbending && RGA_Spring2019) /// Inbending Spring 2019
@@ -349,13 +349,13 @@ int analysisTCS_MC()
 
 		if (IsEE_BG)
 		{
-			positron_bdt_weights = path_ML_weights + "S19neg/TMVAClassification_BDT.weights.xml";
-			electron_bdt_weights = path_ML_weights + "S19neg/TMVAClassification_BDT.weights.xml";
+			positron_bdt_weights = path_ML_weights + "/S19neg/TMVAClassification_BDT.weights.xml";
+			electron_bdt_weights = path_ML_weights + "/S19neg/TMVAClassification_BDT.weights.xml";
 		}
 		else
 		{
-			positron_bdt_weights = path_ML_weights + "S19pos/TMVAClassification_BDT.weights.xml";
-			electron_bdt_weights = path_ML_weights + "S19neg/TMVAClassification_BDT.weights.xml";
+			positron_bdt_weights = path_ML_weights + "/S19pos/TMVAClassification_BDT.weights.xml";
+			electron_bdt_weights = path_ML_weights + "/S19neg/TMVAClassification_BDT.weights.xml";
 		}
 	}
 	else if (!inbending) /// Outbending  Fall 2018
@@ -367,13 +367,13 @@ int analysisTCS_MC()
 
 		if (IsEE_BG)
 		{
-			positron_bdt_weights = path_ML_weights + "F18outneg/TMVAClassification_BDT.weights.xml";
-			electron_bdt_weights = path_ML_weights + "F18outneg/TMVAClassification_BDT.weights.xml";
+			positron_bdt_weights = path_ML_weights + "/F18outneg/TMVAClassification_BDT.weights.xml";
+			electron_bdt_weights = path_ML_weights + "/F18outneg/TMVAClassification_BDT.weights.xml";
 		}
 		else
 		{
-			positron_bdt_weights = path_ML_weights + "F18outpos/TMVAClassification_BDT.weights.xml";
-			electron_bdt_weights = path_ML_weights + "F18outneg/TMVAClassification_BDT.weights.xml";
+			positron_bdt_weights = path_ML_weights + "/F18outpos/TMVAClassification_BDT.weights.xml";
+			electron_bdt_weights = path_ML_weights + "/F18outneg/TMVAClassification_BDT.weights.xml";
 		}
 	}
 
