@@ -668,7 +668,11 @@ int analysisTCS_MC()
 					if (QA_Golden)
 						Keep_run = qa->Golden(run, event_nb);
 				}
-				if (!Keep_run && IsData)
+
+				int bad_runs[] = {5610, 5615, 6631, 6757};
+				bool Additional_bad_runs = std::find(std::begin(bad_runs), std::end(bad_runs), run) = std::end(bad_runs);
+
+				if (!Keep_run && IsData && Additional_bad_runs)
 					continue;
 
 				////////////////////////////////////////
