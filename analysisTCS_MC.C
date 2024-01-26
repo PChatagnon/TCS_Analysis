@@ -30,6 +30,7 @@
 #include "bib/InputParser.h"
 
 #include "reader.h"
+#include "rcdb_reader.h"
 
 // QADB header and namespace
 #include "QADB.h"
@@ -142,6 +143,12 @@ int analysisTCS_MC()
 	TString nameFiles = "";
 
 	TString type = "REC";
+
+	/////////////////////////////////////////////
+	// RCDB setup
+	/////////////////////////////////////////////
+	rcdb_root rcdb("InputOptions/rcdb.root");
+
 
 	//////////////////////////////////////////////
 	// Acceptance setup
@@ -316,7 +323,7 @@ int analysisTCS_MC()
 	// TMVA PID for Positron
 	///////////////////////////////////////////
 
-	//string path_ML_weights = "ML_weights";
+	// string path_ML_weights = "ML_weights";
 	string path_ML_weights = "ML_weights_pass2";
 
 	TString positron_bdt_weights;
@@ -325,9 +332,11 @@ int analysisTCS_MC()
 	if (inbending && RGA_Fall2018) /// Inbending Fall 2018
 	{
 
-		cout << "////////////////////////////////////////////" << "\n";
+		cout << "////////////////////////////////////////////"
+			 << "\n";
 		cout << "Weight for Inbending Fall 2018 " << ebeam << " GeV\n";
-		cout << "////////////////////////////////////////////" << "\n";
+		cout << "////////////////////////////////////////////"
+			 << "\n";
 
 		if (IsEE_BG)
 		{
@@ -343,9 +352,11 @@ int analysisTCS_MC()
 	else if (inbending && RGA_Spring2019) /// Inbending Spring 2019
 	{
 
-		cout << "////////////////////////////////////////////" << "\n";
+		cout << "////////////////////////////////////////////"
+			 << "\n";
 		cout << "Weight for Inbending Spring 2019 " << ebeam << " GeV\n";
-		cout << "////////////////////////////////////////////" << "\n";
+		cout << "////////////////////////////////////////////"
+			 << "\n";
 
 		if (IsEE_BG)
 		{
@@ -361,9 +372,11 @@ int analysisTCS_MC()
 	else if (!inbending) /// Outbending  Fall 2018
 	{
 
-		cout << "////////////////////////////////////////////" << "\n";
+		cout << "////////////////////////////////////////////"
+			 << "\n";
 		cout << "Weight for Outbending Fall 2018 " << ebeam << " GeV\n";
-		cout << "////////////////////////////////////////////" << "\n";
+		cout << "////////////////////////////////////////////"
+			 << "\n";
 
 		if (IsEE_BG)
 		{
@@ -403,6 +416,14 @@ int analysisTCS_MC()
 
 	int corrrad = 0;
 	int nbEvent = 0;
+
+	////////////////////////////////////////////
+	//Initialize RCDB flags
+	bool RCDB_read = false;
+	double beam_current = 0.0;
+	string beam_current_requested = "";
+	int run_data = 0;
+	////////////////////////////////////////////
 
 	////////////////////////////////////////////
 	// Get file name
@@ -656,6 +677,21 @@ int analysisTCS_MC()
 				if (IsData)
 				{
 					qa->AccumulateCharge();
+				}
+
+				////////////////////////////////////////////
+				// RCDB informations
+				////////////////////////////////////////////
+				if (IsData && !RCDB_read)
+				{
+				rcdb.readRun(run);
+				cout << "Beam energy: " << rcdb.current().beam_energy << endl;
+				cout << "Beam current for run "<<run<<": " << rcdb.current().beam_current << endl;
+				cout << "Beam current requested for run "<<run<<": " << rcdb.current().beam_current_request << endl;
+				beam_current = rcdb.current().beam_current;
+				beam_current_requested = rcdb.current().beam_current_request;
+				run_data = run;
+				RCDB_read = true;
 				}
 
 				///////////////////////////////////////////
@@ -1122,9 +1158,12 @@ int analysisTCS_MC()
 	Plots.Draw_All_1D();
 	Plots.Draw_All_2D();
 
+	outFile->cd();
 	outT->Write();
 	outFile->Write();
 	outFile->Close();
+
+	cout<<"Tree written"<<endl;
 
 	///////////////////////////////
 	// Output charge from QA in txt
@@ -1138,6 +1177,12 @@ int analysisTCS_MC()
 		}
 		output_txt_charge << "Charge" << std::endl;
 		output_txt_charge << (qa->GetAccumulatedCharge()) << std::endl;
+		output_txt_charge << "Current" << std::endl;
+		output_txt_charge << beam_current << std::endl;
+		output_txt_charge << "Current requested" << std::endl;
+		output_txt_charge << beam_current_requested << std::endl;
+		output_txt_charge << "run" << std::endl;
+		output_txt_charge << run_data << std::endl;
 	}
 
 	cout << "nb of file " << nbf << "\n";
