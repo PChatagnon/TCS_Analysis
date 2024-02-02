@@ -78,6 +78,7 @@ int analysisTCS_MC()
 	DC_Traj_check = input.cmdOptionExists("-DC_Traj_check");
 	all_Gen_vector = input.cmdOptionExists("-all_Gen_vector");
 	QA_Golden = input.cmdOptionExists("-QA_Golden");
+	no_QADB = input.cmdOptionExists("-no_QADB");
 	/////////////////////////////////////////
 
 	if (input.cmdOptionExists("-energy"))
@@ -148,7 +149,6 @@ int analysisTCS_MC()
 	// RCDB setup
 	/////////////////////////////////////////////
 	rcdb_root rcdb("InputOptions/rcdb.root");
-
 
 	//////////////////////////////////////////////
 	// Acceptance setup
@@ -418,7 +418,7 @@ int analysisTCS_MC()
 	int nbEvent = 0;
 
 	////////////////////////////////////////////
-	//Initialize RCDB flags
+	// Initialize RCDB flags
 	bool RCDB_read = false;
 	double beam_current = 0.0;
 	string beam_current_requested = "";
@@ -661,18 +661,34 @@ int analysisTCS_MC()
 				// Filter good runs for data only using QADB
 				///////////////////////////////////////////
 				// if (!Run_Selector.Is_Good_Run(run) && IsData && RGA_Fall2018)
-				bool Keep_run = true;
+				bool Keep_event = true;
 				if (IsData)
 				{
-					Keep_run = qa->OkForAsymmetry(run, event_nb);
+					Keep_event = qa->OkForAsymmetry(run, event_nb);
 					if (QA_Golden)
-						Keep_run = qa->Golden(run, event_nb);
+					{
+						Keep_event = qa->Golden(run, event_nb);
+					}
+					if (no_QADB)
+					{
+						qa->SetMaskBit("TotalOutlier", false);
+						qa->SetMaskBit("TerminalOutlier", false);
+						qa->SetMaskBit("MarginalOutlier", false);
+						qa->SetMaskBit("SectorLoss", false); 
+						qa->SetMaskBit("LowLiveTime", false);
+						qa->SetMaskBit("Misc", false);
+						Keep_event =  qa->Pass(run, event_nb);
+					}
 				}
 
 				int bad_runs[] = {5610, 5615, 6631, 6757};
-				bool Additional_bad_runs = std::find(std::begin(bad_runs), std::end(bad_runs), run) = std::end(bad_runs);
+				bool Additional_bad_runs = false;
+				if (IsData)
+				{
+					Additional_bad_runs = (std::find(std::begin(bad_runs), std::end(bad_runs), run) != std::end(bad_runs));
+				}
 
-				if (!Keep_run && IsData && Additional_bad_runs)
+				if ((!Keep_event || Additional_bad_runs) && IsData)
 					continue;
 
 				////////////////////////////////////////
@@ -688,14 +704,14 @@ int analysisTCS_MC()
 				////////////////////////////////////////////
 				if (IsData && !RCDB_read)
 				{
-				rcdb.readRun(run);
-				cout << "Beam energy: " << rcdb.current().beam_energy << endl;
-				cout << "Beam current for run "<<run<<": " << rcdb.current().beam_current << endl;
-				cout << "Beam current requested for run "<<run<<": " << rcdb.current().beam_current_request << endl;
-				beam_current = rcdb.current().beam_current;
-				beam_current_requested = rcdb.current().beam_current_request;
-				run_data = run;
-				RCDB_read = true;
+					rcdb.readRun(run);
+					cout << "Beam energy: " << rcdb.current().beam_energy << endl;
+					cout << "Beam current for run " << run << ": " << rcdb.current().beam_current << endl;
+					cout << "Beam current requested for run " << run << ": " << rcdb.current().beam_current_request << endl;
+					beam_current = rcdb.current().beam_current;
+					beam_current_requested = rcdb.current().beam_current_request;
+					run_data = run;
+					RCDB_read = true;
 				}
 
 				///////////////////////////////////////////
@@ -1167,7 +1183,7 @@ int analysisTCS_MC()
 	outFile->Write();
 	outFile->Close();
 
-	cout<<"Tree written"<<endl;
+	cout << "Tree written" << endl;
 
 	///////////////////////////////
 	// Output charge from QA in txt
