@@ -674,10 +674,10 @@ int analysisTCS_MC()
 						qa->SetMaskBit("TotalOutlier", false);
 						qa->SetMaskBit("TerminalOutlier", false);
 						qa->SetMaskBit("MarginalOutlier", false);
-						qa->SetMaskBit("SectorLoss", false); 
+						qa->SetMaskBit("SectorLoss", false);
 						qa->SetMaskBit("LowLiveTime", false);
 						qa->SetMaskBit("Misc", false);
-						Keep_event =  qa->Pass(run, event_nb);
+						Keep_event = qa->Pass(run, event_nb);
 					}
 				}
 
@@ -744,6 +744,18 @@ int analysisTCS_MC()
 					Plots.Fill_1D("efficiency", 10, 1);
 				if (ev.recp == 1 && ev.Proton.status > 4000)
 					Plots.Fill_1D("efficiency", 11, 1);
+
+				// Store event topology
+				if (ev.recem > 0 && ev.recep > 0 && ev.recp > 0)
+				{
+					Plots.Fill_1D("multiplicity_e", ev.recem, 1);
+					Plots.Fill_1D("multiplicity_ep", ev.recep, 1);
+					Plots.Fill_1D("multiplicity_p", ev.recp, 1);
+
+					Plots.Fill_2D("multiplicity_2D_e_ep", ev.recem, ev.recep, 1);
+					Plots.Fill_2D("multiplicity_2D_e_p", ev.recem, ev.recp, 1);
+					Plots.Fill_2D("multiplicity_2D_ep_p", ev.recep, ev.recp, 1);
+				}
 
 				if (!ev.pass_topology_cut())
 				{

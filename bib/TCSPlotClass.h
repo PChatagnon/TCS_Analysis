@@ -6,6 +6,11 @@ const std::vector<vector<TString>> ListPlot1D{
     // Format : { "name", "title;tile_x;title_y" , bin_x , min_x , max_x }
     {"evt_count", "evt_count", "6", "0", "6"},
     {"efficiency", "efficiency", "12", "0", "12"},
+
+    {"multiplicity_e", "multiplicity_e", "6", "0", "6"},
+    {"multiplicity_ep", "multiplicity_ep", "6", "0", "6"},
+    {"multiplicity_p", "multiplicity_p", "6", "0", "6"},
+
     {"MMass", "Missing mass beam", "100", "-20", "20"},
     {"Q2", "Virtuality incoming photon (Q2)", "100", "-20", "20"},
     {"EM1", ";M;events", "200", "0.0", "4.0"},
@@ -79,8 +84,10 @@ const std::vector<vector<TString>> ListPlot1D{
     {"ECherenkov Positron", "Cherenkov Positron", "40", "0", "40"}};
 
 const std::vector<vector<TString>> ListPlot2D{
-
     // Format : {"name", "title;tile_x;title_y",bin_x,min_x,max_x,bin_y,min_y,max_y}
+    {"multiplicity_2D_e_ep", "multiplicity_2D_e_ep", "6", "0", "6", "6", "0", "6"},
+    {"multiplicity_2D_ep_p", "multiplicity_2D_ep_p", "6", "0", "6", "6", "0", "6"},
+    {"multiplicity_2D_e_p", "multiplicity_2D_e_p", "6", "0", "6", "6", "0", "6"},
     {"MvsE", "M vs Egamma", "120", "2", "11", "120", "0", "3"},
     {"ChePhi", "ChePhi", "200", "-180", "180", "200", "0", "40"},
     {"MvsPElec", "M vs PElec", "120", "0", "11", "120", "0", "3"},
