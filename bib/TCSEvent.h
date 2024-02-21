@@ -299,7 +299,7 @@ public:
 
         bool pass_EC_cut()
         {
-                return (Electron.passEC && Positron.passEC && Proton.passEC);
+                return (Electron.passEC && Positron.passEC);
         }
 
         void Compute_SF()

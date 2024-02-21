@@ -27,6 +27,7 @@ bool IsEE_BG = false;
 bool IsTCSGen = false;
 bool IsGrape = false;
 bool IsJPsi = false;
+bool IsElSpectro = false;
 bool Weighted_simu = false;
 
 bool HTCCSectorCut = false;

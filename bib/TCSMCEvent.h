@@ -49,7 +49,7 @@ public:
                 vBeam.SetPxPyPzE(0., 0., ebeam, ebeam);
         }
 
-        void Set_MC_Particles(hipo::bank MCEVENT, hipo::bank MCPART, bool IsGrape, bool IsJPsi)
+        void Set_MC_Particles(hipo::bank MCEVENT, hipo::bank MCPART, bool IsGrape, bool IsJPsi, bool IsElSpectro, bool IsTCSGen)
         {
 
                 if (IsGrape)
@@ -64,7 +64,7 @@ public:
                         vz_prot_Gen = MCPART.getFloat("vz", 0);
                 }
 
-                if (!IsGrape && !IsJPsi)
+                if (IsTCSGen)
                 {
                         Electron_2.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), me);
                         Positron.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), me);
@@ -98,10 +98,17 @@ public:
                         w = MC_factor_1 * MC_factor_2 * MC_factor_3;
                 }
 
-                /*if (Weighted_simu)
+                if (IsElSpectro)
                 {
-                        w = MCEVENT.getFloat("weight", 0);
-                }*/
+                        Electron_2.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), me);
+                        Positron.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), me);
+                        Proton.SetXYZM(MCPART.getFloat("px", 2), MCPART.getFloat("py", 2), MCPART.getFloat("pz", 2), mp);
+
+                        vz_elec_Gen = MCPART.getFloat("vz", 0);
+                        vz_posi_Gen = MCPART.getFloat("vz", 1);
+                        vz_prot_Gen = MCPART.getFloat("vz", 2);
+                        //w = 1;
+                }
         }
 
         void Get_Kinematics()

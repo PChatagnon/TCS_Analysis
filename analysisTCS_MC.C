@@ -69,6 +69,7 @@ int analysisTCS_MC()
 	IsTCSGen = input.cmdOptionExists("-IsTCSGen");
 	IsGrape = input.cmdOptionExists("-IsGrape");
 	IsJPsi = input.cmdOptionExists("-IsJPsi");
+	IsElSpectro = input.cmdOptionExists("-IsElSpectro");
 	RGA_Fall2018 = input.cmdOptionExists("-RGA_Fall2018");
 	RGA_Spring2019 = input.cmdOptionExists("-RGA_Spring2019");
 	inbending = !input.cmdOptionExists("-outbending");
@@ -117,6 +118,7 @@ int analysisTCS_MC()
 	cout << "IsTCSGen : " << IsTCSGen << "\n";
 	cout << "IsGrape : " << IsGrape << "\n";
 	cout << "IsJPsi : " << IsJPsi << "\n";
+	cout << "IsElSpectro : " << IsElSpectro << "\n";
 	cout << "IsEE_BG : " << IsEE_BG << "\n";
 	cout << "Lepton ID check : " << Lepton_ID_check << "\n";
 	cout << "PCAL var. : " << PCAL_study << "\n";
@@ -222,7 +224,7 @@ int analysisTCS_MC()
 		"evt_num", "t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "helicity", "polaT",
 		"positron_SF", "electron_SF", "positron_score", "electron_score",
 		"weight", "acc", "acc_error", "real_flux_Gen", "virtual_flux_Gen", "virtual_flux_Frixione_Gen", "run", "analysis_stage", "topology",
-		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
+		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "pass_EC_cut", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
 		"status_elec", "status_posi", "status_prot",
 		"vx_elec", "vy_elec", "vz_elec",
 		"vx_posi", "vy_posi", "vz_posi",
@@ -231,7 +233,11 @@ int analysisTCS_MC()
 		"lead_lep_p", "sub_lead_lep_p", "lead_lep_theta", "sub_lead_lep_theta",
 		"Triangular_Cut_elec", "Triangular_Cut_posi",
 		"CM_gamma_energy", "CM_gamma_energy_2",
-		"Q2_true", "E_k", "E_k_2"};
+		"Q2_true", "E_k", "E_k_2",
+		"PCAL_x_elec",
+		"PCAL_y_elec",
+		"PCAL_x_posi",
+		"PCAL_y_posi",};
 
 	if (PCAL_study)
 	{
@@ -243,6 +249,9 @@ int analysisTCS_MC()
 									  "PCAL_W_elec",
 									  "PCAL_x_posi",
 									  "PCAL_y_posi",
+									  "PCAL_U_posi",
+									  "PCAL_V_posi",
+									  "PCAL_W_posi"
 								  });
 	}
 
@@ -293,7 +302,7 @@ int analysisTCS_MC()
 		"theta_Gen", "phi_Gen", "real_flux_Gen", "virtual_flux_Gen", "virtual_flux_Frixione_Gen"};
 
 	std::map<TString, Float_t> outVars_Gen;
-	if (IsGrape || IsTCSGen || IsJPsi)
+	if (IsGrape || IsTCSGen || IsJPsi || IsElSpectro)
 	{
 		for (size_t i = 0; i < sizeof(fvars_Gen) / sizeof(TString); i++)
 		{
@@ -433,7 +442,7 @@ int analysisTCS_MC()
 	// cout<<input.getCmdIndex("-ef")<<"\n";
 	for (Int_t i = input.getCmdIndex("-f") + 2; i < input.getCmdIndex("-ef") + 1; i++)
 	{
-		if (TString(argv[i]).Contains("MC") || IsGrape || IsTCSGen || IsJPsi)
+		if (TString(argv[i]).Contains("MC") || IsGrape || IsTCSGen || IsJPsi || IsElSpectro)
 		{
 			IsData = false;
 		}
@@ -448,11 +457,6 @@ int analysisTCS_MC()
 		{
 			IsHipo = false;
 			nameFiles = TString(argv[i]);
-		}
-
-		if (IsTCSGen || IsGrape || IsJPsi)
-		{
-			IsData = false;
 		}
 
 		////////////////////////////////////////////
@@ -470,6 +474,10 @@ int analysisTCS_MC()
 		else if (IsJPsi)
 			cout << "Running on JPsi Simulation"
 				 << "\n";
+		else if (IsElSpectro)
+			cout << "Running on ElSpectro Simulation"
+				 << "\n";
+				 
 		cout << TString(argv[i]) << "\n";
 		cout << "Is hipo ? " << IsHipo << "\n";
 		cout << "////////////////////////////////////////////"
@@ -481,6 +489,7 @@ int analysisTCS_MC()
 		cout << "IsTCSGen : " << IsTCSGen << "\n";
 		cout << "IsGrape : " << IsGrape << "\n";
 		cout << "IsJPsi : " << IsJPsi << "\n";
+		cout << "IsElSpectro : " << IsElSpectro << "\n";
 		cout << "IsEE_BG : " << IsEE_BG << "\n";
 		cout << "////////////////////////////////////////////"
 			 << "\n";
@@ -611,7 +620,7 @@ int analysisTCS_MC()
 				if (!IsData)
 				{
 
-					MC_ev.Set_MC_Particles(MCEVENT, MCPART, IsGrape, IsJPsi);
+					MC_ev.Set_MC_Particles(MCEVENT, MCPART, IsGrape, IsJPsi, IsElSpectro, IsTCSGen);
 					MC_ev.Get_Kinematics();
 
 					if (IsTCSGen || IsJPsi)
@@ -842,7 +851,7 @@ int analysisTCS_MC()
 			ev.Set_Polarization(polarization);
 			ev.Set_Run_Number(run);
 
-			if ((ev.pass_EC_cut() && IsHipo) || (!IsHipo))
+			if ((IsHipo) || (!IsHipo))
 			{
 				nbevent_after_EC++;
 
@@ -921,6 +930,7 @@ int analysisTCS_MC()
 				outVars["electron_Nphe"] = ev.electron_Nphe;
 				outVars["positron_HTCCt"] = ev.Positron.TimeChe(HTCC);
 				outVars["electron_HTCCt"] = ev.Electron.TimeChe(HTCC);
+				outVars["pass_EC_cut"] = ev.pass_EC_cut();
 				outVars["positron_HTCC_ECAL_match"] = (ev.Positron.SectorCalo(ECAL, PCAL) == ev.Positron.SectorChe(HTCC)) ? 1. : 0.0;
 				outVars["electron_HTCC_ECAL_match"] = (ev.Electron.SectorCalo(ECAL, PCAL) == ev.Electron.SectorChe(HTCC)) ? 1. : 0.0;
 				outVars["lead_lep_p"] = (ev.Positron.Vector.P() > ev.Electron.Vector.P()) ? ev.Positron.Vector.P() : ev.Electron.Vector.P();
@@ -966,6 +976,10 @@ int analysisTCS_MC()
 					outVars["PCAL_U_elec"] = ev.Electron.U_CALO(PCAL);
 					outVars["PCAL_V_elec"] = ev.Electron.V_CALO(PCAL);
 					outVars["PCAL_W_elec"] = ev.Electron.W_CALO(PCAL);
+
+					outVars["PCAL_U_posi"] = ev.Positron.U_CALO(PCAL);
+					outVars["PCAL_V_posi"] = ev.Positron.V_CALO(PCAL);
+					outVars["PCAL_W_posi"] = ev.Positron.W_CALO(PCAL);
 					// outVars["PCAL_sector_elec"] = ev.Electron.SECTOR_CALO(PCAL);
 				}
 
