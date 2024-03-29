@@ -1,0 +1,34 @@
+#!/bin/csh -f
+
+
+set input_files  = "$1"
+set output_dir = $2
+set output_file  = $3
+set option_string = "$4"
+set name_job = $5
+
+set analysis_code_dir = '/w/hallb-scshelf2102/clas12/pierre/TCS_Analysis_2022/TCS_Analysis'
+
+source /group/clas12/packages/setup.csh
+module purge
+module load clas12/pro
+
+
+cd /scratch/slurm/$SLURM_JOBID
+mkdir analysis_dir_${name_job}
+cd analysis_dir_${name_job}
+cp ${analysis_code_dir}/analysisTCS_MC.C .
+cp ${analysis_code_dir}/NewacceptanceTCS_newSimuLargeStats.root . 
+cp -r ${analysis_code_dir}/bib .
+cp -r ${analysis_code_dir}/ML_weights_pass2 .
+cp -r ${analysis_code_dir}/InputOptions .
+
+
+clas12root analysisTCS_MC.C -a NewacceptanceTCS_newSimuLargeStats.root -f $input_files -ef -o $output_file $option_string
+
+rm $output_dir/outputTCS_${output_file}.root
+cp outputTCS_${output_file}.root $output_dir/.
+cp outputTCS_charge_${output_file}.txt $output_dir/.
+
+cd ..
+rm -rf analysis_dir_${name_job}

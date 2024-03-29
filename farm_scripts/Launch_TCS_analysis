@@ -1,0 +1,76 @@
+#!/bin/csh -f
+#echo Usage: Launch_TCS_analysis job-title-prefix input_dir input_files output_dir output_dir option_string
+
+set title    = $1
+set input_dir = $2
+set input_files = "$3"
+set output_dir = $4
+set output_file = $5
+set option_string = "${6}"
+set number_of_files_per_job = $7
+
+rm -f TCS_analysis.sbatch
+set i = 0
+
+
+echo
+echo
+echo Launching TCS analysis on input files ${input_dir} with options $option_string, to ${output_dir}
+
+set number_of_files = `ls ${input_dir}${input_files} | wc -l`
+echo Number of files to analyse ${number_of_files}
+@ number_of_jobs =  ( ${number_of_files} / ${number_of_files_per_job} + 1 )
+echo We will group them by ${number_of_files_per_job} thus ${number_of_jobs} jobs to do 
+
+set input_files_arr = (`ls ${input_dir}${input_files}`)
+
+set job_id = 1
+set n_processed = 0
+while (${job_id} <= ${number_of_jobs})
+
+
+
+		set input = ""
+		set i = 1
+		while ( $i<= $number_of_files_per_job)
+@ file_index =  ( ${i} + ${number_of_files_per_job} * ${job_id} - ${number_of_files_per_job} )
+		if($file_index <= $number_of_files) then
+		set input = "$input ${input_files_arr[${file_index}]}"
+		@ n_processed +=1
+		endif
+		@ i += 1
+		end
+
+		set memory_req = 750
+		###############################
+		if(${number_of_files_per_job} == 1) then
+		set memory_req = `du ${input} | awk '{print $1;}'`
+		@ memory_req = (${memory_req} / 1000 + 1000)
+		set title = `basename $input | awk -F"." '{print $1}'`
+		echo $title
+		endif
+		###############################
+		#echo ${memory_req}
+
+		\echo  \#\!/bin/bash								> TCS_analysis.sbatch
+		\echo  \#SBATCH --job-name=$title${job_id}          >> TCS_analysis.sbatch
+		\echo  \#SBATCH --account=clas12                    >> TCS_analysis.sbatch
+		\echo  \#SBATCH --mail-user=pierrec@jlab.org        >> TCS_analysis.sbatch
+		\echo  \#SBATCH --partition=production              >> TCS_analysis.sbatch
+		\echo  \#SBATCH --output=/farm_out/%u/%x-%j-%N.out  >> TCS_analysis.sbatch
+		\echo  \#SBATCH --error=/farm_out/%u/%x-%j-%N.err   >> TCS_analysis.sbatch
+		\echo  \#SBATCH --constraint=general                >> TCS_analysis.sbatch
+		\echo  \#SBATCH --gres=disk:${memory_req}           >> TCS_analysis.sbatch
+		\echo  \#SBATCH --mem-per-cpu=${memory_req}         >> TCS_analysis.sbatch
+		\echo  \#SBATCH	--time=20:00:00					    >> TCS_analysis.sbatch
+		echo   /w/hallb-scshelf2102/clas12/pierre/TCS_Analysis_2022/TCS_Analysis/farm_scripts/go_analyse_TCS "'"$input"'" ${output_dir} ${output_file}_${title}_${job_id} "'"$option_string"'" ${title}${job_id}  			>> TCS_analysis.sbatch  
+
+sbatch TCS_analysis.sbatch >> trash.txt
+
+		@ job_id += 1
+		end
+		rm trash.txt
+echo Jobs successfully submitted
+echo $n_processed files analysed
+echo
+
