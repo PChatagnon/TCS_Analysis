@@ -1,0 +1,328 @@
+#!/bin/csh -f
+# usage : work_name input_dir 'input_files' outputdir output_file "options" nb_files_per_jobs
+
+set outputdir = /w/hallb-scshelf2102/clas12/pierre/TCS_Analysis_2022/TCS_Analysis/output_files/
+set osgdir = /volatile/clas12/osg/pierrec/
+set inputdir = /w/hallb-scshelf2102/clas12/pierre/Simulation_JPSI_2024/gemc/
+
+#########################################################
+#################  PASS 2 Data  #########################
+#########################################################
+if (0) then
+mkdir ${outputdir}Data_pass2_fall2018_inbending
+./Launch_TCS_analysis Pass2_fall2018_inbending /cache/clas12/rg-a/production/recon/fall2018/torus-1/pass2/main/train/ '/jpsitcs/*' ${outputdir}Data_pass2_fall2018_inbending Pass2_fall2018_inbending_new_BDT "-inbending -RGA_Fall2018 -PCAL -energy 10.604 -Lepton_ID_check " 1
+
+mkdir ${outputdir}Data_pass2_fall2018_outbending
+./Launch_TCS_analysis Pass2_fall2018_outbending /cache/clas12/rg-a/production/recon/fall2018/torus+1/pass2/train/ '/jpsitcs/*' ${outputdir}Data_pass2_fall2018_outbending Pass2_fall2018_outbending_new_BDT "-outbending -RGA_Fall2018 -PCAL -energy 10.604 -Lepton_ID_check " 1
+#endif
+
+mkdir ${outputdir}Data_pass2_spring2019_inbending
+./Launch_TCS_analysis Pass2_spring2019_inbending /cache/clas12/rg-a/production/recon/spring2019/torus-1/pass2/dst/train/ '/jpsitcs/*' ${outputdir}Data_pass2_spring2019_inbending Pass2_spring2019_inbending_new_BDT "-inbending -RGA_Spring2019 -PCAL -energy 10.2 -Lepton_ID_check " 1
+endif
+
+#mkdir ${outputdir}Data_pass2_fall2018_inbending_Same_Charge
+#./Launch_TCS_analysis Pass2_fall2018_inbending_Same_Charge /cache/clas12/rg-a/production/recon/fall2018/torus-1/pass2/main/dst/train/ '/jpsitcs/*' ${outputdir}Data_pass2_fall2018_inbending_Same_Charge Pass2_fall2018_inbending_Same_Charge "-inbending -energy 10.604 -IsEE_BG -Lepton_ID_check " 1
+
+#mkdir ${outputdir}Data_pass2_fall2018_outbending_Same_Charge
+#./Launch_TCS_analysis Pass2_fall2018_outbending_Same_Charge /cache/clas12/rg-a/production/recon/fall2018/torus+1/pass2/dst/train/ '/jpsitcs/*' ${outputdir}Data_pass2_fall2018_outbending_Same_Charge Pass2_fall2018_outbending_Same_Charge "-outbending -energy 10.604 -IsEE_BG -Lepton_ID_check " 1
+
+
+#########################################################
+#################  PASS 2 Simulation  ###################
+#################      Inbending      ###################
+#########################################################
+if (0) then
+mkdir ${outputdir}Grape_Rad_corr_Fall2018_45_022024
+./Launch_TCS_analysis Grape_Rad_corr_Fall2018_45_022024 ${osgdir}job_7071 '/output/45*.hipo' ${outputdir}Grape_Rad_corr_Fall2018_45_022024 Grape_Rad_corr_Fall2018_45_022024 "-inbending -RGA_Fall2018 -IsGrape -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}Grape_Rad_corr_Fall2018_50_022024
+./Launch_TCS_analysis Grape_Rad_corr_Fall2018_50_022024 ${osgdir}job_7072 '/output/50*.hipo' ${outputdir}Grape_Rad_corr_Fall2018_50_022024 Grape_Rad_corr_Fall2018_50_022024 "-inbending -RGA_Fall2018 -IsGrape -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}Grape_Rad_corr_Fall2018_55_022024
+./Launch_TCS_analysis Grape_Rad_corr_Fall2018_55_022024 ${osgdir}job_7073 '/output/55*.hipo' ${outputdir}Grape_Rad_corr_Fall2018_55_022024 Grape_Rad_corr_Fall2018_55_022024 "-inbending -RGA_Fall2018 -IsGrape -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}TCS_Gen_Rad_corr_Fall2018_45_022024
+./Launch_TCS_analysis TCS_Gen_Rad_corr_Fall2018_45_022024 ${osgdir}job_7081 '/output/45*.hipo' ${outputdir}TCS_Gen_Rad_corr_Fall2018_45_022024 TCS_Gen_Rad_corr_Fall2018_45_022024 "-inbending -RGA_Fall2018 -IsTCSGen -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}TCS_Gen_Rad_corr_Fall2018_50_022024
+./Launch_TCS_analysis TCS_Gen_Rad_corr_Fall2018_50_022024 ${osgdir}job_7082 '/output/50*.hipo' ${outputdir}TCS_Gen_Rad_corr_Fall2018_50_022024 TCS_Gen_Rad_corr_Fall2018_50_022024 "-inbending -RGA_Fall2018 -IsTCSGen -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}TCS_Gen_Rad_corr_Fall2018_55_022024
+./Launch_TCS_analysis TCS_Gen_Rad_corr_Fall2018_55_022024 ${osgdir}job_7083 '/output/55*.hipo' ${outputdir}TCS_Gen_Rad_corr_Fall2018_55_022024 TCS_Gen_Rad_corr_Fall2018_55_022024 "-inbending -RGA_Fall2018 -IsTCSGen -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}JPsi_Rad_corr_Fall2018_45_022024
+./Launch_TCS_analysis JPsi_Rad_corr_Fall2018_45_022024 ${osgdir}job_7076 '/output/45*.hipo' ${outputdir}JPsi_Rad_corr_Fall2018_45_022024 JPsi_Rad_corr_Fall2018_45_022024 "-inbending -RGA_Fall2018 -IsJPsi -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}JPsi_Rad_corr_Fall2018_50_022024
+./Launch_TCS_analysis JPsi_Rad_corr_Fall2018_50_022024 ${osgdir}job_7077 '/output/50*.hipo' ${outputdir}JPsi_Rad_corr_Fall2018_50_022024 JPsi_Rad_corr_Fall2018_50_022024 "-inbending -RGA_Fall2018 -IsJPsi -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}JPsi_Rad_corr_Fall2018_55_022024
+./Launch_TCS_analysis JPsi_Rad_corr_Fall2018_55_022024 ${osgdir}job_7078 '/output/55*.hipo' ${outputdir}JPsi_Rad_corr_Fall2018_55_022024 JPsi_Rad_corr_Fall2018_55_022024 "-inbending -RGA_Fall2018 -IsJPsi -Lepton_ID_check -PCAL -energy 10.604" 5
+#endif
+#########################################################
+#################  PASS 2 Simulation  ###################
+##############   Spring 2019 Inbending  #################
+#########################################################
+
+mkdir ${outputdir}Grape_Rad_corr_Spring2019_022024
+./Launch_TCS_analysis Grape_Rad_corr_Spring2019_022024 ${osgdir}job_7086 '/output/50*.hipo' ${outputdir}Grape_Rad_corr_Spring2019_022024 Grape_Rad_corr_Spring2019_022024 "-inbending -RGA_Spring2019 -IsGrape -Lepton_ID_check -PCAL -energy 10.2" 5
+
+#if (0) then
+mkdir ${outputdir}TCS_Gen_Rad_corr_Spring2019_022024
+./Launch_TCS_analysis TCS_Gen_Rad_corr_Spring2019_022024 ${osgdir}job_7098 '/output/50*.hipo' ${outputdir}TCS_Gen_Rad_corr_Spring2019_022024 TCS_Gen_Rad_corr_Spring2019_022024 "-inbending -RGA_Spring2019 -IsTCSGen -Lepton_ID_check -PCAL -energy 10.2" 5
+
+mkdir ${outputdir}JPsi_Rad_corr_Spring2019_022024
+./Launch_TCS_analysis JPsi_Rad_corr_Spring2019_022024 ${osgdir}job_7087 '/output/50*.hipo' ${outputdir}JPsi_Rad_corr_Spring2019_022024 JPsi_Rad_corr_Spring2019_022024 "-inbending -RGA_Spring2019 -IsJPsi -Lepton_ID_check -PCAL -energy 10.2" 5
+
+#########################################################
+#################  PASS 2 Simulation  ###################
+#################     Outbending      ###################
+#########################################################
+
+mkdir ${outputdir}Grape_Rad_corr_Fall2018_40_022024
+./Launch_TCS_analysis Grape_Rad_corr_Fall2018_40_022024 ${osgdir}job_7074 '/output/40*.hipo' ${outputdir}Grape_Rad_corr_Fall2018_40_022024 Grape_Rad_corr_Fall2018_40_022024 "-outbending -RGA_Fall2018 -IsGrape -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}Grape_Rad_corr_Fall2018_50_out_022024
+./Launch_TCS_analysis Grape_Rad_corr_Fall2018_50_out_022024 ${osgdir}job_7075 '/output/50*.hipo' ${outputdir}Grape_Rad_corr_Fall2018_50_out_022024 Grape_Rad_corr_Fall2018_50_out_022024 "-outbending -RGA_Fall2018 -IsGrape -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}TCS_Gen_Rad_corr_Fall2018_40_022024
+./Launch_TCS_analysis TCS_Gen_Rad_corr_Fall2018_40_022024 ${osgdir}job_7084 '/output/40*.hipo' ${outputdir}TCS_Gen_Rad_corr_Fall2018_40_022024 TCS_Gen_Rad_corr_Fall2018_40_022024 "-outbending -RGA_Fall2018 -IsTCSGen -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}TCS_Gen_Rad_corr_Fall2018_50_out_022024
+./Launch_TCS_analysis TCS_Gen_Rad_corr_Fall2018_50_out_022024 ${osgdir}job_7085 '/output/50*.hipo' ${outputdir}TCS_Gen_Rad_corr_Fall2018_50_out_022024 TCS_Gen_Rad_corr_Fall2018_50_out_022024 "-outbending -RGA_Fall2018 -IsTCSGen -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}JPsi_Rad_corr_Fall2018_40_022024
+./Launch_TCS_analysis JPsi_Rad_corr_Fall2018_40_022024 ${osgdir}job_7079 '/output/40*.hipo' ${outputdir}JPsi_Rad_corr_Fall2018_40_022024 JPsi_Rad_corr_Fall2018_40_022024 "-outbending -IsJPsi -RGA_Fall2018 -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}JPsi_Rad_corr_Fall2018_50_out_022024
+./Launch_TCS_analysis JPsi_Rad_corr_Fall2018_50_out_022024 ${osgdir}job_7080 '/output/50*.hipo' ${outputdir}JPsi_Rad_corr_Fall2018_50_out_022024 JPsi_Rad_corr_Fall2018_50_out_022024 "-outbending -RGA_Fall2018 -IsJPsi -Lepton_ID_check -PCAL -energy 10.604" 5
+
+endif
+
+#########################################################
+#################  PASS 2 Simulation  ###################
+#################   No radiated JPsi  ###################
+#########################################################
+#if (0) then
+
+mkdir ${outputdir}JPsi_Fall2018_45_022024
+./Launch_TCS_analysis JPsi_Fall2018_45_022024 ${inputdir}Fall2018_In/JPsi_No_rad_45nA_25012024 '/output/45*.hipo' ${outputdir}JPsi_Fall2018_45_022024 JPsi_Fall2018_45_022024 "-inbending -RGA_Fall2018 -IsJPsi -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}JPsi_Fall2018_50_022024
+./Launch_TCS_analysis JPsi_Fall2018_50_022024 ${inputdir}Fall2018_In/JPsi_No_rad_50nA_25012024 '/output/50*.hipo' ${outputdir}JPsi_Fall2018_50_022024 JPsi_Fall2018_50_022024 "-inbending -RGA_Fall2018 -IsJPsi -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}JPsi_Fall2018_55_022024
+./Launch_TCS_analysis JPsi_Fall2018_55_022024 ${inputdir}Fall2018_In/JPsi_No_rad_55nA_25012024 '/output/55*.hipo' ${outputdir}JPsi_Fall2018_55_022024 JPsi_Fall2018_55_022024 "-inbending -RGA_Fall2018 -IsJPsi -Lepton_ID_check -PCAL -energy 10.604" 5
+
+
+mkdir ${outputdir}JPsi_Spring2019_022024
+./Launch_TCS_analysis JPsi_Spring2019_022024 ${inputdir}Spring2019/JPsi_No_rad_25012024 '/output/50*.hipo' ${outputdir}JPsi_Spring2019_022024 JPsi_Spring2019_022024 "-inbending -RGA_Spring2019 -IsJPsi -Lepton_ID_check -PCAL -energy 10.2" 5
+
+
+mkdir ${outputdir}JPsi_Fall2018_50_out_022024
+./Launch_TCS_analysis JPsi_Fall2018_50_out_022024 ${inputdir}Fall2018_Out/JPsi_No_rad_50nA_25012024 '/output/50*.hipo' ${outputdir}JPsi_Fall2018_50_out_022024 JPsi_Fall2018_50_out_022024 "-outbending -RGA_Fall2018 -IsJPsi -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}JPsi_Fall2018_40_out_022024
+./Launch_TCS_analysis JPsi_Fall2018_40_out_022024 ${inputdir}Fall2018_Out/JPsi_No_rad_40nA_25012024 '/output/40*.hipo' ${outputdir}JPsi_Fall2018_40_out_022024 JPsi_Fall2018_40_out_022024 "-outbending -RGA_Fall2018 -IsJPsi -Lepton_ID_check -PCAL -energy 10.604" 5
+#endif
+
+
+if (0) then
+#########################################################
+#################  PASS 2 Data on RGB ###################
+#########################################################
+mkdir ${outputdir}Data_pass2_RGB_Spring19
+./Launch_TCS_analysis Data_pass2_RGB_Spring19 /cache/clas12/rg-b/production/recon/spring2019/torus-1/pass2/v0/dst/train/ '/jpsi/jpsi_00[0-6][0-3][0-9][0-9].*' ${outputdir}Data_pass2_RGB_Spring19 Data_pass2_RGB_Spring19 "-inbending -RGA_Fall2018 -energy 10.6 -Lepton_ID_check -QA_Golden -PCAL -Skip_RCDB" 1
+
+mkdir ${outputdir}Data_pass2_RGB_Spring19_10_2
+./Launch_TCS_analysis Data_pass2_RGB_Spring19_10_2 /cache/clas12/rg-b/production/recon/spring2019/torus-1/pass2/v0/dst/train/ '/jpsi/jpsi_00[0-6][4-9][0-9][0-9].*' ${outputdir}Data_pass2_RGB_Spring19_10_2 Data_pass2_RGB_Spring19_10_2 "-inbending -RGA_Fall2018 -energy 10.2 -Lepton_ID_check -QA_Golden -PCAL -Skip_RCDB" 1
+
+#########################################################
+##############  PASS 2 Simulation on RGB ################
+#########################################################
+#if (0) then
+set inputdir_RGB = /w/work/clas12/tyson/data_repo/simu/elSpectro/
+mkdir ${outputdir}JPsi_RGB_Spring19
+./Launch_TCS_analysis JPsi_RGB_Spring19 ${inputdir_RGB}eep_eD_pJpsi_s2019_mixed '/*10p6*.hipo' ${outputdir}JPsi_RGB_Spring19 JPsi_RGB_Spring19 "-inbending -RGA_Fall2018 -IsElSpectro -PCAL -Lepton_ID_check -energy 10.6" 5
+
+mkdir ${outputdir}JPsi_RGB_Spring19_10_2
+./Launch_TCS_analysis JPsi_RGB_Spring19_10_2 ${inputdir_RGB}eep_eD_pJpsi_s2019_mixed '/*10p2*.hipo' ${outputdir}JPsi_RGB_Spring19_10_2 JPsi_RGB_Spring19_10_2 "-inbending -RGA_Fall2018 -PCAL -IsElSpectro -Lepton_ID_check -energy 10.2" 5
+endif
+
+
+
+
+
+#Pass 2 simulations
+#mkdir ${outputdir}Grape_Rad_corr_Fall2018
+#./Launch_TCS_analysis Grape_Rad_corr_Fall2018 ${osgdir}job_363 '/output/simu_*/dst.hipo' ${outputdir}Grape_Rad_corr_Fall2018 Grape_Rad_corr_Fall2018 "-inbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#mkdir ${outputdir}Grape_Rad_corr_Fall2018_Pass1
+#./Launch_TCS_analysis Grape_Rad_corr_Fall2018_Pass1 ${osgdir}job_364 '/output/simu_*/dst.hipo' ${outputdir}Grape_Rad_corr_Fall2018_Pass1 Grape_Rad_corr_Fall2018_Pass1 "-inbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+
+#Fall 2018 inbending Pass1
+#mkdir ${outputdir}Grape_Fall2018_in_Pass1_0
+#./Launch_TCS_analysis Grape_Fall2018_in_Pass1_0 ${osgdir}job_6546 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Fall2018_in_Pass1_0 Grape_Fall2018_in_Pass1_0 "-inbending -IsGrape -Lepton_ID_check -energy 10.2 -all_Gen_vector" 10
+
+#mkdir ${outputdir}Grape_Fall2018_in_Pass1_55
+#./Launch_TCS_analysis Grape_Fall2018_in_Pass1_55 ${osgdir}job_6547 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Fall2018_in_Pass1_55 Grape_Fall2018_in_Pass1_55 "-inbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#mkdir ${outputdir}Grape_Fall2018_in_Pass1_50
+#./Launch_TCS_analysis Grape_Fall2018_in_Pass1_50 ${osgdir}job_6548 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Fall2018_in_Pass1_50 Grape_Fall2018_in_Pass1_50 "-inbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#Fall 2018 inbending Pass2
+#mkdir ${outputdir}Grape_Fall2018_in_Pass2_0
+#./Launch_TCS_analysis Grape_Fall2018_in_Pass2_0 ${osgdir}job_6543 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Fall2018_in_Pass2_0 Grape_Fall2018_in_Pass2_0 "-inbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#mkdir ${outputdir}Grape_Fall2018_in_Pass2_55
+#./Launch_TCS_analysis Grape_Fall2018_in_Pass2_55 ${osgdir}job_6544 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Fall2018_in_Pass2_55 Grape_Fall2018_in_Pass2_55 "-inbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#mkdir ${outputdir}Grape_Fall2018_in_Pass2_50
+#./Launch_TCS_analysis Grape_Fall2018_in_Pass2_50 ${osgdir}job_6545 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Fall2018_in_Pass2_50 Grape_Fall2018_in_Pass2_50 "-inbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#Fall 2018 outbending Pass1
+#mkdir ${outputdir}Grape_Fall2018_out_Pass1_0
+#./Launch_TCS_analysis Grape_Fall2018_out_Pass1_0 ${osgdir}job_6552 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Fall2018_out_Pass1_0 Grape_Fall2018_out_Pass1_0 "-outbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#mkdir ${outputdir}Grape_Fall2018_out_Pass1_40
+#./Launch_TCS_analysis Grape_Fall2018_out_Pass1_40 ${osgdir}job_6553 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Fall2018_out_Pass1_40 Grape_Fall2018_out_Pass1_40 "-outbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#mkdir ${outputdir}Grape_Fall2018_out_Pass1_50
+#./Launch_TCS_analysis Grape_Fall2018_out_Pass1_50 ${osgdir}job_6554 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Fall2018_out_Pass1_50 Grape_Fall2018_out_Pass1_50 "-outbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#Fall 2018 outbending Pass2
+#mkdir ${outputdir}Grape_Fall2018_out_Pass2_0
+#./Launch_TCS_analysis Grape_Fall2018_out_Pass2_0 ${osgdir}job_6549 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Fall2018_out_Pass2_0 Grape_Fall2018_out_Pass2_0 "-outbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#mkdir ${outputdir}Grape_Fall2018_out_Pass2_40
+#./Launch_TCS_analysis Grape_Fall2018_out_Pass2_40 ${osgdir}job_6550 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Fall2018_out_Pass2_40 Grape_Fall2018_out_Pass2_40 "-outbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#mkdir ${outputdir}Grape_Fall2018_out_Pass2_50
+#./Launch_TCS_analysis Grape_Fall2018_out_Pass2_50 ${osgdir}job_6551 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Fall2018_out_Pass2_50 Grape_Fall2018_out_Pass2_50 "-outbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#Spring 2019 inbending Pass 1
+#mkdir ${outputdir}Grape_Spring2019_in_Pass1_0
+#./Launch_TCS_analysis Grape_Spring2019_in_Pass1_0 ${osgdir}job_6556 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Spring2019_in_Pass1_0 Grape_Spring2019_in_Pass1_0 "-inbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#Spring 2019 inbending Pass2
+#mkdir ${outputdir}Grape_Spring2019_in_Pass2_0
+#./Launch_TCS_analysis Grape_Spring2019_in_Pass2_0 ${osgdir}job_6555 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Spring2019_in_Pass2_0 Grape_Spring2019_in_Pass2_0 "-inbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+
+#Fall 2018 In 45na
+#mkdir ${outputdir}Grape_Fall2018_in_Pass1_45
+#./Launch_TCS_analysis Grape_Fall2018_in_Pass1_45 ${osgdir}job_6571 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Fall2018_in_Pass1_45 Grape_Fall2018_in_Pass1_45 "-inbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#mkdir ${outputdir}Grape_Fall2018_in_Pass2_45
+#./Launch_TCS_analysis Grape_Fall2018_in_Pass2_45 ${osgdir}job_6572 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Fall2018_in_Pass2_45 Grape_Fall2018_in_Pass2_45 "-inbending -IsGrape -energy 10.2 -all_Gen_vector -Mom_corr" 10
+
+#mkdir ${outputdir}Grape_Fall2018_in_Pass2_45_no_mom_corr
+#./Launch_TCS_analysis Grape_Fall2018_in_Pass2_45_no_mom_corr ${osgdir}job_6572 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Fall2018_in_Pass2_45_no_mom_corr Grape_Fall2018_in_Pass2_45_no_mom_corr "-inbending -IsGrape -energy 10.2 -all_Gen_vector" 10
+
+#Spring 2019 In 50 nA
+#mkdir ${outputdir}Grape_Spring2019_in_Pass1_50
+#./Launch_TCS_analysis Grape_Spring2019_in_Pass1_50 ${osgdir}job_6574 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Spring2019_in_Pass1_50 Grape_Spring2019_in_Pass1_50 "-inbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#mkdir ${outputdir}Grape_Spring2019_in_Pass2_50
+#./Launch_TCS_analysis Grape_Spring2019_in_Pass2_50 ${osgdir}job_6573 '/output/simu_2*/dst.hipo' ${outputdir}Grape_Spring2019_in_Pass2_50 Grape_Spring2019_in_Pass2_50 "-inbending -IsGrape -Lepton_ID_check -energy 10.2 -CALO" 10
+
+#Pass 2 Spring 2019 verification
+#mkdir ${outputdir}Spring2019_in_Pass2_noBG
+#./Launch_TCS_analysis Spring2019_in_Pass2_noBG ${osgdir}job_6593 '/output/simu_2*/dst.hipo' ${outputdir}Spring2019_in_Pass2_noBG Spring2019_in_Pass2_noBG "-inbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#mkdir ${outputdir}Spring2019_in_Pass2_50
+#./Launch_TCS_analysis Spring2019_in_Pass2_50 ${osgdir}job_6652 '/output/simu_2*/dst.hipo' ${outputdir}Spring2019_in_Pass2_50 Spring2019_in_Pass2_50 "-inbending -IsGrape -Lepton_ID_check -energy 10.2 -CALO" 10
+
+#Pass 1 simulation
+#mkdir ${outputdir}TCS_Gen_Rad_corr_Spring19_Pass1
+#./Launch_TCS_analysis TCS_Gen_Rad_corr_Spring19_Pass1 ${osgdir}job_319 '/output/simu_*/dst.hipo' ${outputdir}TCS_Gen_Rad_corr_Spring19_Pass1 TCS_Gen_Rad_corr_Spring19_Pass1 "-inbending -IsTCSGen -Lepton_ID_check -energy 10.2" 10
+
+#mkdir ${outputdir}Grape_Rad_corr_Spring19_Pass1
+#./Launch_TCS_analysis Grape_Rad_corr_Spring19_Pass1 ${osgdir}job_317 '/output/simu_*/dst.hipo' ${outputdir}Grape_Rad_corr_Spring19_Pass1 Grape_Rad_corr_Spring19_Pass1 "-inbending -IsGrape -Lepton_ID_check -energy 10.2" 10
+
+#mkdir ${outputdir}JPsi_Rad_corr_Spring19_Pass1
+#./Launch_TCS_analysis JPsi_Rad_corr_Spring19_Pass1 ${osgdir}job_318 '/output/simu_*/dst.hipo' ${outputdir}JPsi_Rad_corr_Spring19_Pass1 JPsi_Rad_corr_Spring19_Pass1 "-inbending -IsJPsi -Lepton_ID_check -energy 10.2" 10
+
+
+
+
+#mkdir ${outputdir}Data_pass2_initial_fall2019_inbending
+#./Launch_TCS_analysis Pass2_initial_fall2019_inbending /volatile/clas12/rg-a/production/pass0/Fall18/fa18_dst_v0_11_in/dst/train/ '/jpsitcs/*' ${outputdir}Data_pass2_initial_fall2019_inbending Pass2_initial_fall2019_inbending "-inbending -energy 10.604 -Lepton_ID_check -CALO" 1
+
+#mkdir ${outputdir}Data_pass2_initial_fall2019_outbending
+#./Launch_TCS_analysis Pass2_initial_fall2019_outbending /volatile/clas12/rg-a/production/pass0/Fall18/fa18_dst_v0_11_out/dst/train/ '/jpsitcs/*' ${outputdir}Data_pass2_initial_fall2019_outbending Pass2_initial_fall2019_outbending "-outbending -energy 10.604 -Lepton_ID_check " 1
+
+#mkdir ${outputdir}TCS_Gen_Rad_corr_0
+#./Launch_TCS_analysis TCS_Gen_Rad_corr_0 ${osgdir}job_6162 '/output/simu_*/dst.hipo' ${outputdir}TCS_Gen_Rad_corr_0 TCS_Gen_Rad_corr_0 "-inbending -IsTCSGen -Lepton_ID_check " 10
+
+#mkdir ${outputdir}TCS_Gen_Rad_corr_1
+#./Launch_TCS_analysis TCS_Gen_Rad_corr_1 ${osgdir}job_6163 '/output/simu_*/dst.hipo' ${outputdir}TCS_Gen_Rad_corr_1 TCS_Gen_Rad_corr_1 "-inbending -IsTCSGen -Lepton_ID_check " 10
+
+#mkdir ${outputdir}TCS_Gen_No_Rad
+#./Launch_TCS_analysis TCS_Gen_No_Rad ${osgdir}job_6165 '/output/simu_*/dst.hipo' ${outputdir}TCS_Gen_No_Rad TCS_Gen_No_Rad "-inbending -IsTCSGen -Lepton_ID_check " 10
+
+
+#mkdir ${outputdir}Grape_Rad_V0
+#./Launch_TCS_analysis Grape_Rad_V0 ${osgdir}job_6171 '/output/simu_*/dst.hipo' ${outputdir}Grape_Rad_V0 Grape_Rad_V0 "-inbending -IsGrape -Lepton_ID_check " 10
+
+#mkdir ${outputdir}Grape_Rad_V1
+#./Launch_TCS_analysis Grape_Rad_V1 ${osgdir}job_6172 '/output/simu_*/dst.hipo' ${outputdir}Grape_Rad_V1 Grape_Rad_V1 "-inbending -IsGrape -Lepton_ID_check " 10
+
+
+
+
+#mkdir ${outputdir}JPsi_Rad_Prod_V1_45
+#./Launch_TCS_analysis JPsi_Rad_Prod_V1_45 ${osgdir}job_6175 '/output/simu_*/dst.hipo' ${outputdir}JPsi_Rad_Prod_V1_45 JPsi_Rad_Prod_V1_45 "-inbending -IsJPsi -Lepton_ID_check " 10
+
+#mkdir ${outputdir}JPsi_Rad_Prod_V1_50
+#./Launch_TCS_analysis JPsi_Rad_Prod_V1_50 ${osgdir}job_6176 '/output/simu_*/dst.hipo' ${outputdir}JPsi_Rad_Prod_V1_50 JPsi_Rad_Prod_V1_50 "-inbending -IsJPsi -Lepton_ID_check " 10
+
+#mkdir ${outputdir}JPsi_Rad_Prod_V1_55
+#./Launch_TCS_analysis JPsi_Rad_Prod_V1_55 ${osgdir}job_6177 '/output/simu_*/dst.hipo' ${outputdir}JPsi_Rad_Prod_V1_55 JPsi_Rad_Prod_V1_55 "-inbending -IsJPsi -Lepton_ID_check " 10
+
+#mkdir ${outputdir}Grape_Prod_45
+#./Launch_TCS_analysis Grape_Prod_45 ${osgdir}job_6186 '/output/simu_*/dst.hipo' ${outputdir}Grape_Prod_45 Grape_Prod_45 "-inbending -IsGrape -Lepton_ID_check " 10
+
+#mkdir ${outputdir}Grape_Prod_50
+#./Launch_TCS_analysis Grape_Prod_50 ${osgdir}job_6187 '/output/simu_*/dst.hipo' ${outputdir}Grape_Prod_50 Grape_Prod_50 "-inbending -IsGrape -Lepton_ID_check " 10
+
+#mkdir ${outputdir}Grape_Prod_55
+#./Launch_TCS_analysis Grape_Prod_55 ${osgdir}job_6188 '/output/simu_*/dst.hipo' ${outputdir}Grape_Prod_55 Grape_Prod_55 "-inbending -IsGrape -Lepton_ID_check " 10
+
+
+
+
+
+#mkdir ${outputdir}Grape_Rad_Prod_V1_45
+#./Launch_TCS_analysis Grape_Rad_Prod_V1_45 ${osgdir}job_6189 '/output/simu_*/dst.hipo' ${outputdir}Grape_Rad_Prod_V1_45 Grape_Rad_Prod_V1_45 "-inbending -IsGrape -Lepton_ID_check " 10
+
+#mkdir ${outputdir}Grape_Rad_Prod_V1_50
+#./Launch_TCS_analysis Grape_Rad_Prod_V1_50 ${osgdir}job_6190 '/output/simu_*/dst.hipo' ${outputdir}Grape_Rad_Prod_V1_50 Grape_Rad_Prod_V1_50 "-inbending -IsGrape -Lepton_ID_check " 10
+
+#mkdir ${outputdir}Grape_Rad_Prod_V1_55
+#./Launch_TCS_analysis Grape_Rad_Prod_V1_55 ${osgdir}job_6191 '/output/simu_*/dst.hipo' ${outputdir}Grape_Rad_Prod_V1_55 Grape_Rad_Prod_V1_55 "-inbending -IsGrape -Lepton_ID_check " 10
+
+
+
+#mkdir ${outputdir}Grape_Rad_Prod_V0_45
+#./Launch_TCS_analysis Grape_Rad_Prod_V0_45 ${osgdir}job_6194 '/output/simu_*/dst.hipo' ${outputdir}Grape_Rad_Prod_V0_45 Grape_Rad_Prod_V0_45 "-inbending -IsGrape -Lepton_ID_check " 10
+
+#mkdir ${outputdir}Grape_Rad_Prod_V0_50
+#./Launch_TCS_analysis Grape_Rad_Prod_V0_50 ${osgdir}job_6195 '/output/simu_*/dst.hipo' ${outputdir}Grape_Rad_Prod_V0_50 Grape_Rad_Prod_V0_50 "-inbending -IsGrape -Lepton_ID_check " 10
+
+#mkdir ${outputdir}Grape_Rad_Prod_V0_55
+#./Launch_TCS_analysis Grape_Rad_Prod_V0_55 ${osgdir}job_6196 '/output/simu_*/dst.hipo' ${outputdir}Grape_Rad_Prod_V0_55 Grape_Rad_Prod_V0_55 "-inbending -IsGrape -Lepton_ID_check " 10
+
+
+#mkdir ${outputdir}TCS_Gen_Rad_Prod_V1_45
+#./Launch_TCS_analysis TCS_Gen_Rad_Prod_V1_45 ${osgdir}job_6181 '/output/simu_*/dst.hipo' ${outputdir}TCS_Gen_Rad_Prod_V1_45 TCS_Gen_Rad_Prod_V1_45 "-inbending -IsTCSGen -Lepton_ID_check " 10
+
+#mkdir ${outputdir}TCS_Gen_Rad_Prod_V1_50
+#./Launch_TCS_analysis TCS_Gen_Rad_Prod_V1_50 ${osgdir}job_6182 '/output/simu_*/dst.hipo' ${outputdir}TCS_Gen_Rad_Prod_V1_50 TCS_Gen_Rad_Prod_V1_50 "-inbending -IsTCSGen -Lepton_ID_check " 10
+
+#mkdir ${outputdir}TCS_Gen_Rad_Prod_V1_55
+#./Launch_TCS_analysis TCS_Gen_Rad_Prod_V1_55 ${osgdir}job_6183 '/output/simu_*/dst.hipo' ${outputdir}TCS_Gen_Rad_Prod_V1_55 TCS_Gen_Rad_Prod_V1_55 "-inbending -IsTCSGen -Lepton_ID_check " 10
+
+#mkdir ${outputdir}Data_pass0_1
+#./Launch_TCS_analysis Pass0_1 /volatile/clas12/rg-a/production/pass0/Spring19/sp19_dst_v1_30/dst/train '/jpsitcs/*' ${outputdir}Data_pass0_1 Pass0_1 "-inbending -energy 10.2 -Lepton_ID_check " 1
