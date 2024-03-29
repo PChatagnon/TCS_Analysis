@@ -221,7 +221,7 @@ int analysisTCS_MC()
 	outT->Branch("trigger_bit", &trigger_bit, "trigger_bit/I");
 
 	std::vector<TString> fvars = {
-		"evt_num", "t", "t_min", "MMassBeam", "Epho", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "helicity", "polaT",
+		"evt_num", "t", "t_min", "MMassBeam", "Epho", "Epho_Gen", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "helicity", "polaT",
 		"positron_SF", "electron_SF", "positron_score", "electron_score",
 		"weight", "acc", "acc_error", "real_flux_Gen", "virtual_flux_Gen", "virtual_flux_Frixione_Gen", "run", "analysis_stage", "topology",
 		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "pass_EC_cut", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
@@ -969,6 +969,7 @@ int analysisTCS_MC()
 					outVars["real_flux_Gen"] = MC_ev.real_flux_Gen;
 					outVars["virtual_flux_Gen"] = MC_ev.virtual_flux_Gen;
 					outVars["virtual_flux_Frixione_Gen"] = MC_ev.virtual_flux_Frixione_Gen;
+					outVars["Epho_Gen"] = MC_ev.Epho;
 				}
 
 				if (PCAL_study)
