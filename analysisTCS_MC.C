@@ -969,7 +969,7 @@ int analysisTCS_MC()
 					outVars["real_flux_Gen"] = MC_ev.real_flux_Gen;
 					outVars["virtual_flux_Gen"] = MC_ev.virtual_flux_Gen;
 					outVars["virtual_flux_Frixione_Gen"] = MC_ev.virtual_flux_Frixione_Gen;
-					outVars["Epho_Gen"] = MC_ev.Epho;
+					outVars["Epho_Gen"] = MC_ev.Epho_Gen;
 				}
 
 				if (PCAL_study)
