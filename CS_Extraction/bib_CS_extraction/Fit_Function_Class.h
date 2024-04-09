@@ -183,6 +183,7 @@ public:
                 function->SetParLimits (1,3.02, 3.2);
                 function->SetParameter (2,0.04);
                 function->SetParLimits (2,0.025, 0.15);
+                //alpha and n
                 function->SetParameter(3,0.75);
                 function->SetParLimits(3,0.05,1.5);
                 function->SetParameter(4,150);
