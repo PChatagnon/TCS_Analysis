@@ -18,7 +18,7 @@
 #include <fstream>
 using namespace std;
 
-int CS_Extraction_combine_Working_V3()
+int CS_Extraction_combine()
 {
 	gROOT->SetBatch(kTRUE);
 
@@ -36,6 +36,9 @@ int CS_Extraction_combine_Working_V3()
 	gStyle->SetTitleH(0.1); // per cent of the pad height
 
 	ROOT::Math::MinimizerOptions::SetDefaultMinimizer("Minuit2");
+	//ADDED by Mariana 
+	ROOT::Math::MinimizerOptions::SetDefaultMaxFunctionCalls(10000);
+	ROOT::Math::MinimizerOptions::SetDefaultTolerance(1);
 
 	// Xsec Signal
 	float strenght_signal = 0.;
@@ -63,7 +66,7 @@ int CS_Extraction_combine_Working_V3()
 	std::vector<double> average_variable{};
 	std::vector<double> sigma_variable{};
 
-	Latex_Table_writter Latex_Table("", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction", "Epho");
+	Latex_Table_writter Latex_Table("", "/lustre19/expphy/volatile/clas12/mtenorio/TCS_Analysis/CS_Extraction", "Epho");
 
 	bool inbending = true;
 	bool RGB = false;
@@ -75,7 +78,7 @@ int CS_Extraction_combine_Working_V3()
 	float lumi_factor = 1316.875;
 
 	TString variable = "Epho";
-	TString folder_pass2 = "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/Pass2_Samples/";
+	TString folder_pass2 = "/volatile/clas12/mtenorio/Root/CS/";
 
 	double min_fit = 2.7;//2.7;
 	double max_fit = 3.3;//3.3;
@@ -120,7 +123,7 @@ int CS_Extraction_combine_Working_V3()
 
 	if (inbending)
 	{
-		name_pdf = "CS_Extraction_combine_good_error_Gaussian";
+		name_pdf = "CS_Extraction_CrystalBall_exp";
 
 		// JPsi
 		//  Fall2018
@@ -222,7 +225,7 @@ int CS_Extraction_combine_Working_V3()
 	// TCut exclusivity_cut = "abs(MMassBeam)<0.4 && Missing.Theta()*180./3.141592<10.";
 	// TCut exclusivity_cut = "abs(MMassBeam)<0.05 && abs(Q2/(2.*10.2))<(3.1/(2.*10.2))";
 	// TCut exclusivity_cut = "abs(MMassBeam)<0.1 && abs(Q2)<0.2";// && abs(Missing.Z()-Missing.E())<0.05";
-	TCut exclusivity_cut = "abs(MMassBeam)<0.4  && abs(Q2)<0.5"; //&& abs(Missing.Z()-Missing.E())<0.05 && Q2_true>-0.2";
+	TCut exclusivity_cut = "abs(MMassBeam)<0.4  && (Missing.Z()-Missing.E())>-0.03";
 
 	TCut data_cut = "abs(positron_HTCCt-electron_HTCCt)<4";
 
@@ -379,12 +382,12 @@ int CS_Extraction_combine_Working_V3()
 		average_variable.push_back(Average_variable->GetMean());
 		sigma_variable.push_back(Average_variable->GetRMS());
 
-		Data_hist->SaveAs("plot.pdf");
+		//Data_hist->SaveAs("plot.pdf");
 
 		int nbBins = Data_hist->GetNbinsX();
 		float min_histo = Data_hist->GetXaxis()->GetXmin();
 		float max_histo = Data_hist->GetXaxis()->GetXmax();
-		if (debug)
+		//if (debug)
 			cout << "Bining and range " << nbBins << " " << min_histo << " " << max_histo << "\n";
 
 		double r = 0.0;
@@ -518,7 +521,10 @@ int CS_Extraction_combine_Working_V3()
 		Fit_func.Set_Data_hist(Data_hist);
 		Fit_func.Set_Limits(min_fit, max_fit);
 		//Fit_func.Single_Gaussian_fit("SLER", Form("func_%i", i));
-		Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
+		//Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
+		//Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
+		//Fit_func.Crystall_Ball_fit("SLER", Form("func_%i", i));
+		Fit_func.Crystall_Ball_fit_exp("SLER", Form("func_%i", i));
 		//Fit_func.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
 		
 		// Fit_func.Double_Gaussian_Fit("SLR",Form("func_%i", i));
@@ -696,7 +702,9 @@ int CS_Extraction_combine_Working_V3()
 		Fit_func_MC.Set_Data_hist(hlast);
 		Fit_func_MC.Set_Limits(min_fit, max_fit);
 		//Fit_func_MC.Single_Gaussian_fit("SLER", Form("func_MC_%i", i));
-		Fit_func_MC.Single_Gaussian_Int_fit("SLER", Form("func_MC_%i", i));
+		//Fit_func_MC.Single_Gaussian_Int_fit("SLER", Form("func_MC_%i", i));
+		//Fit_func_MC.Crystall_Ball_fit("SLER", Form("func_MC_%i", i));
+		Fit_func_MC.Crystall_Ball_fit_exp("SLER", Form("func_%i", i));
 		//Fit_func_MC.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
 		// Fit_func_MC.Double_Gaussian_Fit("SLR",Form("func_MC_%i", i));
 		// Fit_func_MC.Single_Gaussian_Fit_Flat_BG("SLR",Form("func_MC_%i", i));
