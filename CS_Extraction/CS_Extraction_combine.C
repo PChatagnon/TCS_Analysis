@@ -37,14 +37,13 @@ int CS_Extraction_combine()
 	gStyle->SetTitleH(0.1); // per cent of the pad height
 
 	ROOT::Math::MinimizerOptions::SetDefaultMinimizer("Minuit2");
-	//ADDED by Mariana 
 	ROOT::Math::MinimizerOptions::SetDefaultMaxFunctionCalls(10000);
 	ROOT::Math::MinimizerOptions::SetDefaultTolerance(1);
 
-	// Xsec Signal
-	float strenght_signal = 0.;
+	Analysis JPsi_CS_analysis;
 
-	TString name_pdf;
+	TString name_pdf = JPsi_CS_analysis.name_pdf;
+
 	std::vector<vector<TString>> samples{};
 	TString data_file_adress_0;
 	TString data_file_adress_1;
@@ -53,39 +52,9 @@ int CS_Extraction_combine()
 	std::vector<int> ngen{};
 	std::vector<TTree *> MC_tree{};
 
-	std::vector<vector<TString>> labels{};
-	std::vector<vector<TString>> labels_MC{};
-
-	std::vector<double> nb_JPsi_Data{};
-	std::vector<double> error_nb_JPsi_Data{};
-
-	std::vector<double> nb_JPsi_Data_C{};
-	std::vector<double> error_nb_JPsi_Data_C{};
-
-	std::vector<double> w_c{};
-	std::vector<double> Acc_Num{};
-	std::vector<double> average_variable{};
-	std::vector<double> sigma_variable{};
-
-	Latex_Table_writter Latex_Table("", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction", "Epho");
-
-	bool inbending = true;
-	bool RGB = false;
-	bool debug = false;
-	bool ratio_pad = false;
-
-	float Branching_ratio = 0.06;
+	Latex_Table_writter Latex_Table("", JPsi_CS_analysis.latex_output_folder, "Epho");
 
 	float lumi_factor = 1316.875;
-
-	TString variable = "Epho";
-	TString folder_pass2 = "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/Pass2_Samples/";
-
-	double min_fit = 2.7;//2.7;
-	double max_fit = 3.3;//3.3;
-
-	double Mass_norm_low = 2.6;
-	double Mass_norm_high = 2.9;
 
 	TString min_hist_MC = "1.8";
 	TString min_hist = "2.6";
@@ -122,86 +91,84 @@ int CS_Extraction_combine()
 
 	TString charge_50_spring_19_inbending = "50.5319";*/
 
-	if (inbending)
+	if (JPsi_CS_analysis.RunGroup == "RGA")
 	{
-		name_pdf = "CS_Extraction_CrystalBall_exp";
-
 		// JPsi
 		//  Fall2018
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Rad_corr_Fall2018_45_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_45_fall_18_inbending});
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Rad_corr_Fall2018_50_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_inbending});
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Rad_corr_Fall2018_55_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_55_fall_18_inbending});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Rad_corr_Fall2018_45_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_45_fall_18_inbending});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Rad_corr_Fall2018_50_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_inbending});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Rad_corr_Fall2018_55_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_55_fall_18_inbending});
 		// Outbending
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Rad_corr_Fall2018_40_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_40_fall_18_outbending});
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Rad_corr_Fall2018_50_out_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_outbending});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Rad_corr_Fall2018_40_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_40_fall_18_outbending});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Rad_corr_Fall2018_50_out_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_outbending});
 		// Spring2019
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Rad_corr_Spring2019_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_spring_19_inbending});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Rad_corr_Spring2019_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_spring_19_inbending});
 
-		/*samples.push_back({folder_pass2 + "Simulation/JPsi_Fall2018_45_022024.root", cs_no_rad_2018, color_JPsi, "J#psi", charge_45_fall_18_inbending});
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Fall2018_50_022024.root", cs_no_rad_2018, color_JPsi, "J#psi", charge_50_fall_18_inbending});
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Fall2018_55_022024.root", cs_no_rad_2018, color_JPsi, "J#psi", charge_55_fall_18_inbending});
+		/*samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Fall2018_45_022024.root", cs_no_rad_2018, color_JPsi, "J#psi", charge_45_fall_18_inbending});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Fall2018_50_022024.root", cs_no_rad_2018, color_JPsi, "J#psi", charge_50_fall_18_inbending});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Fall2018_55_022024.root", cs_no_rad_2018, color_JPsi, "J#psi", charge_55_fall_18_inbending});
 		// Outbending
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Fall2018_40_out_022024.root", cs_no_rad_2018, color_JPsi, "J#psi", charge_40_fall_18_outbending});
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Fall2018_50_out_022024.root", cs_no_rad_2018, color_JPsi, "J#psi", charge_50_fall_18_outbending});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Fall2018_40_out_022024.root", cs_no_rad_2018, color_JPsi, "J#psi", charge_40_fall_18_outbending});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Fall2018_50_out_022024.root", cs_no_rad_2018, color_JPsi, "J#psi", charge_50_fall_18_outbending});
 		// Spring2019
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Spring2019_022024.root", cs_no_rad_2019, color_JPsi, "J#psi", charge_50_spring_19_inbending});*/
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Spring2019_022024.root", cs_no_rad_2019, color_JPsi, "J#psi", charge_50_spring_19_inbending});*/
 
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Fall2018_45_022024.root", cs_no_rad_2018, color_JPsi, "Jpsi_Rad_Corr", charge_45_fall_18_inbending}); // Normalization to 4*57.6*Eg_psf(10.6-8.2)
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Fall2018_50_022024.root", cs_no_rad_2018, color_JPsi, "Jpsi_Rad_Corr", charge_50_fall_18_inbending});
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Fall2018_55_022024.root", cs_no_rad_2018, color_JPsi, "Jpsi_Rad_Corr", charge_55_fall_18_inbending});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Fall2018_45_022024.root", cs_no_rad_2018, color_JPsi, "Jpsi_Rad_Corr", charge_45_fall_18_inbending}); // Normalization to 4*57.6*Eg_psf(10.6-8.2)
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Fall2018_50_022024.root", cs_no_rad_2018, color_JPsi, "Jpsi_Rad_Corr", charge_50_fall_18_inbending});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Fall2018_55_022024.root", cs_no_rad_2018, color_JPsi, "Jpsi_Rad_Corr", charge_55_fall_18_inbending});
 		// Outbending
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Fall2018_40_out_022024.root", cs_no_rad_2018, color_JPsi, "Jpsi_Rad_Corr", charge_40_fall_18_outbending});
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Fall2018_50_out_022024.root", cs_no_rad_2018, color_JPsi, "Jpsi_Rad_Corr", charge_50_fall_18_outbending});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Fall2018_40_out_022024.root", cs_no_rad_2018, color_JPsi, "Jpsi_Rad_Corr", charge_40_fall_18_outbending});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Fall2018_50_out_022024.root", cs_no_rad_2018, color_JPsi, "Jpsi_Rad_Corr", charge_50_fall_18_outbending});
 		// Spring2019
-		samples.push_back({folder_pass2 + "Simulation/JPsi_Spring2019_022024.root", cs_no_rad_2019, color_JPsi, "Jpsi_Rad_Corr", charge_50_spring_19_inbending});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Spring2019_022024.root", cs_no_rad_2019, color_JPsi, "Jpsi_Rad_Corr", charge_50_spring_19_inbending});
 		/*
 				// TCSGEN
 				//  Fall2018
-				samples.push_back({folder_pass2 + "Simulation/TCS_Gen_Rad_corr_Fall2018_45_022024.root", "1", color_TCSGen, "BH TCSGen", charge_45_fall_18_inbending});
-				samples.push_back({folder_pass2 + "Simulation/TCS_Gen_Rad_corr_Fall2018_50_022024.root", "1", color_TCSGen, "BH TCSGen", charge_50_fall_18_inbending});
-				samples.push_back({folder_pass2 + "Simulation/TCS_Gen_Rad_corr_Fall2018_55_022024.root", "1", color_TCSGen, "BH TCSGen", charge_55_fall_18_inbending});
+				samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/TCS_Gen_Rad_corr_Fall2018_45_022024.root", "1", color_TCSGen, "BH TCSGen", charge_45_fall_18_inbending});
+				samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/TCS_Gen_Rad_corr_Fall2018_50_022024.root", "1", color_TCSGen, "BH TCSGen", charge_50_fall_18_inbending});
+				samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/TCS_Gen_Rad_corr_Fall2018_55_022024.root", "1", color_TCSGen, "BH TCSGen", charge_55_fall_18_inbending});
 				// Outbending
-				samples.push_back({folder_pass2 + "Simulation/TCS_Gen_Rad_corr_Fall2018_40_022024.root", "1", color_TCSGen, "BH TCSGen", charge_40_fall_18_outbending});
-				samples.push_back({folder_pass2 + "Simulation/TCS_Gen_Rad_corr_Fall2018_50_out_022024.root", "1", color_TCSGen, "BH TCSGen", charge_50_fall_18_outbending});
+				samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/TCS_Gen_Rad_corr_Fall2018_40_022024.root", "1", color_TCSGen, "BH TCSGen", charge_40_fall_18_outbending});
+				samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/TCS_Gen_Rad_corr_Fall2018_50_out_022024.root", "1", color_TCSGen, "BH TCSGen", charge_50_fall_18_outbending});
 				// Spring2019
-				samples.push_back({folder_pass2 + "Simulation/TCS_Gen_Rad_corr_Spring2019_022024.root", "1", color_TCSGen, "BH TCSGen", charge_50_spring_19_inbending});
+				samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/TCS_Gen_Rad_corr_Spring2019_022024.root", "1", color_TCSGen, "BH TCSGen", charge_50_spring_19_inbending});
 
 				// Grape
 				//  Fall2018
-				samples.push_back({folder_pass2 + "Simulation/Grape_Rad_corr_Fall2018_45_022024.root", "0.412", color_Grape, "BH Grape", charge_45_fall_18_inbending});
-				samples.push_back({folder_pass2 + "Simulation/Grape_Rad_corr_Fall2018_50_022024.root", "0.412", color_Grape, "BH Grape", charge_50_fall_18_inbending});
-				samples.push_back({folder_pass2 + "Simulation/Grape_Rad_corr_Fall2018_55_022024.root", "0.412", color_Grape, "BH Grape", charge_55_fall_18_inbending});
+				samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/Grape_Rad_corr_Fall2018_45_022024.root", "0.412", color_Grape, "BH Grape", charge_45_fall_18_inbending});
+				samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/Grape_Rad_corr_Fall2018_50_022024.root", "0.412", color_Grape, "BH Grape", charge_50_fall_18_inbending});
+				samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/Grape_Rad_corr_Fall2018_55_022024.root", "0.412", color_Grape, "BH Grape", charge_55_fall_18_inbending});
 				// Outbending
-				samples.push_back({folder_pass2 + "Simulation/Grape_Rad_corr_Fall2018_40_022024.root", "0.412", color_Grape, "BH Grape", charge_40_fall_18_outbending});
-				samples.push_back({folder_pass2 + "Simulation/Grape_Rad_corr_Fall2018_50_out_022024.root", "0.412", color_Grape, "BH Grape", charge_50_fall_18_outbending});
+				samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/Grape_Rad_corr_Fall2018_40_022024.root", "0.412", color_Grape, "BH Grape", charge_40_fall_18_outbending});
+				samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/Grape_Rad_corr_Fall2018_50_out_022024.root", "0.412", color_Grape, "BH Grape", charge_50_fall_18_outbending});
 				// Spring2019
-				samples.push_back({folder_pass2 + "Simulation/Grape_Rad_corr_Spring2019_022024.root", "0.320", color_Grape, "BH Grape", charge_50_spring_19_inbending});
+				samples.push_back({JPsi_CS_analysis.folder_pass2 + "Simulation/Grape_Rad_corr_Spring2019_022024.root", "0.320", color_Grape, "BH Grape", charge_50_spring_19_inbending});
 		*/
-		data_file_adress_0 = folder_pass2 + "Data/Data_pass2_spring2019_inbending.root";
-		data_file_adress_1 = folder_pass2 + "Data/Data_pass2_fall2018_inbending.root";
-		data_file_adress_2 = folder_pass2 + "Data/Data_pass2_fall2018_outbending.root";
+		data_file_adress_0 = JPsi_CS_analysis.folder_pass2 + "Data/Data_pass2_spring2019_inbending.root";
+		data_file_adress_1 = JPsi_CS_analysis.folder_pass2 + "Data/Data_pass2_fall2018_inbending.root";
+		data_file_adress_2 = JPsi_CS_analysis.folder_pass2 + "Data/Data_pass2_fall2018_outbending.root";
 
 		// Event mixing Background
 		// samples.push_back({"/mnt/c/Users/pierrec/Desktop/ABCD_Method/BG_inbending_Spring2019_Q2_20_Formatted_3D_Fall2018.root", "0.050", color_BG, "BG", "0.00075"});
 		// samples.push_back({"/mnt/c/Users/pierrec/Desktop/ABCD_Method/BG_inbending_4_Q05_Epho8_M2_Formatted_2_3D.root", "0.050", color_BG, "BG", "0.00075"});
 		// samples.push_back({"/mnt/c/Users/pierrec/Desktop/ABCD_Method/BG_outbending_Q2_20_Formatted_3D_Fall2018.root", "0.050", color_BG, "BG", "0.00075"});
 	}
-	else if (RGB)
+	else if (JPsi_CS_analysis.RunGroup == "RGB")
 	{
 		// JPsi
 		//  Fall2018
 		name_pdf = "RGB_Spring2019";
-		folder_pass2 = "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/Pass2_Samples_RGB/";
+		JPsi_CS_analysis.folder_pass2 = "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/Pass2_Samples_RGB/";
 
 		lumi_factor = 1514.34;
-		samples.push_back({folder_pass2 + "JPsi_RGB_Spring19.root", "0.07", color_JPsi, "J#psi", "27.237"});
-		samples.push_back({folder_pass2 + "JPsi_RGB_Spring19_10_2.root", "0.07", color_JPsi, "J#psi", "39.389"});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "JPsi_RGB_Spring19.root", "0.07", color_JPsi, "J#psi", "27.237"});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "JPsi_RGB_Spring19_10_2.root", "0.07", color_JPsi, "J#psi", "39.389"});
 
-		samples.push_back({folder_pass2 + "JPsi_RGB_Spring19.root", "0.07", color_JPsi, "Jpsi_Rad_Corr", "27.237"});
-		samples.push_back({folder_pass2 + "JPsi_RGB_Spring19_10_2.root", "0.07", color_JPsi, "Jpsi_Rad_Corr", "39.389"});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "JPsi_RGB_Spring19.root", "0.07", color_JPsi, "Jpsi_Rad_Corr", "27.237"});
+		samples.push_back({JPsi_CS_analysis.folder_pass2 + "JPsi_RGB_Spring19_10_2.root", "0.07", color_JPsi, "Jpsi_Rad_Corr", "39.389"});
 
-		data_file_adress_0 = folder_pass2 + "Data_pass2_RGB_Spring19.root";
-		data_file_adress_1 = folder_pass2 + "Data_pass2_RGB_Spring19_10_2.root";
+		data_file_adress_0 = JPsi_CS_analysis.folder_pass2 + "Data_pass2_RGB_Spring19.root";
+		data_file_adress_1 = JPsi_CS_analysis.folder_pass2 + "Data_pass2_RGB_Spring19_10_2.root";
 	}
 
 	bool no_info = true;
@@ -212,23 +179,12 @@ int CS_Extraction_combine()
 	Data_tree->Add(data_file_adress_0);
 	cout << "Add second data file" << endl;
 	Data_tree->Add(data_file_adress_1);
-	if (!RGB)
+	if (JPsi_CS_analysis.RunGroup == "RGB")
 	{
 		cout << "Add third data file" << endl;
 		Data_tree->Add(data_file_adress_2);
 	}
-	// TTree *Data_tree = (TTree *)Data_file->Get("tree");
-
-	TCut kinematic_cut = "pass_EC_cut &&  Proton.Theta()*180./3.141592<35. && M>2.6 && (Electron.P() > 1.7) && (Positron.P() > 1.7) && positron_SF>0.15 && electron_SF>0.15 && ( Positron.P()<4.0 || (Positron.P()>4.0 && positron_score>0.05)) && ( Electron.P()<4.0 || (Electron.P()>4.0 && electron_score>0.05))  && positron_HTCC_ECAL_match==1. && electron_HTCC_ECAL_match==1.";
-	// TCut kinematic_cut = "Proton.Theta()*180./3.141592<35. && M>2.6 && (Electron.P() > 1.7) && (Positron.P() > 1.7) && positron_SF>0.15 && electron_SF>0.15  && positron_HTCC_ECAL_match==1. && electron_HTCC_ECAL_match==1.";
-	TCut kinematic_cut_BG = "Proton.Theta()*180./3.141592<35. &&  M>2.6 && (Electron.P() > 1.7) && (Positron.P() > 1.7)";
-	// TCut exclusivity_cut = "abs(MMassBeam)<0.4 && abs(Pt_Frac)<0.05";
-	// TCut exclusivity_cut = "abs(MMassBeam)<0.4 && Missing.Theta()*180./3.141592<10.";
-	// TCut exclusivity_cut = "abs(MMassBeam)<0.05 && abs(Q2/(2.*10.2))<(3.1/(2.*10.2))";
-	// TCut exclusivity_cut = "abs(MMassBeam)<0.1 && abs(Q2)<0.2";// && abs(Missing.Z()-Missing.E())<0.05";
-	TCut exclusivity_cut = "abs(MMassBeam)<0.4  && abs(Q2)<0.5";
-
-	TCut data_cut = "abs(positron_HTCCt-electron_HTCCt)<4";
+	
 
 	cout << "Start reducing root files \n";
 	for (int j = 0; j < samples.size(); j++)
@@ -246,10 +202,10 @@ int CS_Extraction_combine()
 
 		TTree *sample_tree = (TTree *)sample_file->Get("tree");
 		TFile *f2 = new TFile("small.root", "recreate");
-		TTree *filtered_sample_tree = sample_tree->CopyTree(kinematic_cut * exclusivity_cut);
+		TTree *filtered_sample_tree = sample_tree->CopyTree(JPsi_CS_analysis.kinematic_cut * JPsi_CS_analysis.exclusivity_cut);
 		if (samples[j][3] == "BG")
 		{
-			filtered_sample_tree = sample_tree->CopyTree(kinematic_cut_BG * exclusivity_cut);
+			filtered_sample_tree = sample_tree->CopyTree(JPsi_CS_analysis.kinematic_cut_BG * JPsi_CS_analysis.exclusivity_cut);
 		}
 		reduced_samples_tree.push_back(filtered_sample_tree);
 
@@ -265,57 +221,57 @@ int CS_Extraction_combine()
 	cout << "Filtering data now...\n";
 
 	TFile *Data_file_temp = new TFile("smalldata.root", "recreate");
-	TTree *filtered_Data_tree = (TTree *)Data_tree->CopyTree(kinematic_cut * exclusivity_cut * data_cut);
+	TTree *filtered_Data_tree = (TTree *)Data_tree->CopyTree(JPsi_CS_analysis.kinematic_cut * JPsi_CS_analysis.exclusivity_cut * JPsi_CS_analysis.data_cut);
 
 	cout << "Finished reducing root files... \n";
 	cout << "... and start plotting !\n";
 
 	// Fine Binning
-	if (!RGB)
+	if (JPsi_CS_analysis.RunGroup == "RGA")
 	{
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>8.2 && Epho<8.65 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>8.65 && Epho<8.9 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>8.9 && Epho<9.05 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.05 && Epho<9.2 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.2 && Epho<9.46 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.46 && Epho<9.7 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.7 && Epho<10. ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>10. && Epho<10.2 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>10.2 && Epho<10.4 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>10.4 && Epho<10.6 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>8.2 && Epho<8.65 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>8.65 && Epho<8.9 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>8.9 && Epho<9.05 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.05 && Epho<9.2 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.2 && Epho<9.46 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.46 && Epho<9.7 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.7 && Epho<10. ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>10. && Epho<10.2 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>10.2 && Epho<10.4 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>10.4 && Epho<10.6 ", "", "M2"});
 
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>8.2 && Epho_Gen<8.65 ", "50", "8.2", "8.65"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>8.65 && Epho_Gen<8.9 ", "50", "8.65", "8.9"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>8.9 && Epho_Gen<9.05 ", "50", "8.9", "9.05"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.05 && Epho_Gen<9.2 ", "50", "9.05", "9.2"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.2 && Epho_Gen<9.46", "50", "9.2", "9.46"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.46 && Epho_Gen<9.7 ", "50", "9.46", "9.7"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.7 && Epho_Gen<10.0 ", "50", "9.7", "10."});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>10.0 && Epho_Gen<10.2 ", "50", "10.", "10.2"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>10.2 && Epho_Gen<10.4 ", "50", "10.2", "10.4"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>10.4 && Epho_Gen<10.6 ", "50", "10.4", "10.6"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>8.2 && Epho_Gen<8.65 ", "50", "8.2", "8.65"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>8.65 && Epho_Gen<8.9 ", "50", "8.65", "8.9"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>8.9 && Epho_Gen<9.05 ", "50", "8.9", "9.05"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.05 && Epho_Gen<9.2 ", "50", "9.05", "9.2"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.2 && Epho_Gen<9.46", "50", "9.2", "9.46"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.46 && Epho_Gen<9.7 ", "50", "9.46", "9.7"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.7 && Epho_Gen<10.0 ", "50", "9.7", "10."});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>10.0 && Epho_Gen<10.2 ", "50", "10.", "10.2"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>10.2 && Epho_Gen<10.4 ", "50", "10.2", "10.4"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>10.4 && Epho_Gen<10.6 ", "50", "10.4", "10.6"});
 	}
 
-	if (RGB)
+	if (JPsi_CS_analysis.RunGroup == "RGB")
 	{
 
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>8.2 && Epho<9.0 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.0 && Epho<9.2 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.2 && Epho<9.4 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.4 && Epho<9.6 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.6 && Epho<9.8 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.8 && Epho<10.0 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>10.0 && Epho<10.2 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>10.2 && Epho<10.6 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>8.2 && Epho<9.0 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.0 && Epho<9.2 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.2 && Epho<9.4 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.4 && Epho<9.6 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.6 && Epho<9.8 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.8 && Epho<10.0 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>10.0 && Epho<10.2 ", "", "M2"});
+		JPsi_CS_analysis.labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>10.2 && Epho<10.6 ", "", "M2"});
 
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>8.2 && Epho_Gen<9.0 ", "50", "8.2", "9.0"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.0 && Epho_Gen<9.2 ", "50", "9.0", "9.2"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.2 && Epho_Gen<9.4 ", "50", "9.2", "9.4"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.4 && Epho_Gen<9.6 ", "50", "9.4", "9.6"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.6 && Epho_Gen<9.8", "50", "9.6", "9.8"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.8 && Epho_Gen<10.0 ", "50", "9.8", "10.0"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>10.0 && Epho_Gen<10.2 ", "50", "10.0", "10.2"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>10.2 && Epho_Gen<10.6 ", "50", "10.2", "10.6"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>8.2 && Epho_Gen<9.0 ", "50", "8.2", "9.0"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.0 && Epho_Gen<9.2 ", "50", "9.0", "9.2"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.2 && Epho_Gen<9.4 ", "50", "9.2", "9.4"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.4 && Epho_Gen<9.6 ", "50", "9.4", "9.6"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.6 && Epho_Gen<9.8", "50", "9.6", "9.8"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.8 && Epho_Gen<10.0 ", "50", "9.8", "10.0"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>10.0 && Epho_Gen<10.2 ", "50", "10.0", "10.2"});
+		JPsi_CS_analysis.labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>10.2 && Epho_Gen<10.6 ", "50", "10.2", "10.6"});
 	}
 
 	/*// 2 bins
@@ -329,27 +285,27 @@ int CS_Extraction_combine()
 		{"M_Gen_2", "M_{ee}",  "2.6", "3.5",  "40", "weight<100 && M_Gen_2>2. && Epho_Gen>9.7 && Epho_Gen<10.6 ", "50", "9.7", "10.6"},
 	};*/
 
-	TH1D *Acc_hist = new TH1D("Acc_hist", "Acc_hist", labels.size(), 0.0, labels.size());
-	TH1D *Flux_hist = new TH1D("Flux_hist", "Flux_hist", labels.size(), 0.0, labels.size());
-	TH1D *Nb_JPsi_hist = new TH1D("Nb_JPsi_hist", "Nb_JPsi_hist", labels.size(), 0.0, labels.size());
-	TH1D *Rad_corr_hist = new TH1D("Rad_corr_hist", "Rad_corr_hist", labels.size(), 0.0, labels.size());
+	TH1D *Acc_hist = new TH1D("Acc_hist", "Acc_hist", JPsi_CS_analysis.labels.size(), 0.0, JPsi_CS_analysis.labels.size());
+	TH1D *Flux_hist = new TH1D("Flux_hist", "Flux_hist", JPsi_CS_analysis.labels.size(), 0.0, JPsi_CS_analysis.labels.size());
+	TH1D *Nb_JPsi_hist = new TH1D("Nb_JPsi_hist", "Nb_JPsi_hist", JPsi_CS_analysis.labels.size(), 0.0, JPsi_CS_analysis.labels.size());
+	TH1D *Rad_corr_hist = new TH1D("Rad_corr_hist", "Rad_corr_hist", JPsi_CS_analysis.labels.size(), 0.0, JPsi_CS_analysis.labels.size());
 
-	TGraphAsymmErrors JPsi_CS_Graph(labels.size());
-	TGraphAsymmErrors JPsi_CS_Graph_C(labels.size());
+	TGraphAsymmErrors JPsi_CS_Graph(JPsi_CS_analysis.labels.size());
+	TGraphAsymmErrors JPsi_CS_Graph_C(JPsi_CS_analysis.labels.size());
 
-	for (int i = 0; i < labels.size(); i++)
+	for (int i = 0; i < JPsi_CS_analysis.labels.size(); i++)
 	{
 
 		//////////////////////////////////////////////////
 		// Set options for each label
-		TString label = labels[i][0];
-		TString xAxis_label = labels[i][1];
-		TString min_histo_option = labels[i][2];
-		TString max_histo_option = labels[i][3];
-		TString nb_bins = labels[i][4];
-		TString string_cut = labels[i][5];
-		TString max_y = labels[i][6];
-		TString output_string = labels[i][7];
+		TString label = JPsi_CS_analysis.labels[i][0];
+		TString xAxis_label = JPsi_CS_analysis.labels[i][1];
+		TString min_histo_option = JPsi_CS_analysis.labels[i][2];
+		TString max_histo_option = JPsi_CS_analysis.labels[i][3];
+		TString nb_bins = JPsi_CS_analysis.labels[i][4];
+		TString string_cut = JPsi_CS_analysis.labels[i][5];
+		TString max_y = JPsi_CS_analysis.labels[i][6];
+		TString output_string = JPsi_CS_analysis.labels[i][7];
 		//////////////////////////////////////////////////
 
 		cout << "\n";
@@ -378,16 +334,17 @@ int CS_Extraction_combine()
 
 		TCut weight_data = Form("%s", "weight");
 
-		filtered_Data_tree->Draw(label + ">>" + Form("Data_hist_%i", i), weight_data * data_cut * cut * exclusivity_cut * kinematic_cut);
-		filtered_Data_tree->Draw(variable + ">>" + Form("Average_variable_%i", i), weight_data * data_cut * cut * exclusivity_cut * kinematic_cut);
-		average_variable.push_back(Average_variable->GetMean());
-		sigma_variable.push_back(Average_variable->GetRMS());
+		filtered_Data_tree->Draw(label + ">>" + Form("Data_hist_%i", i), weight_data * JPsi_CS_analysis.data_cut * cut * JPsi_CS_analysis.exclusivity_cut * JPsi_CS_analysis.kinematic_cut);
+		filtered_Data_tree->Draw(JPsi_CS_analysis.variable + ">>" + Form("Average_variable_%i", i), weight_data * JPsi_CS_analysis.data_cut * cut * JPsi_CS_analysis.exclusivity_cut * JPsi_CS_analysis.kinematic_cut);
+		JPsi_CS_analysis.average_variable.push_back(Average_variable->GetMean());
+		JPsi_CS_analysis.sigma_variable.push_back(Average_variable->GetRMS());
 
 
 		int nbBins = Data_hist->GetNbinsX();
 		float min_histo = Data_hist->GetXaxis()->GetXmin();
 		float max_histo = Data_hist->GetXaxis()->GetXmax();
-		//if (debug)
+
+		if (JPsi_CS_analysis.debug)
 			cout << "Bining and range " << nbBins << " " << min_histo << " " << max_histo << "\n";
 
 		double r = 0.0;
@@ -421,7 +378,7 @@ int CS_Extraction_combine()
 				continue;
 
 			int nbEvents_sample = ngen[j];
-			if (debug)
+			if (JPsi_CS_analysis.debug)
 				cout << "Nb of events in " << samples[j][0] << " : " << nbEvents_sample << "\n";
 
 			// Xsec BG
@@ -434,9 +391,9 @@ int CS_Extraction_combine()
 
 			reduced_samples_tree[j]->Draw(label + ">>" + hist_name, cut * weight);
 
-			if (debug)
+			if (JPsi_CS_analysis.debug)
 				cout << cut * weight << "\n";
-			if (debug)
+			if (JPsi_CS_analysis.debug)
 				cout << "Number of entries " << sample_hist->GetEntries() << "\n";
 
 			// UnderFlow-OverFlow
@@ -458,7 +415,7 @@ int CS_Extraction_combine()
 			if (samples[j][3] == "J#psi")
 				hs_JPsi->Add(sample_hist);
 
-			if (debug)
+			if (JPsi_CS_analysis.debug)
 				cout << samples[j][0] << "\n";
 			BG_hist->Add(sample_hist);
 
@@ -488,12 +445,12 @@ int CS_Extraction_combine()
 		cancG0->cd();
 
 		float limit_lower_pad = 0.0;
-		if (ratio_pad)
+		if (JPsi_CS_analysis.ratio_pad)
 			limit_lower_pad = 0.3;
 		// Upper plot will be in pad1
 		TPad *pad1 = new TPad("pad1", "pad1", 0, limit_lower_pad, 1, 1.0);
 
-		if (ratio_pad)
+		if (JPsi_CS_analysis.ratio_pad)
 			pad1->SetBottomMargin(0.);
 
 		float max_display = (hs->GetMaximum()) * 1.5;
@@ -502,7 +459,7 @@ int CS_Extraction_combine()
 		pad1->Draw(); // Draw the upper pad: pad1
 		pad1->cd();	  // pad1 becomes the current pad
 
-		if (debug)
+		if (JPsi_CS_analysis.debug)
 			cout << " max _ y " << max_y << "\n";
 		if (max_y != "")
 		{
@@ -520,7 +477,7 @@ int CS_Extraction_combine()
 		cout << "///////////////////////" << endl;
 		Fit_Function Fit_func;
 		Fit_func.Set_Data_hist(Data_hist);
-		Fit_func.Set_Limits(min_fit, max_fit);
+		Fit_func.Set_Limits(JPsi_CS_analysis.min_fit, JPsi_CS_analysis.max_fit);
 		//Fit_func.Single_Gaussian_fit("SLER", Form("func_%i", i));
 		//Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
 		//Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
@@ -534,7 +491,7 @@ int CS_Extraction_combine()
 		double NDF = Fit_func.NDF;
 		cout << "///////////////////////" << endl;
 
-		if (ratio_pad)
+		if (JPsi_CS_analysis.ratio_pad)
 		{
 			hs->Draw("e hist same");
 			BG_hist->SetMarkerSize(0);
@@ -551,22 +508,22 @@ int CS_Extraction_combine()
 
 		cout << " nb_JPsi  " << nb_JPsi << endl;
 
-		nb_JPsi_Data.push_back(nb_JPsi);
-		error_nb_JPsi_Data.push_back(error_nb_JPsi);
+		JPsi_CS_analysis.nb_JPsi_Data.push_back(nb_JPsi);
+		JPsi_CS_analysis.error_nb_JPsi_Data.push_back(error_nb_JPsi);
 
 		double nb_JPsi_C = (Data_hist->Integral(Data_hist->FindBin(3.0), Data_hist->FindBin(10.)));
-		nb_JPsi_Data_C.push_back(nb_JPsi_C);
+		JPsi_CS_analysis.nb_JPsi_Data_C.push_back(nb_JPsi_C);
 
-		double w_c_norm_wrong = (Data_hist->Integral(Data_hist->FindBin(Mass_norm_low), Data_hist->FindBin(Mass_norm_high)) / BG_hist->Integral(BG_hist->FindBin(Mass_norm_low), BG_hist->FindBin(Mass_norm_high)));
+		double w_c_norm_wrong = (Data_hist->Integral(Data_hist->FindBin(JPsi_CS_analysis.Mass_norm_low), Data_hist->FindBin(JPsi_CS_analysis.Mass_norm_high)) / BG_hist->Integral(BG_hist->FindBin(JPsi_CS_analysis.Mass_norm_low), BG_hist->FindBin(JPsi_CS_analysis.Mass_norm_high)));
 		cout << "W_C wrong " << w_c_norm_wrong << endl;
 
-		double nb_data = (Data_hist->Integral(Data_hist->FindBin(Mass_norm_low), Data_hist->FindBin(Mass_norm_high)));
-		double nb_bg_only = (BG_only_hist->Integral(BG_only_hist->FindBin(Mass_norm_low), BG_only_hist->FindBin(Mass_norm_high)));
-		double nb_bg = (BG_hist->Integral(BG_hist->FindBin(Mass_norm_low), BG_hist->FindBin(Mass_norm_high)));
+		double nb_data = (Data_hist->Integral(Data_hist->FindBin(JPsi_CS_analysis.Mass_norm_low), Data_hist->FindBin(JPsi_CS_analysis.Mass_norm_high)));
+		double nb_bg_only = (BG_only_hist->Integral(BG_only_hist->FindBin(JPsi_CS_analysis.Mass_norm_low), BG_only_hist->FindBin(JPsi_CS_analysis.Mass_norm_high)));
+		double nb_bg = (BG_hist->Integral(BG_hist->FindBin(JPsi_CS_analysis.Mass_norm_low), BG_hist->FindBin(JPsi_CS_analysis.Mass_norm_high)));
 		double w_c_norm = (nb_data - nb_bg_only) / (nb_bg - nb_bg_only);
 		cout << "W_C true ingredient nb_data " << nb_data << " nb_bg_only " << nb_bg_only << " nb_bg " << nb_bg << endl;
 		cout << "W_C true " << w_c_norm << endl;
-		w_c.push_back(w_c_from_BG_estimation); // 1.0); // 0.7); //.push_back(w_c_norm); // Data_hist->Integral(Data_hist->FindBin(2.6), Data_hist->FindBin(2.9)) / BG_hist->Integral(BG_hist->FindBin(2.6), BG_hist->FindBin(2.9)));
+		JPsi_CS_analysis.w_c.push_back(w_c_from_BG_estimation); // 1.0); // 0.7); //.push_back(w_c_norm); // Data_hist->Integral(Data_hist->FindBin(2.6), Data_hist->FindBin(2.9)) / BG_hist->Integral(BG_hist->FindBin(2.6), BG_hist->FindBin(2.9)));
 
 		legend->AddEntry(Fit_func.function_Signal, Form("J#psi fit (%3.1f #pm %3.1f)  ", nb_JPsi, error_nb_JPsi), "l");
 		legend->AddEntry(Fit_func.function_Signal, Form("#Chi^{2} %3.1f, NdF %3.1f, #Chi^{2}/NdF %3.1f ", chi2, NDF, chi2 / NDF), "");
@@ -607,7 +564,7 @@ int CS_Extraction_combine()
 
 		// lower plot will be in pad
 		///////////////////////////////////////////////////////////////////////////////
-		if (ratio_pad)
+		if (JPsi_CS_analysis.ratio_pad)
 		{
 			cancG0->cd(); // Go back to the main canvas before defining pad2
 			TPad *pad2 = new TPad("pad2", "pad2", 0, 0.05, 1, limit_lower_pad);
@@ -713,7 +670,7 @@ int CS_Extraction_combine()
 		cout << "///////////////////////" << endl;
 		Fit_Function Fit_func_MC;
 		Fit_func_MC.Set_Data_hist(hlast);
-		Fit_func_MC.Set_Limits(min_fit, max_fit);
+		Fit_func_MC.Set_Limits(JPsi_CS_analysis.min_fit, JPsi_CS_analysis.max_fit);
 		//Fit_func_MC.Single_Gaussian_fit("SLER", Form("func_MC_%i", i));
 		//Fit_func_MC.Single_Gaussian_Int_fit("SLER", Form("func_MC_%i", i));
 		//Fit_func_MC.Crystall_Ball_fit("SLER", Form("func_MC_%i", i));
@@ -737,7 +694,7 @@ int CS_Extraction_combine()
 
 		double nb_JPsi_MC = Fit_func_MC.Get_Integral_Signal(); // nb_JPsi_integral; //
 
-		Acc_Num.push_back(nb_JPsi_MC/normalization_MC_to_data); //(sample_Acc->Integral());
+		JPsi_CS_analysis.Acc_Num.push_back(nb_JPsi_MC/normalization_MC_to_data); //(sample_Acc->Integral());
 		// cout<<"acc num 1 "<<sample_Acc->Integral()<<endl;
 
 		cancAcc->SaveAs(name_pdf + ".pdf");
@@ -747,20 +704,20 @@ int CS_Extraction_combine()
 	// Process MC
 	//////////////////////////////////////////////////////
 
-	for (int i = 0; i < labels_MC.size(); i++)
+	for (int i = 0; i < JPsi_CS_analysis.labels_MC.size(); i++)
 	{
 
 		//////////////////////////////////////////////////
 		// Set options for each label
-		TString label = labels_MC[i][0];
-		TString xAxis_label = labels_MC[i][1];
-		TString min_histo_option = labels_MC[i][2];
-		TString max_histo_option = labels_MC[i][3];
-		TString nb_bins = labels_MC[i][4];
-		TString string_cut = labels_MC[i][5];
-		TString max_y = labels_MC[i][6];
-		double Eg_min = stof((string)labels_MC[i][7].Data());
-		double Eg_max = stof((string)labels_MC[i][8].Data());
+		TString label = JPsi_CS_analysis.labels_MC[i][0];
+		TString xAxis_label = JPsi_CS_analysis.labels_MC[i][1];
+		TString min_histo_option = JPsi_CS_analysis.labels_MC[i][2];
+		TString max_histo_option = JPsi_CS_analysis.labels_MC[i][3];
+		TString nb_bins = JPsi_CS_analysis.labels_MC[i][4];
+		TString string_cut = JPsi_CS_analysis.labels_MC[i][5];
+		TString max_y = JPsi_CS_analysis.labels_MC[i][6];
+		double Eg_min = stof((string)JPsi_CS_analysis.labels_MC[i][7].Data());
+		double Eg_max = stof((string)JPsi_CS_analysis.labels_MC[i][8].Data());
 
 		std::vector<double> integral_flux{};
 		//////////////////////////////////////////////////
@@ -783,7 +740,7 @@ int CS_Extraction_combine()
 
 		int nbBins = stoi((string)nb_bins.Data());
 
-		if (debug)
+		if (JPsi_CS_analysis.debug)
 			cout << "Bining and range " << nbBins << " " << min_histo << " " << max_histo << "\n";
 
 		auto legend = new TLegend(0.54, 0.87, 0.90, 0.60);
@@ -802,7 +759,7 @@ int CS_Extraction_combine()
 			if (samples[j][3] == "J#psi")
 			{
 
-				if (debug)
+				if (JPsi_CS_analysis.debug)
 					cout << "Nb of events in " << samples[j][0] << " : " << nbEvents_sample << "\n";
 
 				TString hist_name1 = Form("sample_hist1_%s_%i_%i", samples[j][3].Data(), j, i);
@@ -822,7 +779,7 @@ int CS_Extraction_combine()
 				MC_tree[j]->Draw(label + ">>" + hist_name1, cut * weight1 * weight_acc);
 				MC_tree[j]->Draw(label + ">>" + hist_Acc, cut * weight_acc);
 
-				if (debug)
+				if (JPsi_CS_analysis.debug)
 				{
 					// cout << cut * weight << "\n";
 					cout << "Debug flux"
@@ -851,7 +808,7 @@ int CS_Extraction_combine()
 				double integral_flux_sample = (sample_hist1->GetEntries() > 100) ? (Eg_max - Eg_min) * ((sample_hist1->Integral()) / sample_Acc->Integral()) : 0.0;
 				integral_flux.push_back(integral_flux_sample);
 
-				if (debug)
+				if (JPsi_CS_analysis.debug)
 				{
 					cout << " IN FLUX CALCULATION " << endl;
 					cout << samples[j][0] << "\n";
@@ -886,52 +843,52 @@ int CS_Extraction_combine()
 		double avg_flux = std::accumulate(integral_flux.begin(), integral_flux.end(), 0.0);
 		for (const auto &element : integral_flux)
 		{
-			if (debug)
+			if (JPsi_CS_analysis.debug)
 				std::cout << element << " ";
 		}
 		cout << "Average Flux " << avg_flux << "\n";
 		TH1D *MC_stack_hist = (TH1D *)(hs_MC->GetStack()->Last());
-		double Acc = Acc_Num[i] / (MC_stack_hist->Integral());
+		double Acc = JPsi_CS_analysis.Acc_Num[i] / (MC_stack_hist->Integral());
 
-		cout << "Acc calculation: num " << Acc_Num[i] << " denom: " << (MC_stack_hist->Integral()) << "\n";
+		cout << "Acc calculation: num " << JPsi_CS_analysis.Acc_Num[i] << " denom: " << (MC_stack_hist->Integral()) << "\n";
 
 		TH1D *No_rad_MC_stack_hist = (TH1D *)(hs_MC_no_rad->GetStack()->Last());
 		double Rad_corr = (MC_stack_hist->Integral()) / (No_rad_MC_stack_hist->Integral());
 
 		Acc_hist->SetBinContent(i + 1, Acc);
 		Flux_hist->SetBinContent(i + 1, avg_flux * lumi_factor);
-		Nb_JPsi_hist->SetBinContent(i + 1, nb_JPsi_Data[i]);
+		Nb_JPsi_hist->SetBinContent(i + 1, JPsi_CS_analysis.nb_JPsi_Data[i]);
 		Rad_corr_hist->SetBinContent(i + 1, Rad_corr);
 
 		cout << "Acc " << Acc << "\n";
 		cout << "Rad_corr " << Rad_corr << "\n";
-		cout << "Nb JPsi " << nb_JPsi_Data[i] << "\n";
-		cout << "Br " << Branching_ratio << "\n";
-		cout << "w_c " << w_c[i] << "\n";
+		cout << "Nb JPsi " << JPsi_CS_analysis.nb_JPsi_Data[i] << "\n";
+		cout << "Br " << JPsi_CS_analysis.Branching_ratio << "\n";
+		cout << "w_c " << JPsi_CS_analysis.w_c[i] << "\n";
 		cout << "Size of the bin Delta_E " << (Eg_max - Eg_min) << "\n";
 
-		double CS_usual = 0.001 * nb_JPsi_Data[i] / (avg_flux * lumi_factor * Branching_ratio * Rad_corr * (Acc)*w_c[i]);
+		double CS_usual = 0.001 * JPsi_CS_analysis.nb_JPsi_Data[i] / (avg_flux * lumi_factor * JPsi_CS_analysis.Branching_ratio * Rad_corr * (Acc)*JPsi_CS_analysis.w_c[i]);
 		cout << "CS using normal formula " << CS_usual << "\n"; // remove lumi factor ?
 
-		cout << "Nb JPsi (comptage)" << nb_JPsi_Data_C[i] << "\n";
-		double CS_comptage = 0.001 * nb_JPsi_Data_C[i] / (avg_flux * lumi_factor * Branching_ratio * (Acc)*w_c[i]);						   //
-		double error_CS_comptage = 0.001 * sqrt(nb_JPsi_Data_C[i]) / (avg_flux * lumi_factor * Branching_ratio * Rad_corr * (Acc)*w_c[i]); //
+		cout << "Nb JPsi (comptage)" << JPsi_CS_analysis.nb_JPsi_Data_C[i] << "\n";
+		double CS_comptage = 0.001 * JPsi_CS_analysis.nb_JPsi_Data_C[i] / (avg_flux * lumi_factor * JPsi_CS_analysis.Branching_ratio * (Acc)*JPsi_CS_analysis.w_c[i]);						   //
+		double error_CS_comptage = 0.001 * sqrt(JPsi_CS_analysis.nb_JPsi_Data_C[i]) / (avg_flux * lumi_factor * JPsi_CS_analysis.Branching_ratio * Rad_corr * (Acc)*JPsi_CS_analysis.w_c[i]); //
 		cout << "CS using comptage formula " << CS_comptage << "\n";
 
-		double error_CS_usual = 0.001 * error_nb_JPsi_Data[i] / (avg_flux * lumi_factor * Branching_ratio * Rad_corr * (Acc)*w_c[i]); //
-		cout << "error on the jpsi number " << error_nb_JPsi_Data[i] << "\n";
+		double error_CS_usual = 0.001 * JPsi_CS_analysis.error_nb_JPsi_Data[i] / (avg_flux * lumi_factor * JPsi_CS_analysis.Branching_ratio * Rad_corr * (Acc)*JPsi_CS_analysis.w_c[i]); //
+		cout << "error on the jpsi number " << JPsi_CS_analysis.error_nb_JPsi_Data[i] << "\n";
 		cout << "error CS using normal formula " << error_CS_usual << "\n";
 
-		cout << "average variable " << average_variable[i] << "\n";
+		cout << "average variable " << JPsi_CS_analysis.average_variable[i] << "\n";
 
-		Latex_Table.Add_value(i, labels_MC.size(), CS_usual, error_CS_usual, average_variable[i], sigma_variable[i]);
+		Latex_Table.Add_value(i, JPsi_CS_analysis.labels_MC.size(), CS_usual, error_CS_usual, JPsi_CS_analysis.average_variable[i], JPsi_CS_analysis.sigma_variable[i]);
 
-		JPsi_CS_Graph.SetPoint(i, average_variable[i], CS_usual);
+		JPsi_CS_Graph.SetPoint(i, JPsi_CS_analysis.average_variable[i], CS_usual);
 		// JPsi_CS_Graph.SetPointError(i, average_variable[i] - Eg_min, Eg_max - average_variable[i], error_CS_usual, error_CS_usual);
-		JPsi_CS_Graph.SetPointError(i, sigma_variable[i], sigma_variable[i], error_CS_usual, error_CS_usual);
+		JPsi_CS_Graph.SetPointError(i, JPsi_CS_analysis.sigma_variable[i], JPsi_CS_analysis.sigma_variable[i], error_CS_usual, error_CS_usual);
 
-		JPsi_CS_Graph_C.SetPoint(i, average_variable[i], CS_comptage);
-		JPsi_CS_Graph_C.SetPointError(i, average_variable[i] - Eg_min, Eg_max - average_variable[i], error_CS_comptage, error_CS_comptage);
+		JPsi_CS_Graph_C.SetPoint(i, JPsi_CS_analysis.average_variable[i], CS_comptage);
+		JPsi_CS_Graph_C.SetPointError(i, JPsi_CS_analysis.average_variable[i] - Eg_min, Eg_max - JPsi_CS_analysis.average_variable[i], error_CS_comptage, error_CS_comptage);
 		/////////////////////////
 		/////////////////////////
 
@@ -1007,8 +964,8 @@ int CS_Extraction_combine()
 	TH1F *CS_hist_1 = new TH1F("CS_hist_1", "CS_hist_1", 50, 8.6, 10.2);
 	CS_tree->Draw("Epho_Gen>>CS_hist_1", "weight*(1.0)/(((10.2-8.6)/50.)*1124999*(virtual_flux_Gen+real_flux_Gen))", "hist");*/
 	cout << "here" << endl;
-	// TFile *CS_file = new TFile(folder_pass2 + "Simulation/JPsi_Rad_corr_Fall2018_45_022024.root");
-	// TFile *CS_file = new TFile(folder_pass2 + "JPsi_RGB_Spring19.root");
+	// TFile *CS_file = new TFile(JPsi_CS_analysis.folder_pass2 + "Simulation/JPsi_Rad_corr_Fall2018_45_022024.root");
+	// TFile *CS_file = new TFile(JPsi_CS_analysis.folder_pass2 + "JPsi_RGB_Spring19.root");
 	// TTree *CS_tree = (TTree *)CS_file->Get("tree_Gen");
 	// TH1F *CS_hist_1 = new TH1F("CS_hist_1", "CS_hist_1", 50, 8.6, 10.6);
 	// CS_tree->Draw("Epho_Gen>>CS_hist_1", "weight*(1.0)/(((10.6-8.6)/50.)*2015000*(virtual_flux_Gen+real_flux_Gen))", "hist");
@@ -1043,7 +1000,7 @@ int CS_Extraction_combine()
 	JPsi_CS_GlueX->Draw("AP");
 	// JPsi_CS_HallC->Draw("P");
 	//JPsi_CS_GlueX_old->Draw("P");
-	if (RGB)
+	if (JPsi_CS_analysis.RunGroup == "RGB")
 		Richard_graph->Draw("P");
 	JPsi_CS_Graph.Draw("P");
 	// JPsi_CS_Graph_C.Draw("P");
@@ -1054,7 +1011,7 @@ int CS_Extraction_combine()
 	// legend_CS->AddEntry(JPsi_CS_HallC, "Hall C (unpublished)", "lp");
 	legend_CS->AddEntry(JPsi_CS_GlueX, "GlueX (2023)", "lp");
 	//legend_CS->AddEntry(JPsi_CS_GlueX_old, "GlueX (2019)", "lp");
-	if (RGB)
+	if (JPsi_CS_analysis.RunGroup == "RGB")
 		legend_CS->AddEntry(Richard_graph, "Richard's analysis", "lp");
 	legend_CS->SetFillStyle(0);
 	legend_CS->SetLineWidth(0);
@@ -1094,7 +1051,7 @@ int CS_Extraction_combine()
 
 	// JPsi_CS_Graph.SetMaximum(1.);
 	auto JPsi_CS_Graph_blind = new TGraphErrors(6);
-	for (int i = 0; i < labels_MC.size(); i++)
+	for (int i = 0; i < JPsi_CS_analysis.labels_MC.size(); i++)
 	{
 		JPsi_CS_Graph_blind->SetPoint(i, JPsi_CS_Graph.GetPointX(i), 0.8);
 		JPsi_CS_Graph_blind->SetPointError(i, 0.0, (JPsi_CS_Graph.GetErrorY(i)));

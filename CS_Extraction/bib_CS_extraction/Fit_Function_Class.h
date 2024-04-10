@@ -200,9 +200,9 @@ public:
                 function->SetParLimits(2, 0.025, 0.15);
                 // alpha and n
                 function->SetParameter(3, 0.75);
-                function->SetParLimits(3, 0.05, 1.5);
+                function->SetParLimits(3, 0.25, 1.5);
                 function->SetParameter(4, 150);
-                function->SetParLimits(4, 100, 500);
+                function->SetParLimits(4, 50, 500);
                 // BG
                 function->SetParameter(5, 7.);
                 function->SetParLimits(5, 0.00, 100000.);
