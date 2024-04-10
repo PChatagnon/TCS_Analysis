@@ -12,13 +12,14 @@
 #include "THStack.h"
 #include "bib_CS_extraction/Fit_Function_Class.h"
 #include "bib_CS_extraction/Table_Class.h"
-#include "bib_CS_extraction/Sample_Class.h"
+#include "bib_CS_extraction/Run_Group_Class.h"
+#include "bib_CS_extraction/Analysis_Class.h"
 #include "bib_CS_extraction/Utils.h"
 #include <iostream>
 #include <fstream>
 using namespace std;
 
-int CS_Extraction_combine_Working_V3()
+int CS_Extraction_combine()
 {
 	gROOT->SetBatch(kTRUE);
 
@@ -379,8 +380,6 @@ int CS_Extraction_combine_Working_V3()
 		average_variable.push_back(Average_variable->GetMean());
 		sigma_variable.push_back(Average_variable->GetRMS());
 
-		Data_hist->SaveAs("plot.pdf");
-
 		int nbBins = Data_hist->GetNbinsX();
 		float min_histo = Data_hist->GetXaxis()->GetXmin();
 		float max_histo = Data_hist->GetXaxis()->GetXmax();
@@ -406,6 +405,7 @@ int CS_Extraction_combine_Working_V3()
 
 		THStack *hs = new THStack("hs", "");
 		THStack *hs_JPsi = new THStack("hs_JPsi", "");
+		THStack *hs_JPsi_BG = new THStack("hs_JPsi_BG", "");
 
 		TH1D *BG_hist = new TH1D(Form("BG_hist_%i", i), "BG_hist", nBins, min_histo, max_histo);
 		TH1D *BG_only_hist = new TH1D(Form("BG_only_hist_%i", i), "BG_only_hist", nBins, min_histo, max_histo);
@@ -664,7 +664,7 @@ int CS_Extraction_combine_Working_V3()
 		/////Acc calculation
 		/////////////////////////////////////////
 
-		/////Simulate the background
+		/////Simulate the background and normalize simulations to data
 		float nb_event_bg = (Fit_func.function_BG->Integral(min_histo, max_histo)) / (Data_hist->GetXaxis()->GetBinWidth(2));
 		TH1D *BG_add_hist = new TH1D("BG_add_hist", "", nbBins, min_histo, max_histo);
 		TString name_BG_func = Form("func_%i_bg_func", i);
@@ -677,17 +677,29 @@ int CS_Extraction_combine_Working_V3()
 		BG_add_hist->SetFillColorAlpha(kCyan, 0.65);
 		BG_add_hist->SetStats(kFALSE);
 		TH1D *h_only_JPsi = (TH1D *)(hs_JPsi->GetStack()->Last());
-		double nb_JPsi_integral = h_only_JPsi->Integral();
-		hs_JPsi->Add(BG_add_hist);
+
+		double nb_JPsi_integral_MC_raw = h_only_JPsi->Integral(h_only_JPsi->FindBin(2.95),h_only_JPsi->FindBin(3.15));
+		double normalization_MC_to_data = 2.0*nb_JPsi/nb_JPsi_integral_MC_raw;
+
+		cout<<"Normalization factor for signal in MC: "<<normalization_MC_to_data<<endl;
+
+		h_only_JPsi->Scale(normalization_MC_to_data);
+		double nb_JPsi_integral_MC = h_only_JPsi->Integral();
+
+
+		hs_JPsi_BG->Add(h_only_JPsi);
+		hs_JPsi_BG->Add(BG_add_hist);
+
+		//hs_JPsi->Add(BG_add_hist);
 		/////End simulate the background
 
 		TCanvas *cancAcc = new TCanvas("", "can0", 1500, 1000);
 		cancAcc->cd();
-		TH1D *hlast = (TH1D *)(hs_JPsi->GetStack()->Last());
+		TH1D *hlast = (TH1D *)(hs_JPsi_BG->GetStack()->Last());
 		hlast->SetTitle(";" + label + ";Events");
 		hlast->GetYaxis()->SetTitleOffset(1.3);
 		hlast->Draw("hist");
-		hs_JPsi->Draw("e hist same");
+		hs_JPsi_BG->Draw("e hist same");
 
 		cout << "///////////////////////" << endl;
 		cout << "FIT MC" << endl;
@@ -703,11 +715,11 @@ int CS_Extraction_combine_Working_V3()
 		cout << "///////////////////////" << endl;
 
 		hlast->Draw("hist");
-		hs_JPsi->Draw("e hist same");
+		hs_JPsi_BG->Draw("e hist same");
 		Fit_func_MC.Draw_Functions();
 
 		auto legend_acc = new TLegend(0.54, 0.87, 0.90, 0.60);
-		legend_acc->AddEntry(h_only_JPsi, Form("nb JPsi %3.1f", nb_JPsi_integral), "f1");
+		legend_acc->AddEntry(h_only_JPsi, Form("nb JPsi %3.1f", nb_JPsi_integral_MC), "f1");
 		legend_acc->AddEntry(Fit_func_MC.function_Signal, Form("J#psi fit (%3.1f #pm %3.1f)  ", Fit_func_MC.Get_Integral_Signal(), Fit_func_MC.Get_Integral_Error_Signal()), "l");
 		legend_acc->AddEntry(Fit_func_MC.function_Signal, Form("#Chi^{2} %3.1f, NdF %3.1f, #Chi^{2}/NdF %3.1f ", Fit_func_MC.chi2, Fit_func_MC.NDF, Fit_func_MC.chi2 / Fit_func_MC.NDF), "");
 		legend_acc->SetFillStyle(0);
@@ -716,7 +728,7 @@ int CS_Extraction_combine_Working_V3()
 
 		double nb_JPsi_MC = Fit_func_MC.Get_Integral_Signal(); // nb_JPsi_integral; //
 
-		Acc_Num.push_back(nb_JPsi_MC); //(sample_Acc->Integral());
+		Acc_Num.push_back(nb_JPsi_MC/normalization_MC_to_data); //(sample_Acc->Integral());
 		// cout<<"acc num 1 "<<sample_Acc->Integral()<<endl;
 
 		cancAcc->SaveAs(name_pdf + ".pdf");
