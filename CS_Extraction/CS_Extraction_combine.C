@@ -12,7 +12,7 @@
 #include "THStack.h"
 #include "bib_CS_extraction/Fit_Function_Class.h"
 #include "bib_CS_extraction/Table_Class.h"
-#include "bib_CS_extraction/Sample_Class.h"
+//#include "bib_CS_extraction/Sample_Class.h"
 #include "bib_CS_extraction/Utils.h"
 #include <iostream>
 #include <fstream>
@@ -66,7 +66,7 @@ int CS_Extraction_combine()
 	std::vector<double> average_variable{};
 	std::vector<double> sigma_variable{};
 
-	Latex_Table_writter Latex_Table("", "/lustre19/expphy/volatile/clas12/mtenorio/TCS_Analysis/CS_Extraction", "Epho");
+	Latex_Table_writter Latex_Table("", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction", "Epho");
 
 	bool inbending = true;
 	bool RGB = false;
@@ -78,7 +78,7 @@ int CS_Extraction_combine()
 	float lumi_factor = 1316.875;
 
 	TString variable = "Epho";
-	TString folder_pass2 = "/volatile/clas12/mtenorio/Root/CS/";
+	TString folder_pass2 = "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/Pass2_Samples/";
 
 	double min_fit = 2.7;//2.7;
 	double max_fit = 3.3;//3.3;
@@ -225,7 +225,7 @@ int CS_Extraction_combine()
 	// TCut exclusivity_cut = "abs(MMassBeam)<0.4 && Missing.Theta()*180./3.141592<10.";
 	// TCut exclusivity_cut = "abs(MMassBeam)<0.05 && abs(Q2/(2.*10.2))<(3.1/(2.*10.2))";
 	// TCut exclusivity_cut = "abs(MMassBeam)<0.1 && abs(Q2)<0.2";// && abs(Missing.Z()-Missing.E())<0.05";
-	TCut exclusivity_cut = "abs(MMassBeam)<0.4  && (Missing.Z()-Missing.E())>-0.03";
+	TCut exclusivity_cut = "abs(MMassBeam)<0.4  && abs(Q2)<0.5";
 
 	TCut data_cut = "abs(positron_HTCCt-electron_HTCCt)<4";
 
