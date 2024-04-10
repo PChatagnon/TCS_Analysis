@@ -37,6 +37,9 @@ int CS_Extraction_combine()
 	gStyle->SetTitleH(0.1); // per cent of the pad height
 
 	ROOT::Math::MinimizerOptions::SetDefaultMinimizer("Minuit2");
+	//ADDED by Mariana 
+	ROOT::Math::MinimizerOptions::SetDefaultMaxFunctionCalls(10000);
+	ROOT::Math::MinimizerOptions::SetDefaultTolerance(1);
 
 	// Xsec Signal
 	float strenght_signal = 0.;
@@ -121,7 +124,7 @@ int CS_Extraction_combine()
 
 	if (inbending)
 	{
-		name_pdf = "CS_Extraction_combine_good_error_Gaussian";
+		name_pdf = "CS_Extraction_CrystalBall_exp";
 
 		// JPsi
 		//  Fall2018
@@ -223,7 +226,7 @@ int CS_Extraction_combine()
 	// TCut exclusivity_cut = "abs(MMassBeam)<0.4 && Missing.Theta()*180./3.141592<10.";
 	// TCut exclusivity_cut = "abs(MMassBeam)<0.05 && abs(Q2/(2.*10.2))<(3.1/(2.*10.2))";
 	// TCut exclusivity_cut = "abs(MMassBeam)<0.1 && abs(Q2)<0.2";// && abs(Missing.Z()-Missing.E())<0.05";
-	TCut exclusivity_cut = "abs(MMassBeam)<0.4  && abs(Q2)<0.5"; //&& abs(Missing.Z()-Missing.E())<0.05 && Q2_true>-0.2";
+	TCut exclusivity_cut = "abs(MMassBeam)<0.4  && abs(Q2)<0.5";
 
 	TCut data_cut = "abs(positron_HTCCt-electron_HTCCt)<4";
 
@@ -380,10 +383,11 @@ int CS_Extraction_combine()
 		average_variable.push_back(Average_variable->GetMean());
 		sigma_variable.push_back(Average_variable->GetRMS());
 
+
 		int nbBins = Data_hist->GetNbinsX();
 		float min_histo = Data_hist->GetXaxis()->GetXmin();
 		float max_histo = Data_hist->GetXaxis()->GetXmax();
-		if (debug)
+		//if (debug)
 			cout << "Bining and range " << nbBins << " " << min_histo << " " << max_histo << "\n";
 
 		double r = 0.0;
@@ -518,7 +522,10 @@ int CS_Extraction_combine()
 		Fit_func.Set_Data_hist(Data_hist);
 		Fit_func.Set_Limits(min_fit, max_fit);
 		//Fit_func.Single_Gaussian_fit("SLER", Form("func_%i", i));
-		Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
+		//Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
+		//Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
+		//Fit_func.Crystall_Ball_fit("SLER", Form("func_%i", i));
+		Fit_func.Crystall_Ball_fit_exp("SLER", Form("func_%i", i));
 		//Fit_func.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
 		
 		// Fit_func.Double_Gaussian_Fit("SLR",Form("func_%i", i));
@@ -708,7 +715,9 @@ int CS_Extraction_combine()
 		Fit_func_MC.Set_Data_hist(hlast);
 		Fit_func_MC.Set_Limits(min_fit, max_fit);
 		//Fit_func_MC.Single_Gaussian_fit("SLER", Form("func_MC_%i", i));
-		Fit_func_MC.Single_Gaussian_Int_fit("SLER", Form("func_MC_%i", i));
+		//Fit_func_MC.Single_Gaussian_Int_fit("SLER", Form("func_MC_%i", i));
+		//Fit_func_MC.Crystall_Ball_fit("SLER", Form("func_MC_%i", i));
+		Fit_func_MC.Crystall_Ball_fit_exp("SLER", Form("func_%i", i));
 		//Fit_func_MC.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
 		// Fit_func_MC.Double_Gaussian_Fit("SLR",Form("func_MC_%i", i));
 		// Fit_func_MC.Single_Gaussian_Fit_Flat_BG("SLR",Form("func_MC_%i", i));
