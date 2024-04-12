@@ -5,12 +5,15 @@
 
 class Analysis
 {
-public:
+public: // Keep everything public for convenience
 	////// Store configuration //////
 	TString RunGroup = "RGA";
 	TString variable = "Epho";
+	TString bin_id = "bin 1";
+	TString fit_procedure = "Default";
 	bool debug = false;
 	bool ratio_pad = false;
+	bool pull_pad = false;
 	/////////////////////////////////
 
 	////// Store fit and plotting configuration //////
@@ -40,7 +43,7 @@ public:
 	/////////////////////////////////
 
 	////// Store the path to data and output //////
-	string latex_output_folder = "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction";
+	TString output_folder = "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/";
 	TString name_pdf = "CS_Extraction_CrystalBall_exp_1";
 	/////////////////////////////////
 
@@ -65,15 +68,10 @@ public:
 	////// Store dataset //////
 	Sample Analysis_Sample;
 
+	//// Default creator
 	Analysis() {}
 
-	/////// Setup Datasets //////
-	void Set_Sample(Sample sample_in, TString run_group)
-	{
-		Analysis_Sample = sample_in;
-		RunGroup = run_group;
-	}
-
+	/////// Set configurations //////
 	void Set_Sample_to_RGA()
 	{
 		Analysis_Sample.Setup_RGA();
@@ -85,73 +83,87 @@ public:
 		Analysis_Sample.Setup_RGB();
 		RunGroup = "RGB";
 	}
-	/////////////////////////////
 
-	//////  Begin set Cuts  ///////
-	void Set_kinematic_cut(TCut kinematic_cut_in)
-	{
-		kinematic_cut = kinematic_cut_in;
-	}
-
-	void Set_kinematic_cut_BG(TCut kinematic_cut_BG_in)
-	{
-		kinematic_cut_BG = kinematic_cut_BG_in;
-	}
-
-	void Set_exclusivity_cut(TCut exclusivity_cut_in)
-	{
-		exclusivity_cut = exclusivity_cut_in;
-	}
-
-	void Set_data_cut(TCut data_cut_in)
-	{
-		data_cut = data_cut_in;
-	}
-	//////  End set Cuts  ///////
-
-	//////  Begin set paths outputs  ///////
 	void Set_name_pdf(TString name_pdf_in)
 	{
 		name_pdf = name_pdf_in;
 	}
+	/////// End set configurations //////
 
-	void Set_latex_output_folder(TString latex_output_folder_in)
+	/////// Set parameters //////
+	std::map<std::string, std::string> parseInputFile(const std::string &filename)
 	{
-		latex_output_folder = latex_output_folder_in;
-	}
-	//////  End set paths outputs  ///////
+		std::map<std::string, std::string> parameters;
+		std::ifstream infile(filename);
+		std::string line;
 
-	//////  Set configuration  //////
-	void Set_variable(TString variable_in)
-	{
-		variable = variable_in;
+		while (std::getline(infile, line))
+		{
+			std::istringstream iss(line);
+			std::string key, value;
+			if (!(iss >> key))
+			{
+				// Skip empty lines
+				continue;
+			}
+
+			// Check if the next character is a double quote
+			char c;
+			iss >> std::ws >> c;
+			if (c != '"')
+			{
+				// If the value is not quoted, skip to the next line
+				continue;
+			}
+
+			// Retrieve the value within double quotes
+			std::getline(iss >> std::ws, value, '"');
+			parameters[key] = value;
+		}
+
+		return parameters;
 	}
 
-	void Set_debug()
+	std::string getParameterValue(const std::map<std::string, std::string> &parameters, const std::string &key)
 	{
-		debug = true;
+		auto it = parameters.find(key);
+		if (it != parameters.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			return ""; // Return empty string if key is not found
+		}
 	}
 
-	void Set_ratio_pad()
+	void Set_Parameters(string parameters_file)
 	{
-		ratio_pad = true;
+		std::map<std::string, std::string> parameters = parseInputFile(parameters_file);
+
+		output_folder = TString(getParameterValue(parameters, "output_folder"));
+		name_pdf = TString(getParameterValue(parameters, "name_pdf"));
+
+		fit_procedure = TString(getParameterValue(parameters, "fit_procedure"));
+		bin_id = TString(getParameterValue(parameters, "bin_id"));
+
+		exclusivity_cut = Form("%s", getParameterValue(parameters, "exclusivity_cut").c_str());
+		kinematic_cut = Form("%s", getParameterValue(parameters, "kinematic_cut").c_str());
+		kinematic_cut_BG = Form("%s", getParameterValue(parameters, "kinematic_cut_BG").c_str());
+		data_cut = Form("%s", getParameterValue(parameters, "data_cut").c_str());
+
+		min_fit = stof(getParameterValue(parameters, "min_fit"));
+		max_fit = stof(getParameterValue(parameters, "max_fit"));
+
+		debug = (getParameterValue(parameters, "debug") == "true");
+		pull_pad = (getParameterValue(parameters, "pull_pad") == "true");
 	}
 
-	void Set_fit_limits(double min_fit_in, double max_fit_in)
-	{
-		min_fit = min_fit_in;
-		max_fit = max_fit_in;
-	}
-
-	void Set_norm_limits(double Mass_norm_low_in, double Mass_norm_high_in)
-	{
-		Mass_norm_low = Mass_norm_low_in;
-		Mass_norm_high = Mass_norm_high_in;
-	}
-	//////  End Set configuration  //////
+	//////  End Set parameters  //////
 
 	//////  Setup binnings  //////
-	void Set_Binning_RGA()
+	void
+	Set_Binning_RGA()
 	{
 
 		// Store the binning and plotting configuration
@@ -248,18 +260,18 @@ public:
 
 	void Save_Histo_to_root()
 	{
-		JPsi_CS_Graph.SaveAs(name_pdf + "_CS_graph.root");
-		Acc_hist->SaveAs(name_pdf + "_Acc.root");
-		Flux_hist->SaveAs(name_pdf + "_Flux.root");
-		Nb_JPsi_hist->SaveAs(name_pdf + "_Nb_JPsi.root");
-		Rad_corr_hist->SaveAs(name_pdf + "_Rad_corr.root");
+		JPsi_CS_Graph.SaveAs(output_folder + name_pdf + "_CS_graph.root");
+		Acc_hist->SaveAs(output_folder + name_pdf + "_Acc.root");
+		Flux_hist->SaveAs(output_folder + name_pdf + "_Flux.root");
+		Nb_JPsi_hist->SaveAs(output_folder + name_pdf + "_Nb_JPsi.root");
+		Rad_corr_hist->SaveAs(output_folder + name_pdf + "_Rad_corr.root");
 	}
 	//////////////////////////////
 
 	////// Method for Latex Tables //////
 	void Setup_Latex_Table()
 	{
-		Latex_Table = Latex_Table_writter("", latex_output_folder, "Epho");
+		Latex_Table = Latex_Table_writter("", output_folder.Data(), "Epho");
 		Latex_Table.Set_output_name(((string)name_pdf.Data()) + "_Latex_Table.txt");
 	}
 	//////////////////////////////
@@ -583,9 +595,9 @@ public:
 			///////////////////////////////////////////////////////////////////////////////
 
 			if (i == 0)
-				cancG0->SaveAs(name_pdf + ".pdf(");
+				cancG0->SaveAs(output_folder + name_pdf + ".pdf(");
 			else
-				cancG0->SaveAs(name_pdf + ".pdf");
+				cancG0->SaveAs(output_folder + name_pdf + ".pdf");
 			cancG0->SaveAs(output_string + ".pdf");
 			cancG0->SaveAs(output_string + ".png");
 
@@ -661,7 +673,7 @@ public:
 			Acc_Num.push_back(nb_JPsi_MC / normalization_MC_to_data); //(sample_Acc->Integral());
 			// cout<<"acc num 1 "<<sample_Acc->Integral()<<endl;
 
-			cancAcc->SaveAs(name_pdf + ".pdf");
+			cancAcc->SaveAs(output_folder + name_pdf + ".pdf");
 		}
 	}
 
@@ -752,7 +764,7 @@ public:
 						cout << "Integral flux " << sample_hist1->Integral() << "\n";
 						TCanvas *candebug = new TCanvas("", "candebug", 1500, 1000);
 						sample_hist1->Draw();
-						candebug->SaveAs(name_pdf + ".pdf");
+						candebug->SaveAs(output_folder + name_pdf + ".pdf");
 					}
 
 					sample_Acc->SetLineWidth(0);
@@ -877,7 +889,7 @@ public:
 
 			t->DrawTextNDC(.5, .53, "Preliminary");
 
-			cancG0->SaveAs(name_pdf + ".pdf");
+			cancG0->SaveAs(output_folder + name_pdf + ".pdf");
 		}
 	}
 
@@ -967,7 +979,7 @@ public:
 		t->SetTextAngle(25);
 		t->DrawTextNDC(.5, .53, "Preliminary");
 
-		cancG0->SaveAs(name_pdf + ".pdf");
+		cancG0->SaveAs(output_folder + name_pdf + ".pdf");
 
 		/// Log CS
 		TCanvas *cancG01 = new TCanvas("", "can01", 1500, 1000);
@@ -985,7 +997,7 @@ public:
 
 		t->DrawTextNDC(.5, .53, "Preliminary");
 
-		cancG01->SaveAs(name_pdf + ".pdf");
+		cancG01->SaveAs(output_folder + name_pdf + ".pdf");
 
 		/// Blind CS
 		TCanvas *cancG1 = new TCanvas("", "can1", 1500, 1000);
@@ -1026,26 +1038,25 @@ public:
 
 		t->DrawTextNDC(.5, .53, "Preliminary");
 
-		cancG1->SaveAs(name_pdf + ".pdf");
+		cancG1->SaveAs(output_folder + name_pdf + ".pdf");
 
 		gStyle->SetPaintTextFormat("4.3f");
 
 		TCanvas *cancG2 = new TCanvas("", "can2", 1500, 1000);
 		Acc_hist->Draw("hist text0");
-		cancG2->SaveAs(name_pdf + ".pdf");
+		cancG2->SaveAs(output_folder + name_pdf + ".pdf");
 
 		TCanvas *cancG3 = new TCanvas("", "can3", 1500, 1000);
 		Flux_hist->Draw("hist text0");
-		cancG3->SaveAs(name_pdf + ".pdf");
+		cancG3->SaveAs(output_folder + name_pdf + ".pdf");
 
 		TCanvas *cancG5 = new TCanvas("", "can5", 1500, 1000);
 		Nb_JPsi_hist->Draw("hist text0");
-		cancG5->SaveAs(name_pdf + ".pdf");
+		cancG5->SaveAs(output_folder + name_pdf + ".pdf");
 
 		TCanvas *cancG4 = new TCanvas("", "can4", 1500, 1000);
 		Rad_corr_hist->Draw("hist text0");
-		cancG4->SaveAs(name_pdf + ".pdf)");
-
+		cancG4->SaveAs(output_folder + name_pdf + ".pdf)");
 	}
 	//////////////////////////////
 

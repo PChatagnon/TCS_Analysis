@@ -7,22 +7,21 @@
 class Analysis_Diff : public Analysis
 {
 public:
-	TString variable = "-t";
-
 	double Eg_min = 8.2;  // //8.205; //
 	double Eg_max = 9.28; //  // 10.6;  //
 
-	TString bin_id = "bin 1";
-
-	TCut kinematic_cut = "Proton.Theta()*180./3.141592<35. && M>2.7 && (Electron.P() > 1.7) && (Positron.P() > 1.7) && positron_SF>0.15 && electron_SF>0.15 && ( Positron.P()<4.0 || (Positron.P()>4.0 && positron_score>0.05)) && ( Electron.P()<4.0 || (Electron.P()>4.0 && electron_score>0.05))  && positron_HTCC_ECAL_match==1. && electron_HTCC_ECAL_match==1.";
-	TCut kinematic_cut_BG = "Proton.Theta()*180./3.141592<35. &&  M>2.7 && (Electron.P() > 1.7) && (Positron.P() > 1.7)";
-
-//pass_EC_cut &&  
 	////// Store histogramms and Graphs //////
 	TGraphAsymmErrors JPsi_CS_Graph_C;
 	/////////////////////////////////
 
-	Analysis_Diff() {}
+	Analysis_Diff()
+	{
+		bin_id = "bin 1";
+		variable = "-t";
+		output_folder = "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/";
+		kinematic_cut = "pass_EC_cut &&  Proton.Theta()*180./3.141592<35. && M>2.7 && (Electron.P() > 1.7) && (Positron.P() > 1.7) && positron_SF>0.15 && electron_SF>0.15 && ( Positron.P()<4.0 || (Positron.P()>4.0 && positron_score>0.05)) && ( Electron.P()<4.0 || (Electron.P()>4.0 && electron_score>0.05))  && positron_HTCC_ECAL_match==1. && electron_HTCC_ECAL_match==1.";
+		kinematic_cut_BG = "Proton.Theta()*180./3.141592<35. &&  M>2.7 && (Electron.P() > 1.7) && (Positron.P() > 1.7)";
+	}
 
 	//////  Setup binnings  //////
 	void Set_Binning_t_diff_1()
@@ -39,6 +38,7 @@ public:
 		TString bin_hist = "40.";
 
 		labels = {};
+		labels_MC = {};
 
 		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>0.77 && -t<1.00 ", Eg_min, Eg_max), "", "M2"});
 		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>1.00 && -t<1.5 ", Eg_min, Eg_max), "", "M2"});
@@ -69,6 +69,7 @@ public:
 		TString bin_hist = "40.";
 
 		labels = {};
+		labels_MC = {};
 
 		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>0.5 && -t<0.75 ", Eg_min, Eg_max), "", "M2"});
 		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>0.75 && -t<1.0 ", Eg_min, Eg_max), "", "M2"});
@@ -101,7 +102,7 @@ public:
 	////// Method for Latex Tables //////
 	void Setup_Latex_Table()
 	{
-		Latex_Table = Latex_Table_writter("", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section", "t");
+		Latex_Table = Latex_Table_writter("", output_folder.Data(), "t");
 		Latex_Table.Set_output_name(((string)name_pdf.Data()) + "_Latex_Table.txt");
 	}
 	//////////////////////////////
@@ -279,12 +280,12 @@ public:
 			cancG0->cd();
 
 			float limit_lower_pad = 0.0;
-			if (ratio_pad)
+			if (ratio_pad || pull_pad)
 				limit_lower_pad = 0.3;
 			// Upper plot will be in pad1
 			TPad *pad1 = new TPad("pad1", "pad1", 0, limit_lower_pad, 1, 1.0);
 
-			if (ratio_pad)
+			if (ratio_pad || pull_pad)
 				pad1->SetBottomMargin(0.);
 
 			float max_display = (hs->GetMaximum()) * 1.5;
@@ -369,6 +370,7 @@ public:
 
 			t->DrawTextNDC(.5, .53, "Preliminary");
 
+			///////////////////////////////////////////////////////////////////////////////
 			// lower plot will be in pad
 			///////////////////////////////////////////////////////////////////////////////
 			if (ratio_pad)
@@ -422,12 +424,61 @@ public:
 				legendR->SetFillStyle(0);
 				legendR->SetLineWidth(0);
 			}
+
+			if (pull_pad)
+			{
+				cancG0->cd(); // Go back to the main canvas before defining pad2
+				TPad *pad2 = new TPad("pad2", "pad2", 0, 0.05, 1, limit_lower_pad);
+				pad2->SetTopMargin(0);
+				pad2->SetGridy();
+				pad2->SetBottomMargin(0.3);
+				pad2->Draw();
+				pad2->cd(); // pad2 becomes the current pad
+
+				ratio_hist_uncertainty->SetFillColor(42);
+				// ratio_hist_uncertainty->SetFillStyle(3001);
+				ratio_hist_uncertainty->SetLineColor(1);
+				ratio_hist_uncertainty->SetLineWidth(1);
+				ratio_hist_uncertainty->SetMarkerSize(0);
+
+				ratio_hist_uncertainty->SetMaximum(2.0);
+				ratio_hist_uncertainty->SetMinimum(0.0);
+				ratio_hist_uncertainty->Draw("e2");
+				ratio_hist->Draw("ep same");
+				pad2->Update();
+
+				// Ratio plot (h3) settings
+				ratio_hist_uncertainty->SetTitle(""); // Remove the ratio title
+
+				// Y axis ratio plot settings
+				ratio_hist_uncertainty->GetYaxis()->SetTitle("Data/MC ratio");
+				ratio_hist_uncertainty->GetXaxis()->SetTitle(xAxis_label);
+				ratio_hist_uncertainty->GetYaxis()->SetNdivisions(505);
+				ratio_hist_uncertainty->GetYaxis()->SetTitleSize(30);
+				ratio_hist_uncertainty->GetYaxis()->SetTitleFont(43);
+				ratio_hist_uncertainty->GetYaxis()->SetTitleOffset(1.55);
+				ratio_hist_uncertainty->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+				ratio_hist_uncertainty->GetYaxis()->SetLabelSize(30);
+
+				// X axis ratio plot settings
+				ratio_hist_uncertainty->GetXaxis()->SetTitleSize(30);
+				ratio_hist_uncertainty->GetXaxis()->SetTitleFont(43);
+				ratio_hist_uncertainty->GetXaxis()->SetTitleOffset(4.);
+				ratio_hist_uncertainty->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+				ratio_hist_uncertainty->GetXaxis()->SetLabelSize(30);
+
+				auto legendR = new TLegend(0.81, 0.95, 0.9, 0.75);
+				legendR->AddEntry(ratio_hist_uncertainty, "MC Uncert.", "f1");
+				legendR->Draw("same ");
+				legendR->SetFillStyle(0);
+				legendR->SetLineWidth(0);
+			}
 			///////////////////////////////////////////////////////////////////////////////
 
 			if (i == 0)
-				cancG0->SaveAs(name_pdf + ".pdf(");
+				cancG0->SaveAs(output_folder + name_pdf + ".pdf(");
 			else
-				cancG0->SaveAs(name_pdf + ".pdf");
+				cancG0->SaveAs(output_folder + name_pdf + ".pdf");
 			cancG0->SaveAs(output_string + ".pdf");
 			cancG0->SaveAs(output_string + ".png");
 
@@ -485,7 +536,7 @@ public:
 			Acc_Num.push_back(nb_JPsi_MC); //(sample_Acc->Integral());
 			// cout<<"acc num 1 "<<sample_Acc->Integral()<<endl;
 
-			cancAcc->SaveAs(name_pdf + ".pdf");
+			cancAcc->SaveAs(output_folder + name_pdf + ".pdf");
 		}
 	}
 
@@ -573,7 +624,7 @@ public:
 						cout << "Integral flux " << sample_hist1->Integral() << "\n";
 						TCanvas *candebug = new TCanvas("", "candebug", 1500, 1000);
 						sample_hist1->Draw();
-						candebug->SaveAs(name_pdf + ".pdf");
+						candebug->SaveAs(output_folder + name_pdf + ".pdf");
 					}
 
 					sample_Acc->SetLineWidth(0);
@@ -639,7 +690,7 @@ public:
 			cout << "w_c " << w_c[i] << "\n";
 			cout << "Size of the bin Delta_variable " << (variable_max - variable_min) << "\n";
 			cout << "Size of the bin E " << Eg_min << " " << Eg_max << " " << (Eg_max - Eg_min) << "\n";
-			double bin_volume_corr = bin_volume_correction(variable_min, variable_max, Eg_min, Eg_max, debug, name_pdf);
+			double bin_volume_corr = bin_volume_correction(variable_min, variable_max, Eg_min, Eg_max, debug, output_folder + name_pdf);
 			cout << "Bin volume correction " << bin_volume_corr << endl;
 
 			double CS_usual = 0.001 * nb_JPsi_Data[i] / ((variable_max - variable_min) * avg_flux * Analysis_Sample.lumi_factor * Branching_ratio * (Acc)*w_c[i] * bin_volume_corr);
@@ -699,7 +750,7 @@ public:
 
 			t->DrawTextNDC(.5, .53, "Preliminary");
 
-			cancG0->SaveAs(name_pdf + ".pdf");
+			cancG0->SaveAs(output_folder + name_pdf + ".pdf");
 		}
 	}
 
@@ -793,7 +844,7 @@ public:
 		t->SetTextAngle(25);
 		t->DrawTextNDC(.5, .53, "Preliminary");
 
-		cancG0->SaveAs(name_pdf + ".pdf");
+		cancG0->SaveAs(output_folder + name_pdf + ".pdf");
 
 		/// Log CS
 		TCanvas *cancG01 = new TCanvas("", "can01", 1500, 1000);
@@ -844,7 +895,7 @@ public:
 
 		t->DrawTextNDC(.5, .53, "Preliminary");
 
-		cancG01->SaveAs(name_pdf + ".pdf");
+		cancG01->SaveAs(output_folder + name_pdf + ".pdf");
 
 		/// Integrated CS/////////////
 		TCanvas *cancG1 = new TCanvas("", "can1", 1500, 1000);
@@ -918,7 +969,7 @@ public:
 
 		t->DrawTextNDC(.5, .53, "Preliminary");
 
-		cancG1->SaveAs(name_pdf + ".pdf");
+		cancG1->SaveAs(output_folder + name_pdf + ".pdf");
 
 		gStyle->SetPaintTextFormat("4.3f");
 		TCanvas *cancG2 = new TCanvas("", "can2", 1500, 1000);
@@ -926,25 +977,25 @@ public:
 		Acc_hist->GetYaxis()->SetTitleOffset(1.3);
 		Acc_hist->SetTitle(";Bin;Acc");
 		Acc_hist->Draw("hist text0");
-		cancG2->SaveAs(name_pdf + ".pdf");
+		cancG2->SaveAs(output_folder + name_pdf + ".pdf");
 		TCanvas *cancG3 = new TCanvas("", "can3", 1500, 1000);
 		Flux_hist->SetStats(kFALSE);
 		Flux_hist->GetYaxis()->SetTitleOffset(1.3);
 		Flux_hist->SetTitle(";Bin;Flux");
 		Flux_hist->Draw("hist text0");
-		cancG3->SaveAs(name_pdf + ".pdf");
+		cancG3->SaveAs(output_folder + name_pdf + ".pdf");
 		TCanvas *cancG5 = new TCanvas("", "can5", 1500, 1000);
 		Nb_JPsi_hist->SetStats(kFALSE);
 		Nb_JPsi_hist->GetYaxis()->SetTitleOffset(1.3);
 		Nb_JPsi_hist->SetTitle(";Bin;Nb JPsi");
 		Nb_JPsi_hist->Draw("hist text0");
-		cancG5->SaveAs(name_pdf + ".pdf");
+		cancG5->SaveAs(output_folder + name_pdf + ".pdf");
 		TCanvas *cancG4 = new TCanvas("", "can4", 1500, 1000);
 		Rad_corr_hist->SetStats(kFALSE);
 		Rad_corr_hist->GetYaxis()->SetTitleOffset(1.3);
 		Rad_corr_hist->SetTitle(";Bin;Rad. Corr.");
 		Rad_corr_hist->Draw("hist text0");
-		cancG4->SaveAs(name_pdf + ".pdf)");
+		cancG4->SaveAs(output_folder + name_pdf + ".pdf)");
 	}
 	//////////////////////////////
 };

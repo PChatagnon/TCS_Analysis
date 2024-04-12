@@ -15,6 +15,7 @@
 #include "bib_CS_extraction/Sample_Class.h"
 #include "bib_CS_extraction/Analysis_Class.h"
 #include "bib_CS_extraction/Utils.h"
+#include "../bib/InputParser.h"
 #include <iostream>
 #include <fstream>
 #include <ctime>
@@ -44,13 +45,29 @@ int CS_Extraction_combine()
 	ROOT::Math::MinimizerOptions::SetDefaultMaxFunctionCalls(10000);
 	ROOT::Math::MinimizerOptions::SetDefaultTolerance(1);
 
+
 	///////////////////////////////////////////////////////
-	//////// Instantiate all the necessary classes ////////
+	////////////// Instantiate analysis class /////////////
 	///////////////////////////////////////////////////////
 	Analysis JPsi_CS_analysis;
 
-	/// Put here the configuration reader ///
+	///////////////////////////////////////////////////////
+	//////// Read input configuration file ////////////////
+	///////////////////////////////////////////////////////
+	Int_t argc = gApplication->Argc();
+	char **argv = gApplication->Argv();
+	Input input(argc, argv);
 
+	string parameters_file;
+	if (input.cmdOptionExists("-param"))
+	{
+		parameters_file = input.getCmdOption("-param");
+		JPsi_CS_analysis.Set_Parameters(parameters_file);
+	}
+
+	///////////////////////////////////////////////////////
+	////////////////   Setup the analysis  ////////////////
+	///////////////////////////////////////////////////////
 	JPsi_CS_analysis.Set_Sample_to_RGA();
 	JPsi_CS_analysis.Set_Binning_RGA();
 
