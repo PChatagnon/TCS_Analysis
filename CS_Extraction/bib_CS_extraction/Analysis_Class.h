@@ -13,7 +13,7 @@ public: // Keep everything public for convenience
 	TString fit_procedure = "Default";
 	bool debug = false;
 	bool ratio_pad = false;
-	bool pull_pad = false;
+	bool pull_pad = true;
 	/////////////////////////////////
 
 	////// Store fit and plotting configuration //////
@@ -431,13 +431,13 @@ public: // Keep everything public for convenience
 			cancG0->cd();
 
 			float limit_lower_pad = 0.0;
-			if (ratio_pad)
+			if (ratio_pad || pull_pad)
 				limit_lower_pad = 0.3;
 			// Upper plot will be in pad1
 			TPad *pad1 = new TPad("pad1", "pad1", 0, limit_lower_pad, 1, 1.0);
 
-			if (ratio_pad)
-				pad1->SetBottomMargin(0.);
+			if (ratio_pad || pull_pad)
+				pad1->SetBottomMargin(0.003);
 
 			float max_display = (hs->GetMaximum()) * 1.5;
 			hs->SetMaximum(max_display);
@@ -591,6 +591,58 @@ public: // Keep everything public for convenience
 				legendR->Draw("same ");
 				legendR->SetFillStyle(0);
 				legendR->SetLineWidth(0);
+			}
+
+			if (pull_pad)
+			{
+				cancG0->cd(); // Go back to the main canvas before defining pad2
+				TPad *pad2 = new TPad("pad2", "pad2", 0, 0.05, 1, limit_lower_pad);
+				pad2->SetTopMargin(0);
+				pad2->SetGridy();
+				pad2->SetBottomMargin(0.3);
+				pad2->Draw();
+				pad2->cd();
+
+
+				TH1F *pulls_histo = new TH1F("pullsHistogram", "", Data_hist->GetNbinsX(), Data_hist->GetXaxis()->GetXmin(), Data_hist->GetXaxis()->GetXmax());
+				for (int i = 1; i <= Data_hist->GetNbinsX(); ++i)
+				{
+					double dataValue = Data_hist->GetBinContent(i);
+					double dataError = Data_hist->GetBinError(i);
+					double fitValue = Fit_func.function->Eval(Data_hist->GetBinCenter(i));
+					double pull = (dataValue - fitValue) / dataError;
+					if(dataError==0.0)
+						pull = 0.0;
+					cout<<"pull "<<pull<<endl;
+					pulls_histo->SetBinContent(i,pull);
+				}
+
+				pulls_histo->SetStats(kFALSE);
+				pulls_histo->SetFillColor(42);
+				pulls_histo->SetLineColor(1);
+				pulls_histo->SetLineWidth(0);
+				pulls_histo->SetMarkerSize(0);
+				pulls_histo->SetMaximum(5.0);
+				pulls_histo->SetMinimum(-5.0);
+				pulls_histo->Draw("hist");
+				pulls_histo->SaveAs("pull.root");
+				pad2->Update();
+
+				pulls_histo->SetTitle("");
+				pulls_histo->GetYaxis()->SetTitle("Pulls");
+				pulls_histo->GetXaxis()->SetTitle(xAxis_label);
+				pulls_histo->GetYaxis()->SetNdivisions(505);
+				pulls_histo->GetYaxis()->SetTitleSize(30);
+				pulls_histo->GetYaxis()->SetTitleFont(43);
+				pulls_histo->GetYaxis()->SetTitleOffset(1.55);
+				pulls_histo->GetYaxis()->SetLabelFont(43);
+				pulls_histo->GetYaxis()->SetLabelSize(30);
+
+				pulls_histo->GetXaxis()->SetTitleSize(30);
+				pulls_histo->GetXaxis()->SetTitleFont(43);
+				pulls_histo->GetXaxis()->SetTitleOffset(4.);
+				pulls_histo->GetXaxis()->SetLabelFont(43);
+				pulls_histo->GetXaxis()->SetLabelSize(30);
 			}
 			///////////////////////////////////////////////////////////////////////////////
 

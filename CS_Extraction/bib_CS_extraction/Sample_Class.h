@@ -56,8 +56,8 @@ public:
                 // JPsi
                 //  Fall2018
                 samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_45_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_45_fall_18_inbending});
-                samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_50_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_inbending});
                 samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_55_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_55_fall_18_inbending});
+                samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_50_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_inbending});
                 // Outbending
                 samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_40_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_40_fall_18_outbending});
                 samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_50_out_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_outbending});
@@ -82,28 +82,28 @@ public:
                 // Spring2019
                 samples.push_back({sample_folder + "Simulation/JPsi_Spring2019_022024.root", cs_no_rad_2019, color_JPsi, "Jpsi_Rad_Corr", charge_50_spring_19_inbending});
                 /*
-                                // TCSGEN
-                                //  Fall2018
-                                samples.push_back({sample_folder + "Simulation/TCS_Gen_Rad_corr_Fall2018_45_022024.root", "1", color_TCSGen, "BH TCSGen", charge_45_fall_18_inbending});
-                                samples.push_back({sample_folder + "Simulation/TCS_Gen_Rad_corr_Fall2018_50_022024.root", "1", color_TCSGen, "BH TCSGen", charge_50_fall_18_inbending});
-                                samples.push_back({sample_folder + "Simulation/TCS_Gen_Rad_corr_Fall2018_55_022024.root", "1", color_TCSGen, "BH TCSGen", charge_55_fall_18_inbending});
-                                // Outbending
-                                samples.push_back({sample_folder + "Simulation/TCS_Gen_Rad_corr_Fall2018_40_022024.root", "1", color_TCSGen, "BH TCSGen", charge_40_fall_18_outbending});
-                                samples.push_back({sample_folder + "Simulation/TCS_Gen_Rad_corr_Fall2018_50_out_022024.root", "1", color_TCSGen, "BH TCSGen", charge_50_fall_18_outbending});
-                                // Spring2019
-                                samples.push_back({sample_folder + "Simulation/TCS_Gen_Rad_corr_Spring2019_022024.root", "1", color_TCSGen, "BH TCSGen", charge_50_spring_19_inbending});
+                                          // TCSGEN
+                                          //  Fall2018
+                                          samples.push_back({sample_folder + "Simulation/TCS_Gen_Rad_corr_Fall2018_45_022024.root", "1", color_TCSGen, "BH TCSGen", charge_45_fall_18_inbending});
+                                          samples.push_back({sample_folder + "Simulation/TCS_Gen_Rad_corr_Fall2018_50_022024.root", "1", color_TCSGen, "BH TCSGen", charge_50_fall_18_inbending});
+                                          samples.push_back({sample_folder + "Simulation/TCS_Gen_Rad_corr_Fall2018_55_022024.root", "1", color_TCSGen, "BH TCSGen", charge_55_fall_18_inbending});
+                                          // Outbending
+                                          samples.push_back({sample_folder + "Simulation/TCS_Gen_Rad_corr_Fall2018_40_022024.root", "1", color_TCSGen, "BH TCSGen", charge_40_fall_18_outbending});
+                                          samples.push_back({sample_folder + "Simulation/TCS_Gen_Rad_corr_Fall2018_50_out_022024.root", "1", color_TCSGen, "BH TCSGen", charge_50_fall_18_outbending});
+                                          // Spring2019
+                                          samples.push_back({sample_folder + "Simulation/TCS_Gen_Rad_corr_Spring2019_022024.root", "1", color_TCSGen, "BH TCSGen", charge_50_spring_19_inbending});
 
-                                // Grape
-                                //  Fall2018
-                                samples.push_back({sample_folder + "Simulation/Grape_Rad_corr_Fall2018_45_022024.root", "0.412", color_Grape, "BH Grape", charge_45_fall_18_inbending});
-                                samples.push_back({sample_folder + "Simulation/Grape_Rad_corr_Fall2018_50_022024.root", "0.412", color_Grape, "BH Grape", charge_50_fall_18_inbending});
-                                samples.push_back({sample_folder + "Simulation/Grape_Rad_corr_Fall2018_55_022024.root", "0.412", color_Grape, "BH Grape", charge_55_fall_18_inbending});
-                                // Outbending
-                                samples.push_back({sample_folder + "Simulation/Grape_Rad_corr_Fall2018_40_022024.root", "0.412", color_Grape, "BH Grape", charge_40_fall_18_outbending});
-                                samples.push_back({sample_folder + "Simulation/Grape_Rad_corr_Fall2018_50_out_022024.root", "0.412", color_Grape, "BH Grape", charge_50_fall_18_outbending});
-                                // Spring2019
-                                samples.push_back({sample_folder + "Simulation/Grape_Rad_corr_Spring2019_022024.root", "0.320", color_Grape, "BH Grape", charge_50_spring_19_inbending});
-                */
+                                          // Grape
+                                          //  Fall2018
+                                          samples.push_back({sample_folder + "Simulation/Grape_Rad_corr_Fall2018_45_022024.root", "0.412", color_Grape, "BH Grape", charge_45_fall_18_inbending});
+                                          samples.push_back({sample_folder + "Simulation/Grape_Rad_corr_Fall2018_50_022024.root", "0.412", color_Grape, "BH Grape", charge_50_fall_18_inbending});
+                                          samples.push_back({sample_folder + "Simulation/Grape_Rad_corr_Fall2018_55_022024.root", "0.412", color_Grape, "BH Grape", charge_55_fall_18_inbending});
+                                          // Outbending
+                                          samples.push_back({sample_folder + "Simulation/Grape_Rad_corr_Fall2018_40_022024.root", "0.412", color_Grape, "BH Grape", charge_40_fall_18_outbending});
+                                          samples.push_back({sample_folder + "Simulation/Grape_Rad_corr_Fall2018_50_out_022024.root", "0.412", color_Grape, "BH Grape", charge_50_fall_18_outbending});
+                                          // Spring2019
+                                          samples.push_back({sample_folder + "Simulation/Grape_Rad_corr_Spring2019_022024.root", "0.320", color_Grape, "BH Grape", charge_50_spring_19_inbending});
+                          */
                 TString data_file_adress_0 = sample_folder + "Data/Data_pass2_spring2019_inbending.root";
                 TString data_file_adress_1 = sample_folder + "Data/Data_pass2_fall2018_inbending.root";
                 TString data_file_adress_2 = sample_folder + "Data/Data_pass2_fall2018_outbending.root";
@@ -189,7 +189,6 @@ public:
                 filtered_Data_tree = (TTree *)Data_tree->CopyTree(kinematic_cut * exclusivity_cut * data_cut);
 
                 cout << "Finished reducing data !\n";
-	
         }
 };
 

@@ -286,7 +286,7 @@ public:
 			TPad *pad1 = new TPad("pad1", "pad1", 0, limit_lower_pad, 1, 1.0);
 
 			if (ratio_pad || pull_pad)
-				pad1->SetBottomMargin(0.);
+				pad1->SetBottomMargin(0.003);
 
 			float max_display = (hs->GetMaximum()) * 1.5;
 			hs->SetMaximum(max_display);
@@ -433,45 +433,48 @@ public:
 				pad2->SetGridy();
 				pad2->SetBottomMargin(0.3);
 				pad2->Draw();
-				pad2->cd(); // pad2 becomes the current pad
+				pad2->cd();
 
-				ratio_hist_uncertainty->SetFillColor(42);
-				// ratio_hist_uncertainty->SetFillStyle(3001);
-				ratio_hist_uncertainty->SetLineColor(1);
-				ratio_hist_uncertainty->SetLineWidth(1);
-				ratio_hist_uncertainty->SetMarkerSize(0);
 
-				ratio_hist_uncertainty->SetMaximum(2.0);
-				ratio_hist_uncertainty->SetMinimum(0.0);
-				ratio_hist_uncertainty->Draw("e2");
-				ratio_hist->Draw("ep same");
+				TH1F *pulls_histo = new TH1F("pullsHistogram", "", Data_hist->GetNbinsX(), Data_hist->GetXaxis()->GetXmin(), Data_hist->GetXaxis()->GetXmax());
+				for (int i = 1; i <= Data_hist->GetNbinsX(); ++i)
+				{
+					double dataValue = Data_hist->GetBinContent(i);
+					double dataError = Data_hist->GetBinError(i);
+					double fitValue = Fit_func.function->Eval(Data_hist->GetBinCenter(i));
+					double pull = (dataValue - fitValue) / dataError;
+					if(dataError==0.0)
+						pull = 0.0;
+					cout<<"pull "<<pull<<endl;
+					pulls_histo->SetBinContent(i,pull);
+				}
+
+				pulls_histo->SetStats(kFALSE);
+				pulls_histo->SetFillColor(42);
+				pulls_histo->SetLineColor(1);
+				pulls_histo->SetLineWidth(0);
+				pulls_histo->SetMarkerSize(0);
+				pulls_histo->SetMaximum(5.0);
+				pulls_histo->SetMinimum(-5.0);
+				pulls_histo->Draw("hist");
+				pulls_histo->SaveAs("pull.root");
 				pad2->Update();
 
-				// Ratio plot (h3) settings
-				ratio_hist_uncertainty->SetTitle(""); // Remove the ratio title
+				pulls_histo->SetTitle("");
+				pulls_histo->GetYaxis()->SetTitle("Pulls");
+				pulls_histo->GetXaxis()->SetTitle(xAxis_label);
+				pulls_histo->GetYaxis()->SetNdivisions(505);
+				pulls_histo->GetYaxis()->SetTitleSize(30);
+				pulls_histo->GetYaxis()->SetTitleFont(43);
+				pulls_histo->GetYaxis()->SetTitleOffset(1.55);
+				pulls_histo->GetYaxis()->SetLabelFont(43);
+				pulls_histo->GetYaxis()->SetLabelSize(30);
 
-				// Y axis ratio plot settings
-				ratio_hist_uncertainty->GetYaxis()->SetTitle("Data/MC ratio");
-				ratio_hist_uncertainty->GetXaxis()->SetTitle(xAxis_label);
-				ratio_hist_uncertainty->GetYaxis()->SetNdivisions(505);
-				ratio_hist_uncertainty->GetYaxis()->SetTitleSize(30);
-				ratio_hist_uncertainty->GetYaxis()->SetTitleFont(43);
-				ratio_hist_uncertainty->GetYaxis()->SetTitleOffset(1.55);
-				ratio_hist_uncertainty->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
-				ratio_hist_uncertainty->GetYaxis()->SetLabelSize(30);
-
-				// X axis ratio plot settings
-				ratio_hist_uncertainty->GetXaxis()->SetTitleSize(30);
-				ratio_hist_uncertainty->GetXaxis()->SetTitleFont(43);
-				ratio_hist_uncertainty->GetXaxis()->SetTitleOffset(4.);
-				ratio_hist_uncertainty->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
-				ratio_hist_uncertainty->GetXaxis()->SetLabelSize(30);
-
-				auto legendR = new TLegend(0.81, 0.95, 0.9, 0.75);
-				legendR->AddEntry(ratio_hist_uncertainty, "MC Uncert.", "f1");
-				legendR->Draw("same ");
-				legendR->SetFillStyle(0);
-				legendR->SetLineWidth(0);
+				pulls_histo->GetXaxis()->SetTitleSize(30);
+				pulls_histo->GetXaxis()->SetTitleFont(43);
+				pulls_histo->GetXaxis()->SetTitleOffset(4.);
+				pulls_histo->GetXaxis()->SetLabelFont(43);
+				pulls_histo->GetXaxis()->SetLabelSize(30);
 			}
 			///////////////////////////////////////////////////////////////////////////////
 
