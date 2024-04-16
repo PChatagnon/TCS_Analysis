@@ -125,8 +125,8 @@ public:
                 cout << "name BG func" << endl;
                 cout << name_bg << endl;
 
-                // function = new TF1(name_function,"[0]*crystalball_function(x, [1], [2], [3], [4]) + ([5]+[6]*(x-3.1) + [7]*(x-3.1)*(x-3.1))",min_fit, max_fit);
-                function = new TF1(name_function, "[0]*ROOT::Math::crystalball_function(x,[3], [4], [2], [1]) + ([5]+[6]*(x-3.1) + [7]*(x-3.1)*(x-3.1))", min_fit, max_fit);
+                function = new TF1(name_function,"[0]*crystalball_function(x, [1], [2], [3], [4]) + ([5]+[6]*(x-3.1) + [7]*(x-3.1)*(x-3.1))",min_fit, max_fit);
+                //function = new TF1(name_function, "[0]*ROOT::Math::crystalball_function(x,[3], [4], [2], [1]) + ([5]+[6]*(x-3.1) + [7]*(x-3.1)*(x-3.1))", min_fit, max_fit);
 
                 int init_amp_fit = (input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) > 0.0) ? input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) : 5;
 
@@ -188,21 +188,21 @@ public:
                 cout << name_bg << endl;
 
                 function = new TF1(name_function, "[0]*crystalball_function(x, [1], [2], [3], [4]) +  exp([5]+[6]*x)", min_fit, max_fit);
-                // function = new TF1(name_function,"[0]*ROOT::Math::crystalball_function(x,[3], [4], [2], [1]) + ([5]+[6]*(x-3.1) + [7]*(x-3.1)*(x-3.1))",min_fit, max_fit);
+                 //function = new TF1(name_function,"[0]*ROOT::Math::crystalball_function(x,[3], [4], [2], [1]) + exp([5]+[6]*x)",min_fit, max_fit);
 
                 int init_amp_fit = (input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) > 0.0) ? input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) : 5;
 
                 function->SetParameter(0, init_amp_fit);
                 function->SetParLimits(0, init_amp_fit * 0.1, init_amp_fit * 100.);
                 function->SetParameter(1, 3.096);
-                function->SetParLimits(1, 3.02, 3.2);
+                function->SetParLimits(1, 3.04, 3.2);
                 function->SetParameter(2, 0.04);
                 function->SetParLimits(2, 0.025, 0.15);
                 // alpha and n
-                function->SetParameter(3, 0.75);
-                function->SetParLimits(3, 0.05, 1.5);
-                function->SetParameter(4, 150);
-                function->SetParLimits(4, 100, 500);
+                function->SetParameter(3, 0.60);
+                function->SetParLimits(3, 0.5, 2);
+                function->SetParameter(4, 0);
+                function->SetParLimits(4, -5, 5);
                 // BG
                 function->SetParameter(5, 7.);
                 function->SetParLimits(5, 0.00, 100000.);
@@ -211,6 +211,16 @@ public:
 
                 input_Data_hist->Draw("e");
                 TFitResultPtr fitResult = input_Data_hist->Fit(name_function, options);
+
+                FILE *fp = fopen("/lustre19/expphy/volatile/clas12/mtenorio/ResultsFit.txt","a");
+                if (fp!=NULL) {
+                        fprintf(fp,"\n%s\n",name.Data());
+                        for (int i=0;i<nb_param;i++) {
+                                Float_t value = function->GetParameter(i);
+                                fprintf(fp,"p%d %f +/- %f \n",i,value,function->GetParError(i));
+                        }
+                }
+                fclose(fp);
 
                 cov_matrix = fitResult->GetCovarianceMatrix();
                 chi2 = fitResult->Chi2();

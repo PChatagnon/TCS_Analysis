@@ -12,8 +12,8 @@
 #include "THStack.h"
 #include "bib_CS_extraction/Fit_Function_Class.h"
 #include "bib_CS_extraction/Table_Class.h"
-#include "bib_CS_extraction/Run_Group_Class.h"
-#include "bib_CS_extraction/Analysis_Class.h"
+//#include "bib_CS_extraction/Run_Group_Class.h"
+//#include "bib_CS_extraction/Analysis_Class.h"
 #include "bib_CS_extraction/Utils.h"
 #include <iostream>
 #include <fstream>
@@ -67,7 +67,7 @@ int CS_Extraction_combine()
 	std::vector<double> average_variable{};
 	std::vector<double> sigma_variable{};
 
-	Latex_Table_writter Latex_Table("", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction", "Epho");
+	Latex_Table_writter Latex_Table("", "/work/clas12/mtenorio/CS", "Epho");
 
 	bool inbending = true;
 	bool RGB = false;
@@ -79,7 +79,7 @@ int CS_Extraction_combine()
 	float lumi_factor = 1316.875;
 
 	TString variable = "Epho";
-	TString folder_pass2 = "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/Pass2_Samples/";
+	TString folder_pass2 = "/work/clas12/mtenorio/CS/";
 
 	double min_fit = 2.7;//2.7;
 	double max_fit = 3.3;//3.3;
