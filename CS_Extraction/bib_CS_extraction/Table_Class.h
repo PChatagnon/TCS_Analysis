@@ -17,6 +17,8 @@ public:
     string output_folder = "";
     string output_content = "";
 
+    Latex_Table_writter() {}
+
     Latex_Table_writter(string in_output_name, string in_output_folder, string in_variable)
     {
         output_name = in_output_name;
@@ -73,7 +75,7 @@ public:
         }
         else
         {
-            std::cerr << "Error opening file for writing table at "<< output_name << std::endl;
+            std::cerr << "Error opening file for writing table at " << output_name << std::endl;
         }
     }
 };

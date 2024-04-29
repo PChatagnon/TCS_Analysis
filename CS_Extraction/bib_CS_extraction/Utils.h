@@ -198,5 +198,6 @@ float e_t_down_GluX_Bin1_zeros[7] = {0., 0., 0., 0., 0., 0., 0.};
 
 double w_c_from_BG_estimation = 0.69;
 double convert_Gev_to_fm = 0.1973;
+float Branching_ratio = 0.06;
 
 #endif

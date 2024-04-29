@@ -2,6 +2,7 @@
 #include "TTree.h"
 #include "TChain.h"
 #include "TH1F.h"
+#include "TH1D.h"
 #include "TF1.h"
 #include "TTreeReader.h"
 #include "TH2F.h"
@@ -10,20 +11,19 @@
 #include "TCanvas.h"
 #include "TH3F.h"
 #include "THStack.h"
-#include "bib_CS_extraction/Fit_Function_Class.h"
-#include "bib_CS_extraction/Table_Class.h"
-#include "bib_CS_extraction/Sample_Class.h"
-#include "bib_CS_extraction/Analysis_Class.h"
-#include "bib_CS_extraction/Utils.h"
-#include "../bib/InputParser.h"
+#include "../bib_CS_extraction/Fit_Function_Class.h"
+#include "../bib_CS_extraction/Table_Class.h"
+#include "../bib_CS_extraction/Sample_Class.h"
+#include "../bib_CS_extraction/Analysis_Diff_Class.h"
+#include "../bib_CS_extraction/Utils.h"
+#include "../../bib/InputParser.h"
 #include <iostream>
 #include <fstream>
 #include <ctime>
 using namespace std;
 
-int CS_Extraction_combine()
+int CS_Extraction_combine_Diff_t_cs()
 {
-
 	time_t begin, filtering_time, fitting_time, MC_time, end; 
 	time(&begin);
 
@@ -45,11 +45,10 @@ int CS_Extraction_combine()
 	ROOT::Math::MinimizerOptions::SetDefaultMaxFunctionCalls(10000);
 	ROOT::Math::MinimizerOptions::SetDefaultTolerance(1);
 
-
 	///////////////////////////////////////////////////////
 	////////////// Instantiate analysis class /////////////
 	///////////////////////////////////////////////////////
-	Analysis JPsi_CS_analysis;
+	Analysis_Diff JPsi_CS_analysis;
 
 	///////////////////////////////////////////////////////
 	//////// Read input configuration file ////////////////
@@ -68,15 +67,15 @@ int CS_Extraction_combine()
 	///////////////////////////////////////////////////////
 	////////////////   Setup the analysis  ////////////////
 	///////////////////////////////////////////////////////
+	JPsi_CS_analysis.Set_name_pdf("CS_Extraction_combine_t_05_rad_new_2_");
 	JPsi_CS_analysis.Set_Sample_to_RGA();
-	JPsi_CS_analysis.Set_Binning_RGA();
 
-	// JPsi_CS_analysis.Set_Sample_to_RGB();
-	// JPsi_CS_analysis.Set_Binning_RGB();
-
+	//JPsi_CS_analysis.Set_Binning_t_diff_1();
+	JPsi_CS_analysis.Set_Binning_t_diff_2();
+	
 	JPsi_CS_analysis.Setup_Histo();
 	JPsi_CS_analysis.Setup_Latex_Table();
-	///////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////// 
 
 	////////////////////////////////////
 	//////// Filter the samples ////////
@@ -84,16 +83,16 @@ int CS_Extraction_combine()
 	JPsi_CS_analysis.Analysis_Sample.Filter_Sample_Trees(JPsi_CS_analysis.kinematic_cut, JPsi_CS_analysis.kinematic_cut_BG, JPsi_CS_analysis.exclusivity_cut);
 	JPsi_CS_analysis.Analysis_Sample.Filter_Data_Tree(JPsi_CS_analysis.kinematic_cut, JPsi_CS_analysis.data_cut, JPsi_CS_analysis.exclusivity_cut);
 	time(&filtering_time);
-	////////////////////////////////////
+	//////////////////////////////////////
 
 	/////////////////////////////////////////
 	//////// Cross section calculation //////
 	/////////////////////////////////////////
-	JPsi_CS_analysis.Process_REC();
+	JPsi_CS_analysis.Process_REC_Diff();
 	time(&fitting_time);
-	JPsi_CS_analysis.Process_MC();
+	JPsi_CS_analysis.Process_MC_Diff();
 	time(&MC_time);
-	JPsi_CS_analysis.Finalize_int_CS_Calculation();
+	JPsi_CS_analysis.Finalize_Diff_CS_Calculation();
 
 	JPsi_CS_analysis.Save_Histo_to_root();
 	JPsi_CS_analysis.Latex_Table.Format();

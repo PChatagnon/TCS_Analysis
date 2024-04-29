@@ -26,6 +26,24 @@ double crystalball_function(double x, double mean, double sigma, double alpha, d
         }
 }
 
+double gaussexp_function(double x, double mean, double sigma, double k)
+{
+        // evaluate the crystal ball function
+        //if (sigma < 0.)
+        //        return 0.;
+        double z = (x - mean) / sigma;
+        if (k < 0)
+                z = -z;
+        double abs_k= std::abs(k);
+        if (z > -abs_k)
+                return std::exp(-0.5 * z * z);
+        else
+        {
+                double k2=0.5*abs_k*abs_k;
+                return std::exp(k2+k*z);
+        }
+}
+
 class Fit_Function
 {
 public:
@@ -199,10 +217,11 @@ public:
                 function->SetParameter(2, 0.04);
                 function->SetParLimits(2, 0.025, 0.15);
                 // alpha and n
-                function->SetParameter(3, 0.60);
-                function->SetParLimits(3, 0.5, 2);
-                function->SetParameter(4, 0);
-                function->SetParLimits(4, -5, 5);
+                function->FixParameter(3, 1.05);
+                //function->SetParLimits(3, 1, 1.25);
+
+                function->FixParameter(4, 1.1);
+                //function->SetParLimits(4, 1,1.2);
                 // BG
                 function->SetParameter(5, 7.);
                 function->SetParLimits(5, 0.00, 100000.);
@@ -212,15 +231,6 @@ public:
                 input_Data_hist->Draw("e");
                 TFitResultPtr fitResult = input_Data_hist->Fit(name_function, options);
 
-                FILE *fp = fopen("/lustre19/expphy/volatile/clas12/mtenorio/ResultsFit.txt","a");
-                if (fp!=NULL) {
-                        fprintf(fp,"\n%s\n",name.Data());
-                        for (int i=0;i<nb_param;i++) {
-                                Float_t value = function->GetParameter(i);
-                                fprintf(fp,"p%d %f +/- %f \n",i,value,function->GetParError(i));
-                        }
-                }
-                fclose(fp);
 
                 cov_matrix = fitResult->GetCovarianceMatrix();
                 chi2 = fitResult->Chi2();
@@ -242,6 +252,64 @@ public:
                 function_BG->SetLineColor(kBlue);
                 function_BG->SetFillColorAlpha(kBlue, 0.8);
         }
+
+        void GaussExp(TString options, TString name)
+        {
+
+                gaussian = false;
+                int nb_param = 6;
+                cov_matrix.ResizeTo(nb_param, nb_param);
+
+                TString name_function = name + "_fit_func";
+                TString name_signal = name + "_sig_func";
+                TString name_bg = name + "_bg_func";
+
+                cout << "name BG func" << endl;
+                cout << name_bg << endl;
+
+                function = new TF1(name_function, "[0]*gaussexp_function(x, [1], [2], [3]) +  exp([4]+[5]*x)", min_fit, max_fit);
+                 //function = new TF1(name_function,"[0]*ROOT::Math::crystalball_function(x,[3], [4], [2], [1]) + exp([5]+[6]*x)",min_fit, max_fit);
+
+                int init_amp_fit = (input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) > 0.0) ? input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) : 5;
+
+                function->SetParameter(0, init_amp_fit);
+                function->SetParLimits(0, init_amp_fit * 0.1, init_amp_fit * 100.);
+                function->SetParameter(1, 3.096);
+                function->SetParLimits(1, 3.04, 3.2);
+                function->SetParameter(2, 0.04);
+                function->SetParLimits(2, 0.025, 0.15);
+                // alpha and n
+                function->SetParameter(3, 2.5);
+                function->SetParLimits(3, 0.20,5);
+                // BG
+                function->SetParameter(4, 7.);
+                function->SetParLimits(4, 0.00, 100000.);
+                function->SetParameter(5, -2.);
+                function->SetParLimits(6, -100000., 0.0);
+
+                input_Data_hist->Draw("e");
+                TFitResultPtr fitResult = input_Data_hist->Fit(name_function, options);
+
+                cov_matrix = fitResult->GetCovarianceMatrix();
+                chi2 = fitResult->Chi2();
+                NDF = fitResult->Ndf();
+
+                function_Signal = new TF1(name_signal, "[0]*gaussexp_function(x, [1], [2], [3])", min_fit, max_fit);
+                function_Signal->SetParameter(0, function->GetParameter(0));
+                function_Signal->SetParameter(1, function->GetParameter(1));
+                function_Signal->SetParameter(2, function->GetParameter(2));
+                function_Signal->SetParameter(3, function->GetParameter(3));
+                function_Signal->SetLineColor(kGreen);
+                function_Signal->SetFillColorAlpha(kGreen, 0.8); // Set the transparency for the band
+                function_Signal->SetLineWidth(3);
+
+                function_BG = new TF1(name_bg, "exp([0]+[1]*x)", min_fit, max_fit);
+                function_BG->SetParameter(0, function->GetParameter(4));
+                function_BG->SetParameter(1, function->GetParameter(5));
+                function_BG->SetLineColor(kBlue);
+                function_BG->SetFillColorAlpha(kBlue, 0.8);
+        }
+
 
         void Single_Gaussian_fit(TString options, TString name)
         {
