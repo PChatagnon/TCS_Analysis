@@ -10,6 +10,11 @@ public:
 	double Eg_min = 8.2;  // //8.205; //
 	double Eg_max = 9.28; //  // 10.6;  //
 
+	std::vector<double> average_variable_2{};
+	std::vector<double> sigma_variable_2{};
+
+	TString variable_2 = "Epho";
+
 	////// Store histogramms and Graphs //////
 	TGraphAsymmErrors JPsi_CS_Graph_C;
 	/////////////////////////////////
@@ -59,7 +64,7 @@ public:
 	{
 
 		Eg_min = 9.28;
-		Eg_max = 10.36;
+		Eg_max = 10.0;
 
 		bin_id = "bin 2";
 
@@ -77,11 +82,9 @@ public:
 		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>1.25 && -t<1.5 ", Eg_min, Eg_max), "", "M2"});
 		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>1.5 && -t<1.75 ", Eg_min, Eg_max), "", "M2"});
 		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>1.75 && -t<2.0 ", Eg_min, Eg_max), "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>2.0 && -t<2.25 ", Eg_min, Eg_max), "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>2.25 && -t<2.5 ", Eg_min, Eg_max), "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>2.0 && -t<2.5 ", Eg_min, Eg_max), "", "M2"});
 		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>2.5 && -t<3.0 ", Eg_min, Eg_max), "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>3.0 && -t<4.0 ", Eg_min, Eg_max), "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>4.0 && -t<6.0 ", Eg_min, Eg_max), "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>3.0 && -t<6.0 ", Eg_min, Eg_max), "", "M2"});
 
 		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>0.5 && -t_Gen<0.75 ", Eg_min, Eg_max), "50", "0.5", "0.75"});
 		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>0.75 && -t_Gen<1.0 ", Eg_min, Eg_max), "50", "0.75", "1.0"});
@@ -89,12 +92,41 @@ public:
 		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>1.25 && -t_Gen<1.5 ", Eg_min, Eg_max), "50", "1.25", "1.5"});
 		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>1.5 && -t_Gen<1.75 ", Eg_min, Eg_max), "50", "1.5", "1.75"});
 		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>1.75 && -t_Gen<2.0 ", Eg_min, Eg_max), "50", "1.75", "2.0"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>2.0 && -t_Gen<2.25 ", Eg_min, Eg_max), "50", "2.0", "2.25"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>2.25 && -t_Gen<2.5 ", Eg_min, Eg_max), "50", "2.25", "2.5"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>2.0 && -t_Gen<2.5 ", Eg_min, Eg_max), "50", "2.0", "2.5"});
 		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>2.5 && -t_Gen<3.0 ", Eg_min, Eg_max), "50", "2.5", "3.0"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>3.0 && -t_Gen<4.0 ", Eg_min, Eg_max), "50", "3.0", "4.0"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>4.0 && -t_Gen<6.0 ", Eg_min, Eg_max), "50", "4.0", "6.0"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>3.0 && -t_Gen<6.0 ", Eg_min, Eg_max), "50", "3.0", "6.0"});
 
+		name_pdf = Form(name_pdf + "%.2f_%.2f", Eg_min, Eg_max);
+	}
+
+	void Set_Binning_t_diff_3()
+	{
+
+		Eg_min = 10.0;
+		Eg_max = 10.6;
+
+		bin_id = "bin 2";
+
+		TString min_hist_MC = "1.8";
+		TString min_hist = "2.7";
+		TString max_hist = "3.3";
+		TString bin_hist = "40.";
+
+		labels = {};
+		labels_MC = {};
+
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>0.5 && -t<0.75 ", Eg_min, Eg_max), "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>0.75 && -t<1.0 ", Eg_min, Eg_max), "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>1.0 && -t<1.25 ", Eg_min, Eg_max), "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>1.25 && -t<2.0 ", Eg_min, Eg_max), "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>2.0 && -t<6.0 ", Eg_min, Eg_max), "", "M2"});
+
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>0.5 && -t_Gen<0.75 ", Eg_min, Eg_max), "50", "0.5", "0.75"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>0.75 && -t_Gen<1.0 ", Eg_min, Eg_max), "50", "0.75", "1.0"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>1.0 && -t_Gen<1.25 ", Eg_min, Eg_max), "50", "1.0", "1.25"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>1.25 && -t_Gen<2.0 ", Eg_min, Eg_max), "50", "1.25", "2.0"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>2.0 && -t_Gen<6.0 ", Eg_min, Eg_max), "50", "2.0", "6.0"});
+		
 		name_pdf = Form(name_pdf + "%.2f_%.2f", Eg_min, Eg_max);
 	}
 	//////////////////////////////
@@ -104,6 +136,7 @@ public:
 	{
 		Latex_Table = Latex_Table_writter("", output_folder.Data(), "t");
 		Latex_Table.Set_output_name(((string)name_pdf.Data()) + "_Latex_Table.txt");
+		Latex_Table.mode = "2D";
 	}
 	//////////////////////////////
 
@@ -156,16 +189,21 @@ public:
 			int nBins = stoi((string)nb_bins.Data());
 
 			TH1D *Data_hist = new TH1D("Data_hist", "Data_hist", nBins, min_histo_ini, max_histo_ini);
-			TH1D *Average_variable = new TH1D("Average_variable", "Average_variable", 100, 0., 11.);
+			TH2D *Average_variable = new TH2D("Average_variable", "Average_variable", 100, 0., 11. , 100, 0., 11.);
 
 			// TCanvas *cancG1 = new TCanvas("", "can1",1500,1000);
 			TCut weight_data = Form("%s", "weight");
 			// TCut weight_data = Form("%s", "1");
 
 			Analysis_Sample.filtered_Data_tree->Draw(label + ">>Data_hist", weight_data * data_cut * cut * exclusivity_cut * kinematic_cut);
-			Analysis_Sample.filtered_Data_tree->Draw(variable + ">>Average_variable", weight_data * data_cut * cut * exclusivity_cut * kinematic_cut);
-			average_variable.push_back(Average_variable->GetMean());
-			sigma_variable.push_back(Average_variable->GetRMS());
+			Analysis_Sample.filtered_Data_tree->Draw(variable + ":" + variable_2 + + ">>Average_variable", weight_data * data_cut * cut * exclusivity_cut * kinematic_cut);
+			average_variable.push_back(Average_variable->ProjectionY()->GetMean());
+			sigma_variable.push_back(Average_variable->ProjectionY()->GetRMS());
+
+			average_variable_2.push_back(Average_variable->ProjectionX()->GetMean());
+			sigma_variable_2.push_back(Average_variable->ProjectionX()->GetRMS());
+
+			cout<<"Mean and RMS of variables "<<Average_variable->ProjectionX()->GetMean()<<" "<<Average_variable->ProjectionY()->GetMean()<<endl;
 
 			Data_hist->SaveAs("plot.pdf");
 
@@ -311,10 +349,22 @@ public:
 			Fit_Function Fit_func;
 			Fit_func.Set_Data_hist(Data_hist);
 			Fit_func.Set_Limits(min_fit, max_fit);
-			// Fit_func.Double_Gaussian_Fit("SLR", Form("func_%i", i));
-			// Fit_func.Single_Gaussian_fit("SLR", Form("func_%i", i));
-			Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
-			// Fit_func.Single_Gaussian_Fit_Flat_BG("SLR", Form("func_%i", i));
+			
+			if(fit_procedure=="Default")
+				Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
+
+			if(fit_procedure=="Crystall ball Pol 2 BG")
+				Fit_func.Crystall_Ball_fit("SLER", Form("func_%i", i));
+
+			if(fit_procedure=="Crystall ball exp BG")
+				Fit_func.Crystall_Ball_fit_exp("SLER", Form("func_%i", i));
+
+			if(fit_procedure=="Pol 2 BG")
+				Fit_func.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
+
+			if(fit_procedure=="Double Gaussian")
+				Fit_func.Double_Gaussian_Fit("SLR",Form("func_%i", i));
+
 			double chi2 = Fit_func.chi2;
 			double NDF = Fit_func.NDF;
 
@@ -445,7 +495,7 @@ public:
 					double pull = (dataValue - fitValue) / dataError;
 					if(dataError==0.0)
 						pull = 0.0;
-					cout<<"pull "<<pull<<endl;
+					//cout<<"pull "<<pull<<endl;
 					pulls_histo->SetBinContent(i,pull);
 				}
 
@@ -517,10 +567,21 @@ public:
 			Fit_Function Fit_func_MC;
 			Fit_func_MC.Set_Data_hist(hlast);
 			Fit_func_MC.Set_Limits(min_fit, max_fit);
-			// Fit_func.Double_Gaussian_Fit("SLR", Form("func_%i", i));
-			// Fit_func_MC.Single_Gaussian_fit("SLR", Form("func_%i", i));
-			Fit_func_MC.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
-			// Fit_func_MC.Single_Gaussian_Fit_Flat_BG("SLR", Form("func_%i", i));
+
+			if(fit_procedure=="Default")
+				Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
+
+			if(fit_procedure=="Crystall ball Pol 2 BG")
+				Fit_func.Crystall_Ball_fit("SLER", Form("func_%i", i));
+
+			if(fit_procedure=="Crystall ball exp BG")
+				Fit_func.Crystall_Ball_fit_exp("SLER", Form("func_%i", i));
+
+			if(fit_procedure=="Pol 2 BG")
+				Fit_func.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
+
+			if(fit_procedure=="Double Gaussian")
+				Fit_func.Double_Gaussian_Fit("SLR",Form("func_%i", i));
 
 			hlast->Draw("hist");
 			hs_JPsi->Draw("e hist same");
@@ -709,7 +770,7 @@ public:
 
 			cout << "average variable " << average_variable[i] << "\n";
 
-			Latex_Table.Add_value(i, labels_MC.size(), CS_usual, error_CS_usual, average_variable[i], sigma_variable[i]);
+			Latex_Table.Add_value(i, labels_MC.size(), CS_usual, error_CS_usual, average_variable[i], sigma_variable[i], average_variable_2[i], sigma_variable_2[i]);
 
 			JPsi_CS_Graph.SetPoint(i, average_variable[i], CS_usual);
 			// JPsi_CS_Graph.SetPointError(i, average_variable[i] - variable_min, variable_max - average_variable[i], error_CS_usual, error_CS_usual);

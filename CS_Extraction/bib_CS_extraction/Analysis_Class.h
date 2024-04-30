@@ -44,7 +44,7 @@ public: // Keep everything public for convenience
 
 	////// Store the path to data and output //////
 	TString output_folder = "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/";
-	TString name_pdf = "CS_Extraction_CrystalBall_exp_1";
+	TString name_pdf = "CS_Extraction_Gauss_exp_1";
 	/////////////////////////////////
 
 	////// Store kinematic and exclusivity cuts //////
@@ -124,6 +124,12 @@ public: // Keep everything public for convenience
 		return parameters;
 	}
 
+	bool isParameter(const std::map<std::string, std::string> &parameters, const std::string &key)
+	{
+		auto it = parameters.find(key);
+		return (it != parameters.end());
+	}
+
 	std::string getParameterValue(const std::map<std::string, std::string> &parameters, const std::string &key)
 	{
 		auto it = parameters.find(key);
@@ -141,22 +147,41 @@ public: // Keep everything public for convenience
 	{
 		std::map<std::string, std::string> parameters = parseInputFile(parameters_file);
 
-		output_folder = TString(getParameterValue(parameters, "output_folder"));
-		name_pdf = TString(getParameterValue(parameters, "name_pdf"));
+		if(isParameter(parameters, "output_folder"))
+			output_folder = TString(getParameterValue(parameters, "output_folder"));
 
-		fit_procedure = TString(getParameterValue(parameters, "fit_procedure"));
-		bin_id = TString(getParameterValue(parameters, "bin_id"));
+		if(isParameter(parameters, "name_pdf"))
+			name_pdf = TString(getParameterValue(parameters, "name_pdf"));
 
-		exclusivity_cut = Form("%s", getParameterValue(parameters, "exclusivity_cut").c_str());
-		kinematic_cut = Form("%s", getParameterValue(parameters, "kinematic_cut").c_str());
-		kinematic_cut_BG = Form("%s", getParameterValue(parameters, "kinematic_cut_BG").c_str());
-		data_cut = Form("%s", getParameterValue(parameters, "data_cut").c_str());
+		if(isParameter(parameters, "fit_procedure"))
+			fit_procedure = TString(getParameterValue(parameters, "fit_procedure"));
 
-		min_fit = stof(getParameterValue(parameters, "min_fit"));
-		max_fit = stof(getParameterValue(parameters, "max_fit"));
+		if(isParameter(parameters, "bin_id"))
+			bin_id = TString(getParameterValue(parameters, "bin_id"));
 
-		debug = (getParameterValue(parameters, "debug") == "true");
-		pull_pad = (getParameterValue(parameters, "pull_pad") == "true");
+		if(isParameter(parameters, "exclusivity_cut"))
+			exclusivity_cut = Form("%s", getParameterValue(parameters, "exclusivity_cut").c_str());
+
+		if(isParameter(parameters, "kinematic_cut"))
+			kinematic_cut = Form("%s", getParameterValue(parameters, "kinematic_cut").c_str());
+
+		if(isParameter(parameters, "kinematic_cut_BG"))
+			kinematic_cut_BG = Form("%s", getParameterValue(parameters, "kinematic_cut_BG").c_str());
+
+		if(isParameter(parameters, "data_cut"))
+			data_cut = Form("%s", getParameterValue(parameters, "data_cut").c_str());
+
+		if(isParameter(parameters, "min_fit"))
+			min_fit = stof(getParameterValue(parameters, "min_fit"));
+
+		if(isParameter(parameters, "max_fit"))
+			max_fit = stof(getParameterValue(parameters, "max_fit"));
+
+		if(isParameter(parameters, "debug"))
+			debug = (getParameterValue(parameters, "debug") == "true");
+
+		if(isParameter(parameters, "pull_pad"))
+			pull_pad = (getParameterValue(parameters, "pull_pad") == "true");
 	}
 
 	//////  End Set parameters  //////
@@ -466,12 +491,21 @@ public: // Keep everything public for convenience
 			Fit_func.Set_Limits(min_fit, max_fit);
 			// Fit_func.Single_Gaussian_fit("SLER", Form("func_%i", i));
 			// Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
-			// Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
-			// Fit_func.Crystall_Ball_fit("SLER", Form("func_%i", i));
-			Fit_func.Crystall_Ball_fit_exp("SLER", Form("func_%i", i));
-			// Fit_func.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
 
-			// Fit_func.Double_Gaussian_Fit("SLR",Form("func_%i", i));
+			if(fit_procedure=="Default")
+				Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
+
+			if(fit_procedure=="Crystall ball Pol 2 BG")
+				Fit_func.Crystall_Ball_fit("SLER", Form("func_%i", i));
+
+			if(fit_procedure=="Crystall ball exp BG")
+				Fit_func.Crystall_Ball_fit_exp("SLER", Form("func_%i", i));
+
+			if(fit_procedure=="Pol 2 BG")
+				Fit_func.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
+
+			if(fit_procedure=="Double Gaussian")
+				Fit_func.Double_Gaussian_Fit("SLR",Form("func_%i", i));
 			// Fit_func.Single_Gaussian_Fit_Flat_BG("SLR",Form("func_%i", i));
 			double chi2 = Fit_func.chi2;
 			double NDF = Fit_func.NDF;
@@ -700,11 +734,22 @@ public: // Keep everything public for convenience
 			Fit_func_MC.Set_Data_hist(hlast);
 			Fit_func_MC.Set_Limits(min_fit, max_fit);
 			// Fit_func_MC.Single_Gaussian_fit("SLER", Form("func_MC_%i", i));
-			// Fit_func_MC.Single_Gaussian_Int_fit("SLER", Form("func_MC_%i", i));
-			// Fit_func_MC.Crystall_Ball_fit("SLER", Form("func_MC_%i", i));
-			Fit_func_MC.Crystall_Ball_fit_exp("SLER", Form("func_%i", i));
-			// Fit_func_MC.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
-			//  Fit_func_MC.Double_Gaussian_Fit("SLR",Form("func_MC_%i", i));
+
+			if(fit_procedure=="Default")
+				Fit_func_MC.Single_Gaussian_Int_fit("SLER", Form("func_MC_%i", i));
+
+			if(fit_procedure=="Crystall ball Pol 2 BG")
+				Fit_func_MC.Crystall_Ball_fit("SLER", Form("func_MC_%i", i));
+
+			if(fit_procedure=="Crystall ball exp BG")
+				Fit_func_MC.Crystall_Ball_fit_exp("SLER", Form("func_%i", i));
+
+			if(fit_procedure=="Pol 2 BG")
+				Fit_func_MC.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
+
+			if(fit_procedure=="Double Gaussian")
+				Fit_func_MC.Double_Gaussian_Fit("SLR",Form("func_MC_%i", i));
+
 			//  Fit_func_MC.Single_Gaussian_Fit_Flat_BG("SLR",Form("func_MC_%i", i));
 			cout << "///////////////////////" << endl;
 

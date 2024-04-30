@@ -70,8 +70,12 @@ int CS_Extraction_combine_Diff_t_cs()
 	JPsi_CS_analysis.Set_name_pdf("CS_Extraction_combine_t_05_rad_new_2_");
 	JPsi_CS_analysis.Set_Sample_to_RGA();
 
-	//JPsi_CS_analysis.Set_Binning_t_diff_1();
-	JPsi_CS_analysis.Set_Binning_t_diff_2();
+	if(JPsi_CS_analysis.bin_id == "bin 1")
+		JPsi_CS_analysis.Set_Binning_t_diff_1();
+	else if(JPsi_CS_analysis.bin_id == "bin 2")
+		JPsi_CS_analysis.Set_Binning_t_diff_2();
+	else if(JPsi_CS_analysis.bin_id == "bin 3")
+		JPsi_CS_analysis.Set_Binning_t_diff_3();	
 	
 	JPsi_CS_analysis.Setup_Histo();
 	JPsi_CS_analysis.Setup_Latex_Table();

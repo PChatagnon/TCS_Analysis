@@ -433,7 +433,7 @@ public:
 
         void Double_Gaussian_Fit(TString options, TString name)
         {
-
+                gaussian = false;
                 int nb_param = 7;
                 cov_matrix.ResizeTo(nb_param, nb_param);
 
@@ -486,6 +486,7 @@ public:
 
         void Single_Gaussian_Fit_Flat_BG(TString options, TString name)
         {
+                gaussian = false;
                 int nb_param = 5;
                 cov_matrix.ResizeTo(nb_param, nb_param);
 
