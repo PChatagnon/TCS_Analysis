@@ -742,10 +742,10 @@ public: // Keep everything public for convenience
 				Fit_func_MC.Crystall_Ball_fit("SLER", Form("func_MC_%i", i));
 
 			if(fit_procedure=="Crystall ball exp BG")
-				Fit_func_MC.Crystall_Ball_fit_exp("SLER", Form("func_%i", i));
+				Fit_func_MC.Crystall_Ball_fit_exp("SLER", Form("func_MC_%i", i));
 
 			if(fit_procedure=="Pol 2 BG")
-				Fit_func_MC.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
+				Fit_func_MC.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_MC_%i", i));
 
 			if(fit_procedure=="Double Gaussian")
 				Fit_func_MC.Double_Gaussian_Fit("SLR",Form("func_MC_%i", i));

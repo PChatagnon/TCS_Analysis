@@ -569,19 +569,19 @@ public:
 			Fit_func_MC.Set_Limits(min_fit, max_fit);
 
 			if(fit_procedure=="Default")
-				Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
+				Fit_func_MC.Single_Gaussian_Int_fit("SLER", Form("func_MC_%i", i));
 
 			if(fit_procedure=="Crystall ball Pol 2 BG")
-				Fit_func.Crystall_Ball_fit("SLER", Form("func_%i", i));
+				Fit_func_MC.Crystall_Ball_fit("SLER", Form("func_MC_%i", i));
 
 			if(fit_procedure=="Crystall ball exp BG")
-				Fit_func.Crystall_Ball_fit_exp("SLER", Form("func_%i", i));
+				Fit_func_MC.Crystall_Ball_fit_exp("SLER", Form("func_MC_%i", i));
 
 			if(fit_procedure=="Pol 2 BG")
-				Fit_func.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
+				Fit_func_MC.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_MC_%i", i));
 
 			if(fit_procedure=="Double Gaussian")
-				Fit_func.Double_Gaussian_Fit("SLR",Form("func_%i", i));
+				Fit_func_MC.Double_Gaussian_Fit("SLR",Form("func_MC_%i", i));
 
 			hlast->Draw("hist");
 			hs_JPsi->Draw("e hist same");
