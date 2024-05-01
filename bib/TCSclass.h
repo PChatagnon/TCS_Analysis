@@ -38,6 +38,7 @@ bool DC_Traj_check = false;
 bool all_Gen_vector = false;
 bool QA_Golden = false;
 bool no_QADB = false;
+bool no_RCDB = false;
 
 bool RGA_Fall2018 = true; // inbending or outbending in the end
 bool RGA_Spring2019 = false;

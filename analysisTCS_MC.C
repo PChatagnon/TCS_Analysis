@@ -80,6 +80,7 @@ int analysisTCS_MC()
 	all_Gen_vector = input.cmdOptionExists("-all_Gen_vector");
 	QA_Golden = input.cmdOptionExists("-QA_Golden");
 	no_QADB = input.cmdOptionExists("-no_QADB");
+	no_RCDB = input.cmdOptionExists("-no_RCDB");
 	/////////////////////////////////////////
 
 	if (input.cmdOptionExists("-energy"))
@@ -711,7 +712,7 @@ int analysisTCS_MC()
 				////////////////////////////////////////////
 				// RCDB informations
 				////////////////////////////////////////////
-				if (IsData && !RCDB_read)
+				if (IsData && !RCDB_read && !no_RCDB)
 				{
 					rcdb.readRun(run);
 					cout << "Beam energy: " << rcdb.current().beam_energy << endl;
