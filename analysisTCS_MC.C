@@ -671,23 +671,23 @@ int analysisTCS_MC()
 				///////////////////////////////////////////
 				// if (!Run_Selector.Is_Good_Run(run) && IsData && RGA_Fall2018)
 				bool Keep_event = true;
-				if (IsData)
+				if (IsData && !no_QADB)
 				{
 					Keep_event = qa->OkForAsymmetry(run, event_nb);
 					if (QA_Golden)
 					{
 						Keep_event = qa->Golden(run, event_nb);
 					}
-					if (no_QADB)
-					{
-						qa->SetMaskBit("TotalOutlier", false);
-						qa->SetMaskBit("TerminalOutlier", false);
-						qa->SetMaskBit("MarginalOutlier", false);
-						qa->SetMaskBit("SectorLoss", false);
-						qa->SetMaskBit("LowLiveTime", false);
-						qa->SetMaskBit("Misc", false);
-						Keep_event = qa->Pass(run, event_nb);
-					}
+					//if (no_QADB)
+					//{
+					//	qa->SetMaskBit("TotalOutlier", false);
+					//	qa->SetMaskBit("TerminalOutlier", false);
+					//	qa->SetMaskBit("MarginalOutlier", false);
+					//	qa->SetMaskBit("SectorLoss", false);
+					//	qa->SetMaskBit("LowLiveTime", false);
+					//	qa->SetMaskBit("Misc", false);
+					//	Keep_event = qa->Pass(run, event_nb);
+					//}
 				}
 
 				int bad_runs[] = {5610, 5615, 6631, 6757};

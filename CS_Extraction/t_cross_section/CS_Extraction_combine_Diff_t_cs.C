@@ -67,7 +67,6 @@ int CS_Extraction_combine_Diff_t_cs()
 	///////////////////////////////////////////////////////
 	////////////////   Setup the analysis  ////////////////
 	///////////////////////////////////////////////////////
-	JPsi_CS_analysis.Set_name_pdf("CS_Extraction_combine_t_05_rad_new_2_");
 	JPsi_CS_analysis.Set_Sample_to_RGA();
 
 	if(JPsi_CS_analysis.bin_id == "bin 1")
