@@ -10,14 +10,14 @@ const float Pi = 3.14159269;
 const bool PIDflag = true;
 const bool SFdist = true;
 
-const int LTCC = 16;
-const int HTCC = 15;
-const int ECAL = 7;
-const int DC = 6;
-
-const int PCAL = 1;
-const int ECIN = 4;
-const int ECOUT = 7;
+//const int LTCC = 16;
+//const int HTCC = 15;
+//const int ECAL = 7;
+//const int DC = 6;
+//
+//const int PCAL = 1;
+//const int ECIN = 4;
+//const int ECOUT = 7;
 
 ////////////////////Configuration booleans
 bool IsData = true;
@@ -239,9 +239,10 @@ public:
         float X_CALO(int layer)
         {
                 float X = 0;
+                int ECAL = 7;
                 for (int i = 0; i < Calorimeter.size(); i++)
                 {
-                        if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
+                        if (layer == Calorimeter[i].layer && Calorimeter[i].detector == ECAL)
                                 X = Calorimeter[i].x;
                         break;
                 }
@@ -251,9 +252,10 @@ public:
         float Y_CALO(int layer)
         {
                 float Y = 0;
+                int ECAL = 7;
                 for (int i = 0; i < Calorimeter.size(); i++)
                 {
-                        if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
+                        if (layer == Calorimeter[i].layer && Calorimeter[i].detector == ECAL)
                                 Y = Calorimeter[i].y;
                         break;
                 }
@@ -263,6 +265,7 @@ public:
         float Z_CALO(int layer)
         {
                 float Z = 0;
+                int ECAL = 7;
                 for (int i = 0; i < Calorimeter.size(); i++)
                 {
                         if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
@@ -275,6 +278,7 @@ public:
         Vertex Cluster_CALO(int layer)
         {
                 Vertex cluster_calo;
+                int ECAL = 7;
                 for (int i = 0; i < Calorimeter.size(); i++)
                 {
                         //cout<<"requiered: "<<layer<<" "<<ECAL<<" size "<<Calorimeter.size()<<endl;
@@ -294,6 +298,7 @@ public:
         Vertex Matched_Cluster_CALO(int layer)
         {
                 Vertex cluster_calo;
+                int ECAL = 7;
                 for (int i = 0; i < Calorimeter.size(); i++)
                 {
                         if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
@@ -311,6 +316,7 @@ public:
         float U_CALO(int layer)
         {
                 float Y = 0;
+                int ECAL = 7;
                 for (int i = 0; i < Calorimeter.size(); i++)
                 {
                         if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
@@ -323,6 +329,7 @@ public:
         float V_CALO(int layer)
         {
                 float Y = 0;
+                int ECAL = 7;
                 for (int i = 0; i < Calorimeter.size(); i++)
                 {
                         if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
@@ -335,6 +342,7 @@ public:
         float W_CALO(int layer)
         {
                 float Y = 0;
+                int ECAL = 7;
                 for (int i = 0; i < Calorimeter.size(); i++)
                 {
                         if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
@@ -347,6 +355,7 @@ public:
         float SECTOR_CALO(int layer)
         {
                 float Y = 0;
+                int ECAL = 7;
                 for (int i = 0; i < Calorimeter.size(); i++)
                 {
                         if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)

@@ -29,7 +29,7 @@
 #include "bib/TCSRunSelector.h"
 #include "bib/InputParser.h"
 
-#include "reader.h"
+#include "hipo4/reader.h"
 #include "rcdb_reader.h"
 
 // QADB header and namespace
