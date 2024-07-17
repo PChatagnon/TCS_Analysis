@@ -103,7 +103,7 @@ endif
 #################  PASS 2 Simulation  ###################
 #################   No radiated JPsi  ###################
 #########################################################
-#if (0) then
+if (0) then
 
 mkdir ${outputdir}JPsi_Fall2018_45_022024
 ./Launch_TCS_analysis JPsi_Fall2018_45_022024 ${inputdir}Fall2018_In/JPsi_No_rad_45nA_25012024 '/output/45*.hipo' ${outputdir}JPsi_Fall2018_45_022024 JPsi_Fall2018_45_022024 "-inbending -RGA_Fall2018 -IsJPsi -Lepton_ID_check -PCAL -energy 10.604" 5
@@ -124,7 +124,17 @@ mkdir ${outputdir}JPsi_Fall2018_50_out_022024
 
 mkdir ${outputdir}JPsi_Fall2018_40_out_022024
 ./Launch_TCS_analysis JPsi_Fall2018_40_out_022024 ${inputdir}Fall2018_Out/JPsi_No_rad_40nA_25012024 '/output/40*.hipo' ${outputdir}JPsi_Fall2018_40_out_022024 JPsi_Fall2018_40_out_022024 "-outbending -RGA_Fall2018 -IsJPsi -Lepton_ID_check -PCAL -energy 10.604" 5
-#endif
+endif
+
+
+#########################################################
+#################   Efficiency study  ###################
+#########################################################
+mkdir ${outputdir}Efficiency_study
+./Launch_TCS_analysis Efficiency_study_45_inbending_run /cache/clas12/rg-a/production/recon/fall2018/torus-1/pass2/main/train/ '/InclusivePositron/InclusivePositron_00531*.hipo' ${outputdir}Efficiency_study Efficiency_study_45_inbending_run "-inbending -RGA_Fall2018 -Lepton_ID_check -PCAL -energy 10.604 -inclusive_topology" 1
+
+
+
 
 
 if (0) then
