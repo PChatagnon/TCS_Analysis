@@ -126,13 +126,40 @@ mkdir ${outputdir}JPsi_Fall2018_40_out_022024
 ./Launch_TCS_analysis JPsi_Fall2018_40_out_022024 ${inputdir}Fall2018_Out/JPsi_No_rad_40nA_25012024 '/output/40*.hipo' ${outputdir}JPsi_Fall2018_40_out_022024 JPsi_Fall2018_40_out_022024 "-outbending -RGA_Fall2018 -IsJPsi -Lepton_ID_check -PCAL -energy 10.604" 5
 endif
 
+#########################################################
+##############     PASS 2 Simulation      ###############
+##############    JPsi with VM rad corr   ###############
+#########################################################
+if 900 then
+
+mkdir ${outputdir}JPsi_VM_Fall2018_45
+./Launch_TCS_analysis JPsi_VM_Fall2018_45 ${osgdir}job_7725 '/output/*.hipo' ${outputdir}JPsi_VM_Fall2018_45 JPsi_VM_Fall2018_45 "-inbending -RGA_Fall2018 -IsJPsi -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}JPsi_VM_Fall2018_50
+./Launch_TCS_analysis JPsi_VM_Fall2018_50 ${osgdir}job_7726 '/output/*.hipo' ${outputdir}JPsi_VM_Fall2018_50 JPsi_VM_Fall2018_50 "-inbending -RGA_Fall2018 -IsJPsi -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}JPsi_VM_Fall2018_55
+./Launch_TCS_analysis JPsi_VM_Fall2018_55 ${osgdir}job_7727 '/output/*.hipo' ${outputdir}JPsi_VM_Fall2018_55 JPsi_VM_Fall2018_55 "-inbending -RGA_Fall2018 -IsJPsi -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}JPsi_VM_Fall2018_40_out
+./Launch_TCS_analysis JPsi_VM_Fall2018_40_out ${osgdir}job_7728 '/output/*.hipo' ${outputdir}JPsi_VM_Fall2018_40_out JPsi_VM_Fall2018_40_out "-outbending -IsJPsi -RGA_Fall2018 -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}JPsi_VM_Fall2018_50_out
+./Launch_TCS_analysis JPsi_VM_Fall2018_50_out ${osgdir}job_7729 '/output/*.hipo' ${outputdir}JPsi_VM_Fall2018_50_out JPsi_VM_Fall2018_50_out "-outbending -IsJPsi -RGA_Fall2018 -Lepton_ID_check -PCAL -energy 10.604" 5
+
+mkdir ${outputdir}JPsi_VM_Spring2019
+./Launch_TCS_analysis JPsi_VM_Spring2019 ${osgdir}job_7730 '/output/*.hipo' ${outputdir}JPsi_VM_Spring2019 JPsi_VM_Spring2019 "-inbending -RGA_Spring2019 -IsJPsi -Lepton_ID_check -PCAL -energy 10.2" 5
+endif
 
 #########################################################
 #################   Efficiency study  ###################
 #########################################################
 mkdir ${outputdir}Efficiency_study
-./Launch_TCS_analysis Efficiency_study_45_inbending_run /cache/clas12/rg-a/production/recon/fall2018/torus-1/pass2/main/train/ '/InclusivePositron/InclusivePositron_00531*.hipo' ${outputdir}Efficiency_study Efficiency_study_45_inbending_run "-inbending -RGA_Fall2018 -Lepton_ID_check -PCAL -energy 10.604 -inclusive_topology" 1
+#./Launch_TCS_analysis Efficiency_study_45_inbending_run /cache/clas12/rg-a/production/recon/fall2018/torus-1/pass2/main/train/ '/InclusivePositron/InclusivePositron_00531*.hipo' ${outputdir}Efficiency_study Efficiency_study_45_inbending_run "-inbending -RGA_Fall2018 -Lepton_ID_check -PCAL -energy 10.604 -inclusive_topology" 1
 
+./Launch_TCS_analysis Efficiency_study_50_inbending_run /cache/clas12/rg-a/production/recon/fall2018/torus-1/pass2/main/train/ '/InclusivePositron/InclusivePositron_005358.hipo' ${outputdir}Efficiency_study Efficiency_study_50_inbending_run "-inbending -RGA_Fall2018 -Lepton_ID_check -PCAL -energy 10.604 -inclusive_topology" 1
+
+./Launch_TCS_analysis Efficiency_study_55_inbending_run /cache/clas12/rg-a/production/recon/fall2018/torus-1/pass2/main/train/ '/InclusivePositron/InclusivePositron_005374.hipo' ${outputdir}Efficiency_study Efficiency_study_55_inbending_run "-inbending -RGA_Fall2018 -Lepton_ID_check -PCAL -energy 10.604 -inclusive_topology" 1
 
 
 
@@ -142,10 +169,10 @@ if (0) then
 #################  PASS 2 Data on RGB ###################
 #########################################################
 mkdir ${outputdir}Data_pass2_RGB_Spring19
-./Launch_TCS_analysis Data_pass2_RGB_Spring19 /cache/clas12/rg-b/production/recon/spring2019/torus-1/pass2/v0/dst/train/ '/jpsi/jpsi_00[0-6][0-3][0-9][0-9].*' ${outputdir}Data_pass2_RGB_Spring19 Data_pass2_RGB_Spring19 "-inbending -RGA_Fall2018 -energy 10.6 -Lepton_ID_check -QA_Golden -PCAL -Skip_RCDB" 1
+./Launch_TCS_analysis Data_pass2_RGB_Spring19 /cache/clas12/rg-b/production/recon/spring2019/torus-1/pass2/v0/dst/train/ '/jpsi/jpsi_00[0-6][0-3][0-9][0-9].*' ${outputdir}Data_pass2_RGB_Spring19 Data_pass2_RGB_Spring19 "-inbending -RGA_Fall2018 -energy 10.6 -Lepton_ID_check -QA_Golden -PCAL -no_RCDB" 1
 
 mkdir ${outputdir}Data_pass2_RGB_Spring19_10_2
-./Launch_TCS_analysis Data_pass2_RGB_Spring19_10_2 /cache/clas12/rg-b/production/recon/spring2019/torus-1/pass2/v0/dst/train/ '/jpsi/jpsi_00[0-6][4-9][0-9][0-9].*' ${outputdir}Data_pass2_RGB_Spring19_10_2 Data_pass2_RGB_Spring19_10_2 "-inbending -RGA_Fall2018 -energy 10.2 -Lepton_ID_check -QA_Golden -PCAL -Skip_RCDB" 1
+./Launch_TCS_analysis Data_pass2_RGB_Spring19_10_2 /cache/clas12/rg-b/production/recon/spring2019/torus-1/pass2/v0/dst/train/ '/jpsi/jpsi_00[0-6][4-9][0-9][0-9].*' ${outputdir}Data_pass2_RGB_Spring19_10_2 Data_pass2_RGB_Spring19_10_2 "-inbending -RGA_Fall2018 -energy 10.2 -Lepton_ID_check -QA_Golden -PCAL -no_RCDB" 1
 
 #########################################################
 ##############  PASS 2 Simulation on RGB ################
