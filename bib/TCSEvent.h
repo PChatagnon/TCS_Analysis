@@ -227,6 +227,11 @@ public:
                 }
         }
 
+        int topology_FS()
+        {
+                return (recem*100 + recep*10 +recp*1);
+        }
+
         bool pass_topology_cut()
         {
                 return (recem == 1 && recep == 1 && recp == 1);

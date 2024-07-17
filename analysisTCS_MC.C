@@ -81,6 +81,7 @@ int analysisTCS_MC()
 	QA_Golden = input.cmdOptionExists("-QA_Golden");
 	no_QADB = input.cmdOptionExists("-no_QADB");
 	no_RCDB = input.cmdOptionExists("-no_RCDB");
+	inclusive_topology = input.cmdOptionExists("-inclusive_topology");
 	/////////////////////////////////////////
 
 	if (input.cmdOptionExists("-energy"))
@@ -222,7 +223,9 @@ int analysisTCS_MC()
 	outT->Branch("trigger_bit", &trigger_bit, "trigger_bit/I");
 
 	std::vector<TString> fvars = {
-		"evt_num", "t", "t_min", "MMassBeam", "Epho", "Epho_Gen", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "helicity", "polaT",
+		"evt_num", 
+		"topology_FS",
+		"t", "t_min", "MMassBeam", "Epho", "Epho_Gen", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "helicity", "polaT",
 		"positron_SF", "electron_SF", "positron_score", "electron_score",
 		"weight", "acc", "acc_error", "real_flux_Gen", "virtual_flux_Gen", "virtual_flux_Frixione_Gen", "run", "analysis_stage", "topology",
 		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "pass_EC_cut", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
@@ -767,13 +770,18 @@ int analysisTCS_MC()
 					Plots.Fill_2D("multiplicity_2D_ep_p", ev.recep, ev.recp, 1);
 				}
 
-				if (!ev.pass_topology_cut())
+				if ( (ev.topology_FS()!=11 && ev.topology_FS()!=101 && ev.topology_FS()!=110 && ev.topology_FS()!=111) && inclusive_topology)
 				{
 					continue;
 				}
-				// cout<<"event"<<endl;
-				// cout<<ev.topology()<<endl;
-				// PART.show();
+				
+				
+				if (!ev.pass_topology_cut() && !inclusive_topology)
+				{
+					continue;
+				}
+
+
 				///////////////////////////////////////////
 
 				// Number of events after topology cuts
@@ -903,6 +911,7 @@ int analysisTCS_MC()
 				// cout<<ev.Positron.TimeChe(HTCC)<<" "<<ev.Electron.TimeChe(HTCC)<<endl;
 
 				outVars["evt_num"] = nbEvent;
+				outVars["topology_FS"] = (float)ev.topology_FS();
 				outVars["p_p"] = ev.Positron.Vector.P();
 				outVars["e_p"] = ev.Electron.Vector.P();
 				outVars["prot_p"] = ev.Proton.Vector.P();

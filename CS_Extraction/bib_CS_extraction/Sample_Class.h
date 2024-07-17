@@ -53,16 +53,30 @@ public:
 
                 TString charge_50_spring_19_inbending = "50.5319";*/
 
-                // JPsi
+                // JPsi BH radiative correction
                 //  Fall2018
-                samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_45_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_45_fall_18_inbending});
-                samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_55_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_55_fall_18_inbending});
-                samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_50_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_inbending});
+        //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_45_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_45_fall_18_inbending});
+        //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_55_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_55_fall_18_inbending});
+        //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_50_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_inbending});
+        //        // Outbending
+        //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_40_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_40_fall_18_outbending});
+        //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_50_out_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_outbending});
+        //        // Spring2019
+        //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Spring2019_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_spring_19_inbending});
+
+                // JPsi VM radiative correction
+                //  Fall2018
+                samples.push_back({sample_folder + "Simulation/JPsi_VM_Rad/JPsi_VM_Fall2018_45.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_45_fall_18_inbending});
+                samples.push_back({sample_folder + "Simulation/JPsi_VM_Rad/JPsi_VM_Fall2018_55.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_55_fall_18_inbending});
+                samples.push_back({sample_folder + "Simulation/JPsi_VM_Rad/JPsi_VM_Fall2018_50.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_inbending});
                 // Outbending
-                samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_40_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_40_fall_18_outbending});
-                samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_50_out_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_outbending});
+                samples.push_back({sample_folder + "Simulation/JPsi_VM_Rad/JPsi_VM_Fall2018_40_out.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_40_fall_18_outbending});
+                samples.push_back({sample_folder + "Simulation/JPsi_VM_Rad/JPsi_VM_Fall2018_50_out.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_outbending});
                 // Spring2019
-                samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Spring2019_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_spring_19_inbending});
+                samples.push_back({sample_folder + "Simulation/JPsi_VM_Rad/JPsi_VM_Spring2019.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_spring_19_inbending});
+
+
+
 
                 /*samples.push_back({sample_folder + "Simulation/JPsi_Fall2018_45_022024.root", cs_no_rad_2018, color_JPsi, "J#psi", charge_45_fall_18_inbending});
                 samples.push_back({sample_folder + "Simulation/JPsi_Fall2018_50_022024.root", cs_no_rad_2018, color_JPsi, "J#psi", charge_50_fall_18_inbending});

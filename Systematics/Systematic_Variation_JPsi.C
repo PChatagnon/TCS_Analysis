@@ -39,32 +39,32 @@ int Systematic_Variation_JPsi()
 
 		{"Q2_cut", "Q2 cut",
 		 "0.5 GeV^{2}", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_with_int_SLER_CS_graph.root", "Graph",
-		 "0.2 GeV^{2}", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_Q2_02_CS_graph.root", "Graph",
-		 "0.8 GeV^{2}", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_Q2_10_CS_graph.root", "Graph",
+		 "0.2 GeV^{2}", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_Q2_02_CS_graph.root", "Graph","1.25",
+		 "0.8 GeV^{2}", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_Q2_10_CS_graph.root", "Graph","0.92",
 		 "50", "-50", "E_{#gamma} [GeV]", "no_log"},
 
 		{"MM_Cut", "Missing mass cut",
 		 "0.4 GeV^{2}", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_with_int_SLER_CS_graph.root", "Graph",
-		 "0.2 GeV^{2}", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_MM_08_CS_graph.root", "Graph",
-		 "0.8 GeV^{2}", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_MM_08_CS_graph.root", "Graph",
+		 "0.2 GeV^{2}", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_MM_08_CS_graph.root", "Graph","1.",
+		 "0.8 GeV^{2}", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_MM_08_CS_graph.root", "Graph","1.",
 		 "10", "-10", "E_{#gamma} [GeV]", "no_log"},
 
 		{"Rad_Corr", "Rad. Corr.",
-		 "With rad. corr.", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_with_int_SLER_CS_graph.root", "Graph",
-		 "No Rad.", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_Q2_no_rad_CS_graph.root", "Graph",
-		 "No Rad.", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_Q2_no_rad_CS_graph.root", "Graph",
-		 "5", "-30", "E_{#gamma} [GeV]", "no_log"},
+		 "With BH rad. corr.", "../CS_Extraction/Results_CS/CS_Nominal/CS_Extraction_combine_nominal_CS_graph.root", ";1",
+		 "With VM rad. corr", "../CS_Extraction/CS_Extraction_Gauss_exp_1_CS_graph.root", ";1","1.",
+		 "With VM rad. corr", "../CS_Extraction/CS_Extraction_Gauss_exp_1_CS_graph.root", ";1","1.",
+		 "5", "-15", "E_{#gamma} [GeV]", "no_log"},
 
 		{"Fit", "Fit function",
 		 "Exp. BG", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_with_int_SLER_CS_graph.root", "Graph",
-		 "Pol. 2 BG", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_with_int_SLER_pol_BG_CS_graph.root", "Graph",
-		 "Pol. 2 BG", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_with_int_SLER_pol_BG_CS_graph.root", "Graph",
+		 "Pol. 2 BG", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_with_int_SLER_pol_BG_CS_graph.root", "Graph","1.",
+		 "Pol. 2 BG", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_with_int_SLER_pol_BG_CS_graph.root", "Graph","1.",
 		 "50", "-50", "E_{#gamma} [GeV]", "no_log"},
 
 		{"Flux", "Flux fonction",
 		 "Q_{min}<0.02", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_with_int_SLER_CS_graph.root", "Graph",
-		 "Frixione (no cut)", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_Frixione_Flux_1_CS_graph.root", "Graph",
-		 "Frixione (no cut)", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_Frixione_Flux_1_CS_graph.root", "Graph",
+		 "Frixione (no cut)", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_Frixione_Flux_1_CS_graph.root", "Graph","1.",
+		 "Frixione (no cut)", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_Frixione_Flux_1_CS_graph.root", "Graph","1.",
 		 "50", "-50", "E_{#gamma} [GeV]", "no_log"},
 
 		/*{"Rad_Corr", "Rad. Corr. - t-dependence ",
@@ -75,38 +75,38 @@ int Systematic_Variation_JPsi()
 
 		{"M2_cut", "MM2 cut - bin 1 - t-dependence",
 		 "0.5", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/CS_Extraction_combine_t_05_rad_new_2_8.20_9.28_CS_graph.root", ";1",
-		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_02_config_bin1_8.20_9.28_CS_graph.root", ";1",
-		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_08_config_bin1_8.20_9.28_CS_graph.root", ";1",
+		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_02_config_bin1_8.20_9.28_CS_graph.root", ";1","1.",
+		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_08_config_bin1_8.20_9.28_CS_graph.root", ";1","1.",
 		 "50", "-50", "-t [GeV^{2}]", "log"},
 
 		{"M2_cut", "MM2 cut - bin 2 - t-dependence",
 		 "0.5", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/CS_Extraction_combine_t_05_rad_new_2_9.28_10.00_CS_graph.root", ";1",
-		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_02_config_bin2_9.28_10.00_CS_graph.root", ";1",
-		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_08_config_bin2_9.28_10.00_CS_graph.root", ";1",
+		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_02_config_bin2_9.28_10.00_CS_graph.root", ";1","1.",
+		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_08_config_bin2_9.28_10.00_CS_graph.root", ";1","1.",
 		 "50", "-50", "-t [GeV^{2}]", "log"},
 
 		{"M2_cut", "MM2 cut - bin 3 - t-dependence",
 		 "0.5", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/CS_Extraction_combine_t_05_rad_new_2_10.00_10.60_CS_graph.root", ";1",
-		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_02_config_bin3_10.00_10.60_CS_graph.root", ";1",
-		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_08_config_bin3_10.00_10.60_CS_graph.root", ";1",
+		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_02_config_bin3_10.00_10.60_CS_graph.root", ";1","1.",
+		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_08_config_bin3_10.00_10.60_CS_graph.root", ";1","1.",
 		 "50", "-50", "-t [GeV^{2}]", "log"},
 
 		{"Q2_cut", "Q2 cut - bin 1 - t-dependence",
 		 "0.5", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/CS_Extraction_combine_t_05_rad_new_2_8.20_9.28_CS_graph.root", ";1",
-		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_02_config_bin1_8.20_9.28_CS_graph.root", ";1",
-		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_08_config_bin1_8.20_9.28_CS_graph.root", ";1",
+		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_02_config_bin1_8.20_9.28_CS_graph.root", ";1","1.25",
+		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_08_config_bin1_8.20_9.28_CS_graph.root", ";1","0.92",
 		 "50", "-50", "-t [GeV^{2}]", "log"},
 
 		{"Q2_cut", "Q2 cut - bin 2 - t-dependence",
 		 "0.5", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/CS_Extraction_combine_t_05_rad_new_2_9.28_10.00_CS_graph.root", ";1",
-		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_02_config_bin2_9.28_10.00_CS_graph.root", ";1",
-		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_08_config_bin2_9.28_10.00_CS_graph.root", ";1",
+		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_02_config_bin2_9.28_10.00_CS_graph.root", ";1","1.25",
+		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_08_config_bin2_9.28_10.00_CS_graph.root", ";1","0.92",
 		 "50", "-50", "-t [GeV^{2}]", "log"},
 
 		{"Q2_cut", "Q2 cut - bin 3 - t-dependence",
 		 "0.5", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/CS_Extraction_combine_t_05_rad_new_2_10.00_10.60_CS_graph.root", ";1",
-		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_02_config_bin3_10.00_10.60_CS_graph.root", ";1",
-		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_08_config_bin3_10.00_10.60_CS_graph.root", ";1",
+		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_02_config_bin3_10.00_10.60_CS_graph.root", ";1","1.25",
+		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_08_config_bin3_10.00_10.60_CS_graph.root", ";1","0.92",
 		 "50", "-50", "-t [GeV^{2}]", "log"},
 
 	};
@@ -124,13 +124,16 @@ int Systematic_Variation_JPsi()
 		TString name_down = Systematics_array[i][5];
 		TString file_down = Systematics_array[i][6];
 		TString name_file_down = Systematics_array[i][7];
-		TString name_up = Systematics_array[i][8];
-		TString file_up = Systematics_array[i][9];
-		TString name_file_up = Systematics_array[i][10];
-		double max_y_syst = std::stod(Systematics_array[i][11].Data());
-		double min_y_syst = std::stod(Systematics_array[i][12].Data());
-		TString var_label = Systematics_array[i][13];
-		TString log_label = Systematics_array[i][14];
+		double weight_file_down = std::stod(Systematics_array[i][8].Data());
+		TString name_up = Systematics_array[i][9];
+		TString file_up = Systematics_array[i][10];
+		TString name_file_up = Systematics_array[i][11];
+		double weight_file_up = std::stod(Systematics_array[i][12].Data());
+
+		double max_y_syst = std::stod(Systematics_array[i][13].Data());
+		double min_y_syst = std::stod(Systematics_array[i][14].Data());
+		TString var_label = Systematics_array[i][15];
+		TString log_label = Systematics_array[i][16];
 
 		//////////////////////////////////////////////////
 
@@ -147,8 +150,30 @@ int Systematic_Variation_JPsi()
 		TFile *down_file = new TFile(file_down);
 		auto down_graph = (TGraphAsymmErrors *)down_file->Get(name_file_down);
 
+		for (int i = 0; i < down_graph->GetN(); i++) {
+        	double graph_xu = down_graph->GetErrorXhigh(i);
+			double graph_xd = down_graph->GetErrorXlow(i);
+			double graph_yu = down_graph->GetErrorYhigh(i);
+			double graph_yd = down_graph->GetErrorYlow(i);
+			double graph_x = down_graph->GetPointX(i);
+			double graph_y = down_graph->GetPointY(i)*weight_file_down;
+        	down_graph->SetPoint(i, graph_x, graph_y);
+        	down_graph->SetPointError(i, graph_xd, graph_xu, graph_yd, graph_yu);
+    	}
+
 		TFile *up_file = new TFile(file_up);
 		auto up_graph = (TGraphAsymmErrors *)up_file->Get(name_file_up);
+
+		for (int j = 0; j < up_graph->GetN(); j++) {
+        	double graph_xu = up_graph->GetErrorXhigh(j);
+			double graph_xd = up_graph->GetErrorXlow(j);
+			double graph_yu = up_graph->GetErrorYhigh(j);
+			double graph_yd = up_graph->GetErrorYlow(j);
+			double graph_x = up_graph->GetPointX(j);
+			double graph_y = up_graph->GetPointY(j)*weight_file_up;
+        	up_graph->SetPoint(j, graph_x, graph_y);
+        	up_graph->SetPointError(j, graph_xd, graph_xu, graph_yd, graph_yu);
+    	}
 
 		base_graph->GetListOfFunctions()->Clear();
 		down_graph->GetListOfFunctions()->Clear();
