@@ -14,7 +14,90 @@
 #include "THStack.h"
 #include <iostream>
 #include <fstream>
+#include "../CS_Extraction/bib_CS_extraction/Table_Class.h"
 using namespace std;
+
+void resetGraphYValues(TGraphAsymmErrors *graph)
+{
+	if (!graph)
+		return; // Check if the graph pointer is valid
+
+	// Loop over all points in the graph
+	for (int i = 0; i < graph->GetN(); i++)
+	{
+		double graph_x, graph_y;
+		graph->GetPoint(i, graph_x, graph_y); // Get the current point (x, y)
+		graph->SetPoint(i, graph_x, 0.0);	  // Set the y value to 0.0
+		graph->SetPointError(i, 0.1, 0.1, 0.0, 0.0);
+	}
+}
+
+void updateGraphErrors(TGraphAsymmErrors *graph_base, TGraphAsymmErrors *graph_down, TGraphAsymmErrors *graph_up)
+{
+	if (!graph_base || !graph_down || !graph_up)
+		return; // Check if the pointers are valid
+
+	int nPoints = graph_base->GetN();
+	int nPointsNewErrors = graph_down->GetN();
+
+	// Ensure both graphs have the same number of points
+	if (nPoints != nPointsNewErrors)
+	{
+		std::cerr << "Error: The number of points in both graphs does not match!" << std::endl;
+		return;
+	}
+
+	// Loop over all points in the graph
+	for (int i = 0; i < nPoints; i++)
+	{
+		double ErrYLow, ErrYHigh, newErrYLow_down, newErrYLow_up, newErrYLow, newErrYHigh;
+
+		ErrYLow = graph_base->GetErrorYlow(i);
+		ErrYHigh = graph_base->GetErrorYhigh(i);
+
+		newErrYLow_down = -1.0 * graph_down->GetErrorYlow(i);
+		cout << "Down " << newErrYLow_down << endl;
+
+		newErrYLow_up = -1.0 * graph_up->GetErrorYlow(i);
+		cout << "Up " << newErrYLow_up << endl;
+
+		newErrYLow = std::min({newErrYLow_down, newErrYLow_up, 0.0});
+		newErrYHigh = std::max({newErrYLow_down, newErrYLow_up, 0.0});
+		cout << "Here " << newErrYLow << " " << newErrYHigh << endl;
+
+		cout << "Initial errors " << ErrYLow << " " << ErrYHigh << endl;
+		cout << "" << endl;
+
+		// Update the errors in the main graph with the new errors
+		graph_base->SetPointError(i, 0.1, 0.1, sqrt(ErrYLow * ErrYLow + newErrYLow * newErrYLow), sqrt(ErrYHigh * ErrYHigh + newErrYHigh * newErrYHigh));
+	}
+}
+
+void printGraphContent(TGraphAsymmErrors* graph) {
+    if (!graph) {
+        std::cerr << "Error: Invalid TGraphAsymmErrors pointer!" << std::endl;
+        return; 
+    }
+
+    int nPoints = graph->GetN(); 
+    std::cout << "Low Errors: ";
+    
+    for (int i = 0; i < nPoints; ++i) {
+        double eyl = graph->GetErrorYlow(i);
+        std::cout << eyl << ", ";
+    }
+
+    std::cout << std::endl; // End line for X errors
+
+    std::cout << "High Errors: ";
+    
+    // Loop over all points to collect and print Y errors
+    for (int i = 0; i < nPoints; ++i) {
+        double eyh = graph->GetErrorYhigh(i);
+		std::cout << eyh << ", ";
+    }
+    std::cout << std::endl; // End line for Y errors
+}
 
 int Systematic_Variation_JPsi()
 {
@@ -36,6 +119,44 @@ int Systematic_Variation_JPsi()
 	std::vector<vector<TString>> Systematics_array{
 
 		/*{"Name","Title", "name_base", "File_Base", "name_down", "File_Down", "name_up", "File_Up"},*/
+
+		{"Q2_cut", "Q2 cut",
+		 "0.5 GeV^{2}", "../CS_Extraction/Results_CS/CS_Nominal/CS_Extraction_combine_nominal_CS_graph.root", ";1",
+		 "0.2 GeV^{2}", "../CS_Extraction/Results_CS/CS_Q2_Systematic/CS_Extraction_combine_Q2_02_CS_graph.root", ";1", "1.0",
+		 "0.8 GeV^{2}", "../CS_Extraction/Results_CS/CS_Q2_Systematic/CS_Extraction_combine_Q2_08_CS_graph.root", ";1", "1.0",
+		 "70", "-70", "E_{#gamma} [GeV]", "log", "int"},
+
+		{"MM_Cut", "Missing mass cut",
+		 "0.4 GeV^{2}", "../CS_Extraction/Results_CS/CS_Nominal/CS_Extraction_combine_nominal_CS_graph.root", ";1",
+		 "0.2 GeV^{2}", "../CS_Extraction/Results_CS/CS_MM_Systematic/CS_Extraction_combine_MM_02_CS_graph.root", ";1", "1.",
+		 "0.8 GeV^{2}", "../CS_Extraction/Results_CS/CS_MM_Systematic/CS_Extraction_combine_MM_08_CS_graph.root", ";1", "1.",
+		 "10", "-10", "E_{#gamma} [GeV]", "log", "int"},
+
+		{"Fit", "Fit function",
+		 "Exp. BG", "../CS_Extraction/Results_CS/CS_Nominal/CS_Extraction_combine_nominal_CS_graph.root", ";1",
+		 "Fit 1", "../CS_Extraction/Results_CS/CS_Fit_Systematic/CS_Extraction_combine_Fit_1_CS_graph.root", ";1", "1.",
+		 "Fit 4", "../CS_Extraction/Results_CS/CS_Fit_Systematic/CS_Extraction_combine_Fit_4_CS_graph.root", ";1", "1.",
+		 "50", "-50", "E_{#gamma} [GeV]", "log", "int"},
+
+		{"AI_PID", "AI PID",
+		 "Default", "../CS_Extraction/Results_CS/CS_Nominal/CS_Extraction_combine_nominal_CS_graph.root", ";1",
+		 "AI PID 1", "../CS_Extraction/Results_CS/CS_AI_PID_Systematic/CS_Extraction_combine_AI_PID_Systematic_1_CS_graph.root", ";1", "1.",
+		 "AI PID 2", "../CS_Extraction/Results_CS/CS_AI_PID_Systematic/CS_Extraction_combine_AI_PID_Systematic_2_CS_graph.root", ";1", "1.",
+		 "50", "-50", "E_{#gamma} [GeV]", "log", "int"},
+
+		{"Lep_Mom", "Lepton Momentum cut",
+		 "Lepton mom. 1.7", "../CS_Extraction/Results_CS/CS_Nominal/CS_Extraction_combine_nominal_CS_graph.root", ";1",
+		 "Lepton mom. 1.5", "../CS_Extraction/Results_CS/CS_Mom_lepton_Systematic/CS_Extraction_combine_Mom_lepton_1_5_CS_graph.root", ";1", "1.",
+		 "Lepton mom. 1.9", "../CS_Extraction/Results_CS/CS_Mom_lepton_Systematic/CS_Extraction_combine_Mom_lepton_1_9_CS_graph.root", ";1", "1.",
+		 "50", "-50", "E_{#gamma} [GeV]", "log", "int"},
+
+		{"Proton_PID", "Proton PID",
+		 "No cut", "../CS_Extraction/Results_CS/CS_Nominal/CS_Extraction_combine_nominal_CS_graph.root", ";1",
+		 "2-sigma", "../CS_Extraction/Results_CS/CS_Proton_PID_Systematic/CS_Extraction_combine_nominal_Proton_PID_1_CS_graph.root", ";1", "1.",
+		 "3-sigma", "../CS_Extraction/Results_CS/CS_Proton_PID_Systematic/CS_Extraction_combine_nominal_Proton_PID_2_CS_graph.root", ";1", "1.",
+		 "50", "-50", "E_{#gamma} [GeV]", "log", "int"},
+
+		/*
 
 		{"Q2_cut", "Q2 cut",
 		 "0.5 GeV^{2}", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_with_int_SLER_CS_graph.root", "Graph",
@@ -67,6 +188,8 @@ int Systematic_Variation_JPsi()
 		 "Frixione (no cut)", "../CS_Extraction/CS_Extraction_combine_good_error_Gaussian_Frixione_Flux_1_CS_graph.root", "Graph","1.",
 		 "50", "-50", "E_{#gamma} [GeV]", "no_log"},
 
+		 */
+
 		/*{"Rad_Corr", "Rad. Corr. - t-dependence ",
 		 "With rad. corr.", "../CS_Extraction/t_cross_section/CS_Extraction_combine_t_05_rad_new_9.28_10.36_CS_graph.root", "Graph",
 		 "No Rad.", "../CS_Extraction/t_cross_section/CS_Extraction_combine_t_05_rad_new_no_rad9.28_10.36_CS_graph.root", "Graph",
@@ -75,41 +198,58 @@ int Systematic_Variation_JPsi()
 
 		{"M2_cut", "MM2 cut - bin 1 - t-dependence",
 		 "0.5", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/CS_Extraction_combine_t_05_rad_new_2_8.20_9.28_CS_graph.root", ";1",
-		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_02_config_bin1_8.20_9.28_CS_graph.root", ";1","1.",
-		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_08_config_bin1_8.20_9.28_CS_graph.root", ";1","1.",
-		 "50", "-50", "-t [GeV^{2}]", "log"},
+		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_02_config_bin1_8.20_9.28_CS_graph.root", ";1", "1.",
+		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_08_config_bin1_8.20_9.28_CS_graph.root", ";1", "1.",
+		 "50", "-50", "-t [GeV^{2}]", "log", "bin1"},
 
 		{"M2_cut", "MM2 cut - bin 2 - t-dependence",
 		 "0.5", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/CS_Extraction_combine_t_05_rad_new_2_9.28_10.00_CS_graph.root", ";1",
-		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_02_config_bin2_9.28_10.00_CS_graph.root", ";1","1.",
-		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_08_config_bin2_9.28_10.00_CS_graph.root", ";1","1.",
-		 "50", "-50", "-t [GeV^{2}]", "log"},
+		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_02_config_bin2_9.28_10.00_CS_graph.root", ";1", "1.",
+		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_08_config_bin2_9.28_10.00_CS_graph.root", ";1", "1.",
+		 "50", "-50", "-t [GeV^{2}]", "log", "bin2"},
 
 		{"M2_cut", "MM2 cut - bin 3 - t-dependence",
 		 "0.5", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/CS_Extraction_combine_t_05_rad_new_2_10.00_10.60_CS_graph.root", ";1",
-		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_02_config_bin3_10.00_10.60_CS_graph.root", ";1","1.",
-		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_08_config_bin3_10.00_10.60_CS_graph.root", ";1","1.",
-		 "50", "-50", "-t [GeV^{2}]", "log"},
+		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_02_config_bin3_10.00_10.60_CS_graph.root", ";1", "1.",
+		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/MM_08_config_bin3_10.00_10.60_CS_graph.root", ";1", "1.",
+		 "50", "-50", "-t [GeV^{2}]", "log", "bin3"},
 
 		{"Q2_cut", "Q2 cut - bin 1 - t-dependence",
 		 "0.5", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/CS_Extraction_combine_t_05_rad_new_2_8.20_9.28_CS_graph.root", ";1",
-		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_02_config_bin1_8.20_9.28_CS_graph.root", ";1","1.25",
-		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_08_config_bin1_8.20_9.28_CS_graph.root", ";1","0.92",
-		 "50", "-50", "-t [GeV^{2}]", "log"},
+		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_02_config_bin1_8.20_9.28_CS_graph.root", ";1", "1.25",
+		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_08_config_bin1_8.20_9.28_CS_graph.root", ";1", "0.92",
+		 "50", "-50", "-t [GeV^{2}]", "log", "bin1"},
 
 		{"Q2_cut", "Q2 cut - bin 2 - t-dependence",
 		 "0.5", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/CS_Extraction_combine_t_05_rad_new_2_9.28_10.00_CS_graph.root", ";1",
-		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_02_config_bin2_9.28_10.00_CS_graph.root", ";1","1.25",
-		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_08_config_bin2_9.28_10.00_CS_graph.root", ";1","0.92",
-		 "50", "-50", "-t [GeV^{2}]", "log"},
+		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_02_config_bin2_9.28_10.00_CS_graph.root", ";1", "1.25",
+		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_08_config_bin2_9.28_10.00_CS_graph.root", ";1", "0.92",
+		 "50", "-50", "-t [GeV^{2}]", "log", "bin2"},
 
 		{"Q2_cut", "Q2 cut - bin 3 - t-dependence",
 		 "0.5", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/CS_Extraction_combine_t_05_rad_new_2_10.00_10.60_CS_graph.root", ";1",
-		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_02_config_bin3_10.00_10.60_CS_graph.root", ";1","1.25",
-		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_08_config_bin3_10.00_10.60_CS_graph.root", ";1","0.92",
-		 "50", "-50", "-t [GeV^{2}]", "log"},
+		 "0.2", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_02_config_bin3_10.00_10.60_CS_graph.root", ";1", "1.25",
+		 "0.8", "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/Q2_08_config_bin3_10.00_10.60_CS_graph.root", ";1", "0.92",
+		 "50", "-50", "-t [GeV^{2}]", "log", "bin3"},
 
 	};
+
+	// Store the combinaison of systematics here
+	TFile *total_graph_int_file = new TFile("../CS_Extraction/Results_CS/CS_Nominal/CS_Extraction_combine_nominal_CS_graph.root");
+	auto total_graph_int = (TGraphAsymmErrors *)total_graph_int_file->Get(";1");
+	resetGraphYValues(total_graph_int);
+
+	TFile *total_graph_bin1_file = new TFile("/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/CS_Extraction_combine_t_05_rad_new_2_8.20_9.28_CS_graph.root");
+	auto total_graph_bin1 = (TGraphAsymmErrors *)total_graph_bin1_file->Get(";1");
+	resetGraphYValues(total_graph_bin1);
+
+	TFile *total_graph_bin2_file = new TFile("/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/CS_Extraction_combine_t_05_rad_new_2_9.28_10.00_CS_graph.root");
+	auto total_graph_bin2 = (TGraphAsymmErrors *)total_graph_bin2_file->Get(";1");
+	resetGraphYValues(total_graph_bin2);
+
+	TFile *total_graph_bin3_file = new TFile("/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/t_cross_section/Results_diff_CS/CS_Nominal/CS_Extraction_combine_t_05_rad_new_2_10.00_10.60_CS_graph.root");
+	auto total_graph_bin3 = (TGraphAsymmErrors *)total_graph_bin3_file->Get(";1");
+	resetGraphYValues(total_graph_bin3);
 
 	for (int i = 0; i < Systematics_array.size(); i++)
 	{
@@ -135,6 +275,8 @@ int Systematic_Variation_JPsi()
 		TString var_label = Systematics_array[i][15];
 		TString log_label = Systematics_array[i][16];
 
+		TString combinaison_label = Systematics_array[i][17];
+
 		//////////////////////////////////////////////////
 
 		cout << endl;
@@ -150,30 +292,32 @@ int Systematic_Variation_JPsi()
 		TFile *down_file = new TFile(file_down);
 		auto down_graph = (TGraphAsymmErrors *)down_file->Get(name_file_down);
 
-		for (int i = 0; i < down_graph->GetN(); i++) {
-        	double graph_xu = down_graph->GetErrorXhigh(i);
+		for (int i = 0; i < down_graph->GetN(); i++)
+		{
+			double graph_xu = down_graph->GetErrorXhigh(i);
 			double graph_xd = down_graph->GetErrorXlow(i);
 			double graph_yu = down_graph->GetErrorYhigh(i);
 			double graph_yd = down_graph->GetErrorYlow(i);
 			double graph_x = down_graph->GetPointX(i);
-			double graph_y = down_graph->GetPointY(i)*weight_file_down;
-        	down_graph->SetPoint(i, graph_x, graph_y);
-        	down_graph->SetPointError(i, graph_xd, graph_xu, graph_yd, graph_yu);
-    	}
+			double graph_y = down_graph->GetPointY(i) * weight_file_down;
+			down_graph->SetPoint(i, graph_x, graph_y);
+			down_graph->SetPointError(i, graph_xd, graph_xu, graph_yd, graph_yu);
+		}
 
 		TFile *up_file = new TFile(file_up);
 		auto up_graph = (TGraphAsymmErrors *)up_file->Get(name_file_up);
 
-		for (int j = 0; j < up_graph->GetN(); j++) {
-        	double graph_xu = up_graph->GetErrorXhigh(j);
+		for (int j = 0; j < up_graph->GetN(); j++)
+		{
+			double graph_xu = up_graph->GetErrorXhigh(j);
 			double graph_xd = up_graph->GetErrorXlow(j);
 			double graph_yu = up_graph->GetErrorYhigh(j);
 			double graph_yd = up_graph->GetErrorYlow(j);
 			double graph_x = up_graph->GetPointX(j);
-			double graph_y = up_graph->GetPointY(j)*weight_file_up;
-        	up_graph->SetPoint(j, graph_x, graph_y);
-        	up_graph->SetPointError(j, graph_xd, graph_xu, graph_yd, graph_yu);
-    	}
+			double graph_y = up_graph->GetPointY(j) * weight_file_up;
+			up_graph->SetPoint(j, graph_x, graph_y);
+			up_graph->SetPointError(j, graph_xd, graph_xu, graph_yd, graph_yu);
+		}
 
 		base_graph->GetListOfFunctions()->Clear();
 		down_graph->GetListOfFunctions()->Clear();
@@ -233,6 +377,15 @@ int Systematic_Variation_JPsi()
 			cout << base_y - up_y << endl;
 		}
 
+		if (combinaison_label == "int")
+			updateGraphErrors(total_graph_int, syst_var_down, syst_var_up);
+		if (combinaison_label == "bin1")
+			updateGraphErrors(total_graph_bin1, syst_var_down, syst_var_up);
+		if (combinaison_label == "bin2")
+			updateGraphErrors(total_graph_bin2, syst_var_down, syst_var_up);
+		if (combinaison_label == "bin3")
+			updateGraphErrors(total_graph_bin3, syst_var_down, syst_var_up);
+
 		syst_var_down->SetMaximum(max_y_syst);
 		syst_var_down->SetMinimum(min_y_syst);
 		syst_var_down->GetXaxis()->SetTitleSize(30);
@@ -268,13 +421,16 @@ int Systematic_Variation_JPsi()
 		pad1->Draw(); // Draw the upper pad: pad1
 		pad1->cd();	  // pad1 becomes the current pad
 
+		cout << log_label << endl;
+		if (log_label == "log")
+		{
+			gPad->SetLogy();
+			base_graph->SetMaximum(10.0 * base_graph->GetMaximum());
+		}
+
 		base_graph->Draw("AP ");
 		down_graph->Draw("P");
 		up_graph->Draw("P");
-
-		cout << log_label << endl;
-		if (log_label == "log")
-			gPad->SetLogy();
 
 		legend->SetFillStyle(0);
 		legend->SetLineWidth(0);
@@ -330,6 +486,22 @@ int Systematic_Variation_JPsi()
 		else
 			cancG0->SaveAs(name_pdf + ".pdf");
 	}
+
+	cout<<endl;
+	cout<<"Integrated plot"<<endl;
+	printGraphContent(total_graph_int);
+
+	cout<<endl;
+	cout<<"Bin 1"<<endl;
+	printGraphContent(total_graph_bin1);
+
+	cout<<endl;
+	cout<<"Bin 2"<<endl;
+	printGraphContent(total_graph_bin2);
+
+	cout<<endl;
+	cout<<"Bin 3"<<endl;
+	printGraphContent(total_graph_bin3);
 
 	gApplication->Terminate();
 

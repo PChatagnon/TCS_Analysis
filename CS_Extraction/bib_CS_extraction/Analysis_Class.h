@@ -147,40 +147,40 @@ public: // Keep everything public for convenience
 	{
 		std::map<std::string, std::string> parameters = parseInputFile(parameters_file);
 
-		if(isParameter(parameters, "output_folder"))
+		if (isParameter(parameters, "output_folder"))
 			output_folder = TString(getParameterValue(parameters, "output_folder"));
 
-		if(isParameter(parameters, "name_pdf"))
+		if (isParameter(parameters, "name_pdf"))
 			name_pdf = TString(getParameterValue(parameters, "name_pdf"));
 
-		if(isParameter(parameters, "fit_procedure"))
+		if (isParameter(parameters, "fit_procedure"))
 			fit_procedure = TString(getParameterValue(parameters, "fit_procedure"));
 
-		if(isParameter(parameters, "bin_id"))
+		if (isParameter(parameters, "bin_id"))
 			bin_id = TString(getParameterValue(parameters, "bin_id"));
 
-		if(isParameter(parameters, "exclusivity_cut"))
+		if (isParameter(parameters, "exclusivity_cut"))
 			exclusivity_cut = Form("%s", getParameterValue(parameters, "exclusivity_cut").c_str());
 
-		if(isParameter(parameters, "kinematic_cut"))
+		if (isParameter(parameters, "kinematic_cut"))
 			kinematic_cut = Form("%s", getParameterValue(parameters, "kinematic_cut").c_str());
 
-		if(isParameter(parameters, "kinematic_cut_BG"))
+		if (isParameter(parameters, "kinematic_cut_BG"))
 			kinematic_cut_BG = Form("%s", getParameterValue(parameters, "kinematic_cut_BG").c_str());
 
-		if(isParameter(parameters, "data_cut"))
+		if (isParameter(parameters, "data_cut"))
 			data_cut = Form("%s", getParameterValue(parameters, "data_cut").c_str());
 
-		if(isParameter(parameters, "min_fit"))
+		if (isParameter(parameters, "min_fit"))
 			min_fit = stof(getParameterValue(parameters, "min_fit"));
 
-		if(isParameter(parameters, "max_fit"))
+		if (isParameter(parameters, "max_fit"))
 			max_fit = stof(getParameterValue(parameters, "max_fit"));
 
-		if(isParameter(parameters, "debug"))
+		if (isParameter(parameters, "debug"))
 			debug = (getParameterValue(parameters, "debug") == "true");
 
-		if(isParameter(parameters, "pull_pad"))
+		if (isParameter(parameters, "pull_pad"))
 			pull_pad = (getParameterValue(parameters, "pull_pad") == "true");
 	}
 
@@ -300,6 +300,20 @@ public: // Keep everything public for convenience
 		Latex_Table.Set_output_name(((string)name_pdf.Data()) + "_Latex_Table.txt");
 	}
 	//////////////////////////////
+
+	void redefineErrors(TH1D *hist)
+	{
+		if (!hist)
+			return; // Check if the histogram is valid
+
+		// Loop over all bins (from 1 to Nbins, 0 is underflow, N+1 is overflow)
+		for (int bin = 1; bin <= hist->GetNbinsX(); ++bin)
+		{
+			double content = hist->GetBinContent(bin);			   // Get the bin content
+			double error = (content > 0) ? std::sqrt(content) : 0; // Calculate new error as sqrt(content)
+			hist->SetBinError(bin, error);						   // Set the new error for the bin
+		}
+	}
 
 	/////// Processing function for the integrated CS //////
 	void Process_REC()
@@ -492,20 +506,20 @@ public: // Keep everything public for convenience
 			// Fit_func.Single_Gaussian_fit("SLER", Form("func_%i", i));
 			// Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
 
-			if(fit_procedure=="Default")
+			if (fit_procedure == "Default")
 				Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
 
-			if(fit_procedure=="Crystall ball Pol 2 BG")
+			if (fit_procedure == "Crystall ball Pol 2 BG")
 				Fit_func.Crystall_Ball_fit("SLER", Form("func_%i", i));
 
-			if(fit_procedure=="Crystall ball exp BG")
+			if (fit_procedure == "Crystall ball exp BG")
 				Fit_func.Crystall_Ball_fit_exp("SLER", Form("func_%i", i));
 
-			if(fit_procedure=="Pol 2 BG")
+			if (fit_procedure == "Pol 2 BG")
 				Fit_func.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
 
-			if(fit_procedure=="Double Gaussian")
-				Fit_func.Double_Gaussian_Fit("SLR",Form("func_%i", i));
+			if (fit_procedure == "Double Gaussian")
+				Fit_func.Double_Gaussian_Fit("SLR", Form("func_%i", i));
 			// Fit_func.Single_Gaussian_Fit_Flat_BG("SLR",Form("func_%i", i));
 			double chi2 = Fit_func.chi2;
 			double NDF = Fit_func.NDF;
@@ -637,7 +651,6 @@ public: // Keep everything public for convenience
 				pad2->Draw();
 				pad2->cd();
 
-
 				TH1F *pulls_histo = new TH1F("pullsHistogram", "", Data_hist->GetNbinsX(), Data_hist->GetXaxis()->GetXmin(), Data_hist->GetXaxis()->GetXmax());
 				for (int i = 1; i <= Data_hist->GetNbinsX(); ++i)
 				{
@@ -645,10 +658,10 @@ public: // Keep everything public for convenience
 					double dataError = Data_hist->GetBinError(i);
 					double fitValue = Fit_func.function->Eval(Data_hist->GetBinCenter(i));
 					double pull = (dataValue - fitValue) / dataError;
-					if(dataError==0.0)
+					if (dataError == 0.0)
 						pull = 0.0;
-					cout<<"pull "<<pull<<endl;
-					pulls_histo->SetBinContent(i,pull);
+					cout << "pull " << pull << endl;
+					pulls_histo->SetBinContent(i, pull);
 				}
 
 				pulls_histo->SetStats(kFALSE);
@@ -724,37 +737,47 @@ public: // Keep everything public for convenience
 			TH1D *hlast = (TH1D *)(hs_JPsi_BG->GetStack()->Last());
 			hlast->SetTitle(";" + label + ";Events");
 			hlast->GetYaxis()->SetTitleOffset(1.3);
-			hlast->Draw("hist");
-			hs_JPsi_BG->Draw("e hist same");
+			hlast->Draw("");			// hist");
+			hs_JPsi_BG->Draw("e same"); // hist");
 
 			cout << "///////////////////////" << endl;
 			cout << "FIT MC" << endl;
 			cout << "///////////////////////" << endl;
 			Fit_Function Fit_func_MC;
+			redefineErrors(hlast);
 			Fit_func_MC.Set_Data_hist(hlast);
 			Fit_func_MC.Set_Limits(min_fit, max_fit);
 			// Fit_func_MC.Single_Gaussian_fit("SLER", Form("func_MC_%i", i));
 
-			if(fit_procedure=="Default")
+			if (fit_procedure == "Default")
 				Fit_func_MC.Single_Gaussian_Int_fit("SLER", Form("func_MC_%i", i));
 
-			if(fit_procedure=="Crystall ball Pol 2 BG")
+			if (fit_procedure == "Crystall ball Pol 2 BG")
 				Fit_func_MC.Crystall_Ball_fit("SLER", Form("func_MC_%i", i));
 
-			if(fit_procedure=="Crystall ball exp BG")
+			if (fit_procedure == "Crystall ball exp BG")
 				Fit_func_MC.Crystall_Ball_fit_exp("SLER", Form("func_MC_%i", i));
 
-			if(fit_procedure=="Pol 2 BG")
+			if (fit_procedure == "Pol 2 BG")
 				Fit_func_MC.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_MC_%i", i));
 
-			if(fit_procedure=="Double Gaussian")
-				Fit_func_MC.Double_Gaussian_Fit("SLR",Form("func_MC_%i", i));
+			if (fit_procedure == "Double Gaussian")
+				Fit_func_MC.Double_Gaussian_Fit("SLR", Form("func_MC_%i", i));
 
 			//  Fit_func_MC.Single_Gaussian_Fit_Flat_BG("SLR",Form("func_MC_%i", i));
 			cout << "///////////////////////" << endl;
 
-			hlast->Draw("hist");
-			hs_JPsi_BG->Draw("e hist same");
+			//hs_JPsi_BG->SetLineWidth(1);
+			//hs_JPsi_BG->SetLineColor(kBlack);
+			//hs_JPsi_BG->SetMarkerSize(1);
+
+			hlast->SetLineWidth(1);
+			hlast->SetLineColor(kBlack);
+			hlast->SetMarkerStyle(1);
+			hlast->SetMarkerSize(1);
+
+			hlast->Draw("");// hist");	
+			hs_JPsi_BG->Draw("e same hist");//");// 
 			Fit_func_MC.Draw_Functions();
 
 			auto legend_acc = new TLegend(0.54, 0.87, 0.90, 0.60);

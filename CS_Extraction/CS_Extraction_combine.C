@@ -65,6 +65,12 @@ int CS_Extraction_combine()
 		JPsi_CS_analysis.Set_Parameters(parameters_file);
 	}
 
+	//Allow to overide some parameters
+	if (input.cmdOptionExists("-output_folder"))
+	{
+		JPsi_CS_analysis.output_folder = input.getCmdOption("-output_folder");
+	}
+
 	///////////////////////////////////////////////////////
 	////////////////   Setup the analysis  ////////////////
 	///////////////////////////////////////////////////////

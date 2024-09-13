@@ -298,7 +298,7 @@ public:
                 function->SetParameter(0, init_amp_fit);
                 function->SetParLimits(0, 0.000, 100000.);
                 function->SetParameter(1, 3.096);
-                function->SetParLimits(1, 3.02, 3.2);
+                function->SetParLimits(1, 3.07, 3.2);
                 function->SetParameter(2, 0.04);
                 function->SetParLimits(2, 0.025, 0.10);
 

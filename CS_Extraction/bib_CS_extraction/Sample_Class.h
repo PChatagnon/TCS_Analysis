@@ -28,7 +28,7 @@ public:
 
         void Setup_RGA()
         {
-                float Norm_factor = 12.00; // 2.00;
+                float Norm_factor = 50.00; // 2.00;
                 float cs_Jpsi = 57.6;
                 TString string_cs_Jpsi = to_string(Norm_factor * cs_Jpsi);
                 TString cs_no_rad_2018 = to_string(Norm_factor * 138.24); // Normalization to 57.6*Eg_psf(10.6-8.2)
