@@ -181,6 +181,7 @@ int analysisTCS_MC()
 	//////////////////////////////////////////////
 	MomentumCorrection MomCorr;
 	Energy_loss EnergyLoss(inbending, RGA_Fall2018);
+	Momentum_Corrections_Richard Momentum_Correction(inbending);
 
 	////////////////////////////////////////////
 	// Instanciate observables
@@ -829,9 +830,9 @@ int analysisTCS_MC()
 				///////////////////////////////////////////
 				// Momentum MC correction
 				///////////////////////////////////////////
-				// ev.Apply_MC_Correction(MomCorr);
 				// cout<<"Before correction "<<ev.Proton.Vector.P()<<endl;  /////////NEED TO BE VALIDATED/////////
-				// ev.Apply_Energy_loss(EnergyLoss);
+				ev.Apply_Energy_loss(EnergyLoss); //Correct proton energy loss
+				ev.Apply_Momentum_Correction(Momentum_Correction); //Correct momentum of leptons
 				// cout<<"After correction "<<ev.Proton.Vector.P()<<endl;
 				///////////////////////////////////////////
 			}

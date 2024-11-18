@@ -151,43 +151,43 @@ public:
 		{
 
 			fElectron = new TF1("fElectron", "([0]*exp([1]+[2]*x))   * ( [5] * x * x + [4] * x + [3])");
-			fElectron->SetParameters(9.12163,3.82015,-0.494202,-5.99238e-05,2.48287e-05,-4.64859e-06);
+			fElectron->SetParameters(9.12163, 3.82015, -0.494202, -5.99238e-05, 2.48287e-05, -4.64859e-06);
 			fPositron = new TF1("fPositron", "([0]*exp([1]+[2]*x))   * ( [5] * x * x + [4] * x + [3])");
-			fPositron->SetParameters(7.41971,3.48004,-0.571027,-4.44993e-05,1.29072e-05,-5.74303e-06);
+			fPositron->SetParameters(7.41971, 3.48004, -0.571027, -4.44993e-05, 1.29072e-05, -5.74303e-06);
 			fProtonCD = new TF1("fProtonCD", "([0]*exp([1]+[2]*x))   * ( [5] * x * x + [4] * x + [3])");
-			fProtonCD->SetParameters(29.1322,4.6503,-4.38504,-9.75476e-05,0.000154144,-3.08242e-08);
+			fProtonCD->SetParameters(29.1322, 4.6503, -4.38504, -9.75476e-05, 0.000154144, -3.08242e-08);
 			fProtonFD_HighTheta = new TF1("fProtonFD_HighTheta", "([0]*exp([1]+[2]*x))   * ( [5] * x * x + [4] * x + [3])");
-			fProtonFD_HighTheta->SetParameters(53.038,5.36114,-3.85085,-0.000139053,0.000272721,-0.000193624);
+			fProtonFD_HighTheta->SetParameters(53.038, 5.36114, -3.85085, -0.000139053, 0.000272721, -0.000193624);
 			fProtonFD_LowTheta = new TF1("fProtonFD_LowTheta", "([0]*exp([1]+[2]*x))   * ( [5] * x * x + [4] * x + [3])");
-			fProtonFD_LowTheta->SetParameters(44.2175,4.33855,-3.35995,-0.000146557,0.000265887,-0.000174179);
+			fProtonFD_LowTheta->SetParameters(44.2175, 4.33855, -3.35995, -0.000146557, 0.000265887, -0.000174179);
 		}
 		else if (!inbending && RGA_Fall2018)
 		{
 
 			fElectron = new TF1("fElectron", "([0]*exp([1]+[2]*x))   * ( [5] * x * x + [4] * x + [3])");
-			fElectron->SetParameters(9.12163,3.82015,-0.494202,-5.99238e-05,2.48287e-05,-4.64859e-06);
+			fElectron->SetParameters(9.12163, 3.82015, -0.494202, -5.99238e-05, 2.48287e-05, -4.64859e-06);
 			fPositron = new TF1("fPositron", "([0]*exp([1]+[2]*x))   * ( [5] * x * x + [4] * x + [3])");
-			fPositron->SetParameters(7.41971,3.48004,-0.571027,-4.44993e-05,1.29072e-05,-5.74303e-06);
+			fPositron->SetParameters(7.41971, 3.48004, -0.571027, -4.44993e-05, 1.29072e-05, -5.74303e-06);
 			fProtonCD = new TF1("fProtonCD", "([0]*exp([1]+[2]*x))   * ( [5] * x * x + [4] * x + [3])");
-			fProtonCD->SetParameters(29.1322,4.6503,-4.38504,-9.75476e-05,0.000154144,-3.08242e-08);
+			fProtonCD->SetParameters(29.1322, 4.6503, -4.38504, -9.75476e-05, 0.000154144, -3.08242e-08);
 			fProtonFD_HighTheta = new TF1("fProtonFD_HighTheta", "([0]*exp([1]+[2]*x))   * ( [5] * x * x + [4] * x + [3])");
-			fProtonFD_HighTheta->SetParameters(53.038,5.36114,-3.85085,-0.000139053,0.000272721,-0.000193624);
+			fProtonFD_HighTheta->SetParameters(53.038, 5.36114, -3.85085, -0.000139053, 0.000272721, -0.000193624);
 			fProtonFD_LowTheta = new TF1("fProtonFD_LowTheta", "([0]*exp([1]+[2]*x))   * ( [5] * x * x + [4] * x + [3])");
-			fProtonFD_LowTheta->SetParameters(44.2175,4.33855,-3.35995,-0.000146557,0.000265887,-0.000174179);
+			fProtonFD_LowTheta->SetParameters(44.2175, 4.33855, -3.35995, -0.000146557, 0.000265887, -0.000174179);
 		}
 		else if (!RGA_Fall2018)
 		{
 
 			fElectron = new TF1("fElectron", "([0]*exp([1]+[2]*x))   * ( [5] * x * x + [4] * x + [3])");
-			fElectron->SetParameters(9.12163,3.82015,-0.494202,-5.99238e-05,2.48287e-05,-4.64859e-06);
+			fElectron->SetParameters(9.12163, 3.82015, -0.494202, -5.99238e-05, 2.48287e-05, -4.64859e-06);
 			fPositron = new TF1("fPositron", "([0]*exp([1]+[2]*x))   * ( [5] * x * x + [4] * x + [3])");
-			fPositron->SetParameters(7.41971,3.48004,-0.571027,-4.44993e-05,1.29072e-05,-5.74303e-06);
+			fPositron->SetParameters(7.41971, 3.48004, -0.571027, -4.44993e-05, 1.29072e-05, -5.74303e-06);
 			fProtonCD = new TF1("fProtonCD", "([0]*exp([1]+[2]*x))   * ( [5] * x * x + [4] * x + [3])");
-			fProtonCD->SetParameters(29.1322,4.6503,-4.38504,-9.75476e-05,0.000154144,-3.08242e-08);
+			fProtonCD->SetParameters(29.1322, 4.6503, -4.38504, -9.75476e-05, 0.000154144, -3.08242e-08);
 			fProtonFD_HighTheta = new TF1("fProtonFD_HighTheta", "([0]*exp([1]+[2]*x))   * ( [5] * x * x + [4] * x + [3])");
-			fProtonFD_HighTheta->SetParameters(53.038,5.36114,-3.85085,-0.000139053,0.000272721,-0.000193624);
+			fProtonFD_HighTheta->SetParameters(53.038, 5.36114, -3.85085, -0.000139053, 0.000272721, -0.000193624);
 			fProtonFD_LowTheta = new TF1("fProtonFD_LowTheta", "([0]*exp([1]+[2]*x))   * ( [5] * x * x + [4] * x + [3])");
-			fProtonFD_LowTheta->SetParameters(44.2175,4.33855,-3.35995,-0.000146557,0.000265887,-0.000174179);
+			fProtonFD_LowTheta->SetParameters(44.2175, 4.33855, -3.35995, -0.000146557, 0.000265887, -0.000174179);
 		}
 	}
 
@@ -195,17 +195,72 @@ public:
 	{
 		double corr_factor_electron = 1. - fElectron->Eval(Electron->Vector.P());
 		double corr_factor_positron = 1. - fPositron->Eval(Positron->Vector.P());
-		double corr_factor_proton = 1. - (Proton->Vector.Theta()* TMath::RadToDeg() < 27. ? fProtonFD_LowTheta->Eval(Proton->Vector.P()) : fProtonFD_HighTheta->Eval(Proton->Vector.P()));
-		if(status_proton>4000)
+		double corr_factor_proton = 1. - (Proton->Vector.Theta() * TMath::RadToDeg() < 27. ? fProtonFD_LowTheta->Eval(Proton->Vector.P()) : fProtonFD_HighTheta->Eval(Proton->Vector.P()));
+		if (status_proton > 4000)
 			corr_factor_proton = 1. - fProtonCD->Eval(Proton->Vector.P());
-		Electron->Vector.SetRho(Electron->Vector.P()*corr_factor_electron);
-        Positron->Vector.SetRho(Positron->Vector.P()*corr_factor_positron);
-        Proton->Vector.SetRho(Proton->Vector.P()*corr_factor_proton);
-		/*Electron->Vector.SetXYZM(Electron->Vector.Px()/corr_factor_electron, Electron->Vector.Py()/corr_factor_electron , Electron->Vector.Pz()/corr_factor_electron, me);
-        Positron->Vector.SetXYZM(Positron->Vector.Px()/corr_factor_positron, Positron->Vector.Py()/corr_factor_positron, Positron->Vector.Pz()/corr_factor_positron, me);
-        Proton->Vector.SetXYZM(Proton->Vector.Px()/corr_factor_proton, Proton->Vector.Py()/corr_factor_proton, Proton->Vector.Pz()/corr_factor_proton, mp);*/
+		// Electron->Vector.SetRho(Electron->Vector.P() * corr_factor_electron);
+		// Positron->Vector.SetRho(Positron->Vector.P() * corr_factor_positron);
+		// Proton->Vector.SetRho(Proton->Vector.P() * corr_factor_proton);
+
+		// Electron->Vector.SetXYZM(Electron->Vector.Px()/corr_factor_electron, Electron->Vector.Py()/corr_factor_electron , Electron->Vector.Pz()/corr_factor_electron, me);
+		// Positron->Vector.SetXYZM(Positron->Vector.Px()/corr_factor_positron, Positron->Vector.Py()/corr_factor_positron, Positron->Vector.Pz()/corr_factor_positron, me);
+		Proton->Vector.SetXYZM(Proton->Vector.Px() / corr_factor_proton, Proton->Vector.Py() / corr_factor_proton, Proton->Vector.Pz() / corr_factor_proton, mp);
 	}
 };
+
+class Momentum_Corrections_Richard
+{
+public:
+	double corIn_PDep_noPhiDep[5];
+	double corOut_PDep_noPhiDep[5];
+	Momentum_Corrections_Richard(bool inbending)
+	{
+		if (inbending)
+		{
+			corIn_PDep_noPhiDep = {9.376e-03, -7.808e-04, 1.063e-04, -2.029e-02, 4.121e-02};
+			corOut_PDep_noPhiDep = {-6.520e-02, 7.099e-03, -5.929e-05, 2.145e-01, -1.153e-01};
+		}
+
+		else
+		{
+			corIn_PDep_noPhiDep = {-6.520e-02, 7.099e-03, -5.929e-05, 2.145e-01, -1.153e-01};
+			corOut_PDep_noPhiDep = {9.376e-03, -7.808e-04, 1.063e-04, -2.029e-02, 4.121e-02};
+		}
+	}
+
+	void Apply_Momentum_Corrections(Particle *Electron, Particle *Positron)
+	{
+
+		double elPCfc = Electron->Vector.P();
+		double poPCfc = Positron->Vector.P();
+
+		if (elPCfc < 1.0)
+		{
+			elPCfc = 1.0;
+		}
+
+		if (poPCfc < 1.0)
+		{
+			poPCfc = 1.0;
+		}
+
+		elPCorr = elPCfc.P() + (corIn_PDep_noPhiDep[0] + corIn_PDep_noPhiDep[1] * elPCfc + corIn_PDep_noPhiDep[2] * elPCfc * elPCfc + corIn_PDep_noPhiDep[3] / elPCfc + corIn_PDep_noPhiDep[4] / (elPCfc * elPCfc)) * elCorr.P();
+		poPCorr = poPCfc.P() + (corOut_PDep_noPhiDep[0] + corOut_PDep_noPhiDep[1] * poPCfc + corOut_PDep_noPhiDep[2] * poPCfc * poPCfc + corOut_PDep_noPhiDep[3] / poPCfc + corOut_PDep_noPhiDep[4] / (poPCfc * poPCfc)) * poCorr.P();
+
+		double elPxCorr = elPCorr * sin(Electron->Vector.Theta()) * cos(Electron->Vector.Phi());
+		double elPyCorr = elPCorr * sin(Electron->Vector.Theta()) * sin(Electron->Vector.Phi());
+		double elPzCorr = elPCorr * cos(Electron->Vector.Theta());
+
+		Electron->Vector.SetXYZM(elPxCorr, elPyCorr, elPzCorr, me);
+
+		double poPxCorr = poPCorr * sin(Positron->Vector.Theta()) * cos(Positron->Vector.Phi());
+		double poPyCorr = poPCorr * sin(Positron->Vector.Theta()) * sin(Positron->Vector.Phi());
+		double poPzCorr = poPCorr * cos(Positron->Vector.Theta());
+
+		Positron->Vector.SetXYZM(poPxCorr, poPyCorr, poPzCorr, me);
+	}
+
+}
 
 Particle RadiativeCorr(Particle vParticle, Particle Photons[], double thetaWin, double thetaWin1, int np)
 {

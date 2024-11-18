@@ -138,7 +138,7 @@ public:
                         float vy = PART.getFloat("vy", i);
                         float vz = PART.getFloat("vz", i);
                         float vt = PART.getFloat("vt", i);
-                        if ((pid == -11 && !IsEE_BG) || (IsEE_BG && pid==11 && recem==1 && status > 2000))
+                        if ((pid == -11 && !IsEE_BG) || (IsEE_BG && pid == 11 && recem == 1 && status > 2000))
                         {
                                 Positron.Vector.SetXYZM(px, py, pz, me);
                                 Positron.index = i;
@@ -153,7 +153,7 @@ public:
                                 recep++;
                         }
 
-                        if ((pid == 11 && !IsEE_BG) || (IsEE_BG && pid==11 && recem==0 && status > 2000))
+                        if ((pid == 11 && !IsEE_BG) || (IsEE_BG && pid == 11 && recem == 0 && status > 2000))
                         {
                                 if (status > 2000)
                                 {
@@ -229,7 +229,7 @@ public:
 
         int topology_FS()
         {
-                return (recem*100 + recep*10 +recp*1);
+                return (recem * 100 + recep * 10 + recp * 1);
         }
 
         bool pass_topology_cut()
@@ -328,7 +328,6 @@ public:
                 positron_Nphe = Positron.nphe(15);
                 electron_Nphe = Electron.nphe(15);
         }
-        
 
         void Associate_detector_resp(hipo::bank CHE, hipo::bank SCIN)
         {
@@ -401,7 +400,7 @@ public:
         {
                 Electron.Associate_DC_traj_to_Particle(TRAJ);
                 Positron.Associate_DC_traj_to_Particle(TRAJ);
-                Proton.Associate_DC_traj_to_Particle(TRAJ);  
+                Proton.Associate_DC_traj_to_Particle(TRAJ);
         }
 
         void Apply_Radiative_Correction(bool is_apply_corr)
@@ -418,7 +417,13 @@ public:
                 Proton = MomCorr.Apply_MC_Correction(Proton);
         }
 
-        void Apply_Energy_loss(Energy_loss energy_loss){
+        void Apply_Momentum_Correction(Momentum_Corrections_Richard MomCorr)
+        {
+                MomCorr.Apply_Momentum_Corrections(&Electron, &Positron);
+        }
+
+        void Apply_Energy_loss(Energy_loss energy_loss)
+        {
                 energy_loss.Apply_Energy_loss(&Electron, &Positron, &Proton, Proton.status);
         }
 
@@ -454,8 +459,7 @@ public:
                 L0 = qp2 * qp2 * sin(cm.theta * TMath::DegToRad()) * sin(cm.theta * TMath::DegToRad()) / 4.;
                 L = (((qp2 - t) * (qp2 - t)) - (b * b)) / 4.;
 
-                t_min = T_min( 0.0, mp*mp, qp2, mp*mp, s);
-
+                t_min = T_min(0.0, mp * mp, qp2, mp * mp, s);
 
                 real_flux = n_real(ebeam, Epho);
                 virtual_flux = n_virtual(ebeam, Epho, 0.02);
