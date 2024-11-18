@@ -211,8 +211,8 @@ public:
 class Momentum_Corrections_Richard
 {
 public:
-	double corIn_PDep_noPhiDep[5];
-	double corOut_PDep_noPhiDep[5];
+	std::array<double, 5> corIn_PDep_noPhiDep;
+    std::array<double, 5> corOut_PDep_noPhiDep;
 	Momentum_Corrections_Richard(bool inbending)
 	{
 		if (inbending)
@@ -244,8 +244,8 @@ public:
 			poPCfc = 1.0;
 		}
 
-		elPCorr = elPCfc.P() + (corIn_PDep_noPhiDep[0] + corIn_PDep_noPhiDep[1] * elPCfc + corIn_PDep_noPhiDep[2] * elPCfc * elPCfc + corIn_PDep_noPhiDep[3] / elPCfc + corIn_PDep_noPhiDep[4] / (elPCfc * elPCfc)) * elCorr.P();
-		poPCorr = poPCfc.P() + (corOut_PDep_noPhiDep[0] + corOut_PDep_noPhiDep[1] * poPCfc + corOut_PDep_noPhiDep[2] * poPCfc * poPCfc + corOut_PDep_noPhiDep[3] / poPCfc + corOut_PDep_noPhiDep[4] / (poPCfc * poPCfc)) * poCorr.P();
+		double elPCorr = elPCfc.P() + (corIn_PDep_noPhiDep[0] + corIn_PDep_noPhiDep[1] * elPCfc + corIn_PDep_noPhiDep[2] * elPCfc * elPCfc + corIn_PDep_noPhiDep[3] / elPCfc + corIn_PDep_noPhiDep[4] / (elPCfc * elPCfc)) * elCorr.P();
+		double poPCorr = poPCfc.P() + (corOut_PDep_noPhiDep[0] + corOut_PDep_noPhiDep[1] * poPCfc + corOut_PDep_noPhiDep[2] * poPCfc * poPCfc + corOut_PDep_noPhiDep[3] / poPCfc + corOut_PDep_noPhiDep[4] / (poPCfc * poPCfc)) * poCorr.P();
 
 		double elPxCorr = elPCorr * sin(Electron->Vector.Theta()) * cos(Electron->Vector.Phi());
 		double elPyCorr = elPCorr * sin(Electron->Vector.Theta()) * sin(Electron->Vector.Phi());
@@ -260,7 +260,7 @@ public:
 		Positron->Vector.SetXYZM(poPxCorr, poPyCorr, poPzCorr, me);
 	}
 
-}
+};
 
 Particle RadiativeCorr(Particle vParticle, Particle Photons[], double thetaWin, double thetaWin1, int np)
 {
