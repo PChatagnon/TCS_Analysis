@@ -244,8 +244,8 @@ public:
 			poPCfc = 1.0;
 		}
 
-		double elPCorr = elPCfc.P() + (corIn_PDep_noPhiDep[0] + corIn_PDep_noPhiDep[1] * elPCfc + corIn_PDep_noPhiDep[2] * elPCfc * elPCfc + corIn_PDep_noPhiDep[3] / elPCfc + corIn_PDep_noPhiDep[4] / (elPCfc * elPCfc)) * elCorr.P();
-		double poPCorr = poPCfc.P() + (corOut_PDep_noPhiDep[0] + corOut_PDep_noPhiDep[1] * poPCfc + corOut_PDep_noPhiDep[2] * poPCfc * poPCfc + corOut_PDep_noPhiDep[3] / poPCfc + corOut_PDep_noPhiDep[4] / (poPCfc * poPCfc)) * poCorr.P();
+		double elPCorr = elPCfc + (corIn_PDep_noPhiDep[0] + corIn_PDep_noPhiDep[1] * elPCfc + corIn_PDep_noPhiDep[2] * elPCfc * elPCfc + corIn_PDep_noPhiDep[3] / elPCfc + corIn_PDep_noPhiDep[4] / (elPCfc * elPCfc)) * elPCfc;
+		double poPCorr = poPCfc + (corOut_PDep_noPhiDep[0] + corOut_PDep_noPhiDep[1] * poPCfc + corOut_PDep_noPhiDep[2] * poPCfc * poPCfc + corOut_PDep_noPhiDep[3] / poPCfc + corOut_PDep_noPhiDep[4] / (poPCfc * poPCfc)) * poPCfc;
 
 		double elPxCorr = elPCorr * sin(Electron->Vector.Theta()) * cos(Electron->Vector.Phi());
 		double elPyCorr = elPCorr * sin(Electron->Vector.Theta()) * sin(Electron->Vector.Phi());
