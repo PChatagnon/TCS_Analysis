@@ -224,40 +224,89 @@ int analysisTCS_MC()
 	outT->Branch("trigger_bit", &trigger_bit, "trigger_bit/I");
 
 	std::vector<TString> fvars = {
-		"evt_num", 
+		"evt_num",
 		"topology_FS",
-		"t", "t_min", "MMassBeam", "Epho", "Epho_Gen", "qp2", "M", "xi", "s", "L", "L0", "Pt_Frac", "Q2", "theta", "phi", "helicity", "polaT",
-		"positron_SF", "electron_SF", "positron_score", "electron_score",
-		"weight", "acc", "acc_error", "real_flux_Gen", "virtual_flux_Gen", "virtual_flux_Frixione_Gen", "run", "analysis_stage", "topology",
-		"positron_Nphe", "electron_Nphe", "positron_HTCCt", "electron_HTCCt", "pass_EC_cut", "positron_HTCC_ECAL_match", "electron_HTCC_ECAL_match",
-		"status_elec", "status_posi", "status_prot",
-		"vx_elec", "vy_elec", "vz_elec",
-		"vx_posi", "vy_posi", "vz_posi",
-		"vx_prot", "vy_prot", "vz_prot",
-		"chi2_proton", "PCAL_sector_elec", "PCAL_sector_posi",
-		"lead_lep_p", "sub_lead_lep_p", "lead_lep_theta", "sub_lead_lep_theta",
-		"Triangular_Cut_elec", "Triangular_Cut_posi",
-		"CM_gamma_energy", "CM_gamma_energy_2",
-		"Q2_true", "E_k", "E_k_2",
+		"t",
+		"t_min",
+		"MMassBeam",
+		"Epho",
+		"Epho_Gen",
+		"qp2",
+		"M",
+		"xi",
+		"s",
+		"L",
+		"L0",
+		"Pt_Frac",
+		"Q2",
+		"theta",
+		"phi",
+		"helicity",
+		"polaT",
+		"positron_SF",
+		"electron_SF",
+		"positron_score",
+		"electron_score",
+		"weight",
+		"acc",
+		"acc_error",
+		"real_flux_Gen",
+		"virtual_flux_Gen",
+		"virtual_flux_Frixione_Gen",
+		"run",
+		"analysis_stage",
+		"topology",
+		"positron_Nphe",
+		"electron_Nphe",
+		"positron_HTCCt",
+		"electron_HTCCt",
+		"pass_EC_cut",
+		"positron_HTCC_ECAL_match",
+		"electron_HTCC_ECAL_match",
+		"status_elec",
+		"status_posi",
+		"status_prot",
+		"vx_elec",
+		"vy_elec",
+		"vz_elec",
+		"vx_posi",
+		"vy_posi",
+		"vz_posi",
+		"vx_prot",
+		"vy_prot",
+		"vz_prot",
+		"chi2_proton",
+		"PCAL_sector_elec",
+		"PCAL_sector_posi",
+		"lead_lep_p",
+		"sub_lead_lep_p",
+		"lead_lep_theta",
+		"sub_lead_lep_theta",
+		"Triangular_Cut_elec",
+		"Triangular_Cut_posi",
+		"CM_gamma_energy",
+		"CM_gamma_energy_2",
+		"Q2_true",
+		"E_k",
+		"E_k_2",
 		"PCAL_x_elec",
 		"PCAL_y_elec",
 		"PCAL_x_posi",
-		"PCAL_y_posi",};
+		"PCAL_y_posi",
+	};
 
 	if (PCAL_study)
 	{
-		fvars.insert(fvars.end(), {
-									  "PCAL_x_elec",
-									  "PCAL_y_elec",
-									  "PCAL_U_elec",
-									  "PCAL_V_elec",
-									  "PCAL_W_elec",
-									  "PCAL_x_posi",
-									  "PCAL_y_posi",
-									  "PCAL_U_posi",
-									  "PCAL_V_posi",
-									  "PCAL_W_posi"
-								  });
+		fvars.insert(fvars.end(), {"PCAL_x_elec",
+								   "PCAL_y_elec",
+								   "PCAL_U_elec",
+								   "PCAL_V_elec",
+								   "PCAL_W_elec",
+								   "PCAL_x_posi",
+								   "PCAL_y_posi",
+								   "PCAL_U_posi",
+								   "PCAL_V_posi",
+								   "PCAL_W_posi"});
 	}
 
 	if (CALO_study)
@@ -482,7 +531,7 @@ int analysisTCS_MC()
 		else if (IsElSpectro)
 			cout << "Running on ElSpectro Simulation"
 				 << "\n";
-				 
+
 		cout << TString(argv[i]) << "\n";
 		cout << "Is hipo ? " << IsHipo << "\n";
 		cout << "////////////////////////////////////////////"
@@ -683,7 +732,7 @@ int analysisTCS_MC()
 					{
 						Keep_event = qa->Golden(run, event_nb);
 					}
-					//if (no_QADB)
+					// if (no_QADB)
 					//{
 					//	qa->SetMaskBit("TotalOutlier", false);
 					//	qa->SetMaskBit("TerminalOutlier", false);
@@ -692,7 +741,7 @@ int analysisTCS_MC()
 					//	qa->SetMaskBit("LowLiveTime", false);
 					//	qa->SetMaskBit("Misc", false);
 					//	Keep_event = qa->Pass(run, event_nb);
-					//}
+					// }
 				}
 
 				int bad_runs[] = {5610, 5615, 6631, 6757};
@@ -771,17 +820,15 @@ int analysisTCS_MC()
 					Plots.Fill_2D("multiplicity_2D_ep_p", ev.recep, ev.recp, 1);
 				}
 
-				if ( (ev.topology_FS()!=11 && ev.topology_FS()!=101 && ev.topology_FS()!=110 && ev.topology_FS()!=111) && inclusive_topology)
-				{
-					continue;
-				}
-				
-				
-				if (!ev.pass_topology_cut() && !inclusive_topology)
+				if ((ev.topology_FS() != 11 && ev.topology_FS() != 101 && ev.topology_FS() != 110 && ev.topology_FS() != 111) && inclusive_topology)
 				{
 					continue;
 				}
 
+				if (!ev.pass_topology_cut() && !inclusive_topology)
+				{
+					continue;
+				}
 
 				///////////////////////////////////////////
 
@@ -831,8 +878,11 @@ int analysisTCS_MC()
 				// Momentum MC correction
 				///////////////////////////////////////////
 				// cout<<"Before correction "<<ev.Proton.Vector.P()<<endl;  /////////NEED TO BE VALIDATED/////////
-				ev.Apply_Energy_loss(EnergyLoss); //Correct proton energy loss
-				ev.Apply_Momentum_Correction(Momentum_Correction); //Correct momentum of leptons
+				ev.Apply_Energy_loss(EnergyLoss); // Correct proton energy loss
+				if (IsData)
+				{
+					ev.Apply_Momentum_Correction(Momentum_Correction); // Correct momentum of leptons
+				}
 				// cout<<"After correction "<<ev.Proton.Vector.P()<<endl;
 				///////////////////////////////////////////
 			}
