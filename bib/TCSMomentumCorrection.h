@@ -204,7 +204,10 @@ public:
 
 		// Electron->Vector.SetXYZM(Electron->Vector.Px()/corr_factor_electron, Electron->Vector.Py()/corr_factor_electron , Electron->Vector.Pz()/corr_factor_electron, me);
 		// Positron->Vector.SetXYZM(Positron->Vector.Px()/corr_factor_positron, Positron->Vector.Py()/corr_factor_positron, Positron->Vector.Pz()/corr_factor_positron, me);
-		Proton->Vector.SetXYZM(Proton->Vector.Px() / corr_factor_proton, Proton->Vector.Py() / corr_factor_proton, Proton->Vector.Pz() / corr_factor_proton, mp);
+		double pPxCorr = corr_factor_proton * sin(Proton->Vector.Theta()) * cos(Proton->Vector.Phi());
+		double pPyCorr = corr_factor_proton * sin(Proton->Vector.Theta()) * sin(Proton->Vector.Phi());
+		double pPzCorr = corr_factor_proton * cos(Proton->Vector.Theta());
+		Proton->Vector.SetXYZM(pPxCorr, pPyCorr, pPzCorr, mp);
 	}
 };
 
