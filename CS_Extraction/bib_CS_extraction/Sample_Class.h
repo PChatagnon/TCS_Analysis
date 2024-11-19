@@ -5,7 +5,7 @@ class Sample
 {
 public:
         // By default RGA values are used
-        TString sample_folder = "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/Pass2_Samples/";
+        TString sample_folder = "/Users/pc281174/Desktop/JPsi_analysis/Pass2_Samples/";
         float lumi_factor = 1316.875;
 
         // Store the samples
@@ -14,6 +14,7 @@ public:
         std::vector<TTree *> reduced_samples_tree{};
         std::vector<int> ngen{};
         std::vector<TTree *> MC_tree{};
+        double reduction_factor_Gen = 5.0;
 
         TChain *Data_tree = new TChain("tree");
         TTree *filtered_Data_tree;
@@ -25,6 +26,24 @@ public:
         TString color_BG = "42";
 
         Sample() {}
+
+        void clearAttribute()
+        {
+                //delete Data_tree;
+                //delete filtered_Data_tree;
+//
+                //for (TTree *tree : reduced_samples_tree)
+                //{
+                //        delete tree; // Release memory for each TTree
+                //}
+                //reduced_samples_tree.clear();
+//
+                //for (TTree *tree : MC_tree)
+                //{
+                //        delete tree; // Release memory for each TTree
+                //}
+                //MC_tree.clear();
+        }
 
         void Setup_RGA()
         {
@@ -55,14 +74,14 @@ public:
 
                 // JPsi BH radiative correction
                 //  Fall2018
-        //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_45_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_45_fall_18_inbending});
-        //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_55_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_55_fall_18_inbending});
-        //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_50_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_inbending});
-        //        // Outbending
-        //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_40_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_40_fall_18_outbending});
-        //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_50_out_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_outbending});
-        //        // Spring2019
-        //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Spring2019_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_spring_19_inbending});
+                //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_45_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_45_fall_18_inbending});
+                //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_55_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_55_fall_18_inbending});
+                //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_50_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_inbending});
+                //        // Outbending
+                //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_40_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_40_fall_18_outbending});
+                //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Fall2018_50_out_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_outbending});
+                //        // Spring2019
+                //        samples.push_back({sample_folder + "Simulation/JPsi_Rad_corr_Spring2019_022024.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_spring_19_inbending});
 
                 // JPsi VM radiative correction
                 //  Fall2018
@@ -74,9 +93,6 @@ public:
                 samples.push_back({sample_folder + "Simulation/JPsi_VM_Rad/JPsi_VM_Fall2018_50_out.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_fall_18_outbending});
                 // Spring2019
                 samples.push_back({sample_folder + "Simulation/JPsi_VM_Rad/JPsi_VM_Spring2019.root", string_cs_Jpsi, color_JPsi, "J#psi", charge_50_spring_19_inbending});
-
-
-
 
                 /*samples.push_back({sample_folder + "Simulation/JPsi_Fall2018_45_022024.root", cs_no_rad_2018, color_JPsi, "J#psi", charge_45_fall_18_inbending});
                 samples.push_back({sample_folder + "Simulation/JPsi_Fall2018_50_022024.root", cs_no_rad_2018, color_JPsi, "J#psi", charge_50_fall_18_inbending});
@@ -160,6 +176,7 @@ public:
 
         void Filter_Sample_Trees(TCut kinematic_cut, TCut kinematic_cut_BG, TCut exclusivity_cut)
         {
+                TRandom3 random(static_cast<unsigned int>(std::time(0)));
                 cout << "Start reducing sample trees... \n";
                 for (int j = 0; j < samples.size(); j++)
                 {
@@ -185,11 +202,16 @@ public:
 
                         TTree *MC_sample_tree = (TTree *)sample_file->Get("tree_Gen");
                         TFile *f3 = new TFile("small2.root", "recreate");
-                        TTree *filtered_MC_tree = (TTree *)sample_file->Get("tree_Gen");
+                        TString selection_MC = Form("((virtual_flux_Gen)>0) && rndm() < %f", (1.0 / reduction_factor_Gen));
+                        ; //
+
+                        TTree *filtered_MC_tree = MC_sample_tree->CopyTree(selection_MC); //(TTree *)sample_file->Get("tree_Gen");
+
                         if (samples[j][3] == "J#psi")
                         {
-                                filtered_MC_tree = MC_sample_tree->CopyTree("((virtual_flux_Gen)>0)");
+                                filtered_MC_tree = MC_sample_tree->CopyTree(selection_MC); //"((virtual_flux_Gen)>0)");
                         }
+                        cout << filtered_MC_tree->GetEntries() << endl;
                         MC_tree.push_back(filtered_MC_tree);
                 }
                 cout << "Finished reducing sample trees !\n";

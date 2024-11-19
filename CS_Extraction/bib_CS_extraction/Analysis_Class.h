@@ -43,12 +43,12 @@ public: // Keep everything public for convenience
 	/////////////////////////////////
 
 	////// Store the path to data and output //////
-	TString output_folder = "/mnt/c/Users/pierrec/Desktop/TCS_Analysis/TCS_Analysis_2022/TCS_Analysis/CS_Extraction/";
+	TString output_folder = "/Users/pc281174/Desktop/JPsi_analysis/CS_Extraction/";
 	TString name_pdf = "CS_Extraction_Gauss_exp_1";
 	/////////////////////////////////
 
 	////// Store kinematic and exclusivity cuts //////
-	TCut kinematic_cut = "pass_EC_cut &&  Proton.Theta()*180./3.141592<35. && M>2.6 && (Electron.P() > 1.7) && (Positron.P() > 1.7) && positron_SF>0.15 && electron_SF>0.15 && ( Positron.P()<4.0 || (Positron.P()>4.0 && positron_score>0.05)) && ( Electron.P()<4.0 || (Electron.P()>4.0 && electron_score>0.05))  && positron_HTCC_ECAL_match==1. && electron_HTCC_ECAL_match==1.";
+	TCut kinematic_cut = "pass_EC_cut &&  Proton.Theta()*180./3.141592<35. && M>2.6 && (Electron.P() > 1.7) && (Positron.P() > 1.7) && positron_SF>0.15 && electron_SF>0.15 && ( Positron.P()<4.0 || (Positron.P()>4.0 && positron_score>0.00)) && ( Electron.P()<4.0 || (Electron.P()>4.0 && electron_score>0.00))  && positron_HTCC_ECAL_match==1. && electron_HTCC_ECAL_match==1.";
 	TCut kinematic_cut_BG = "Proton.Theta()*180./3.141592<35. &&  M>2.6 && (Electron.P() > 1.7) && (Positron.P() > 1.7)";
 	TCut exclusivity_cut = "abs(MMassBeam)<0.4  && abs(Q2)<0.5";
 	TCut data_cut = "abs(positron_HTCCt-electron_HTCCt)<4";
@@ -391,7 +391,6 @@ public: // Keep everything public for convenience
 
 			THStack *hs = new THStack("hs", "");
 			THStack *hs_JPsi = new THStack("hs_JPsi", "");
-			THStack *hs_JPsi_BG = new THStack("hs_JPsi_BG", "");
 
 			TH1D *BG_hist = new TH1D(Form("BG_hist_%i", i), "BG_hist", nBins, min_histo, max_histo);
 			TH1D *BG_only_hist = new TH1D(Form("BG_only_hist_%i", i), "BG_only_hist", nBins, min_histo, max_histo);
@@ -430,7 +429,8 @@ public: // Keep everything public for convenience
 				sample_hist->SetLineWidth(0);
 				sample_hist->SetLineColor(kBlack);
 				sample_hist->SetMarkerSize(0);
-				sample_hist->SetFillColorAlpha(std::stoi(Analysis_Sample.samples[j][2].Data()), 0.50);
+				sample_hist->SetFillColor(std::stoi(Analysis_Sample.samples[j][2].Data()));
+				// sample_hist->SetFillColorAlpha(std::stoi(Analysis_Sample.samples[j][2].Data()), 0.50);
 				sample_hist->SetStats(kFALSE);
 
 				hs->SetTitle(";" + label + ";Events");
@@ -473,7 +473,7 @@ public: // Keep everything public for convenience
 			if (ratio_pad || pull_pad)
 				limit_lower_pad = 0.3;
 			// Upper plot will be in pad1
-			TPad *pad1 = new TPad("pad1", "pad1", 0, limit_lower_pad, 1, 1.0);
+			TPad *pad1 = new TPad(Form("pad1%i", i), Form("pad1%i", i), 0, limit_lower_pad, 1, 1.0);
 
 			if (ratio_pad || pull_pad)
 				pad1->SetBottomMargin(0.003);
@@ -560,7 +560,7 @@ public: // Keep everything public for convenience
 			w_c.push_back(w_c_from_BG_estimation); // 1.0); // 0.7); //.push_back(w_c_norm); // Data_hist->Integral(Data_hist->FindBin(2.6), Data_hist->FindBin(2.9)) / BG_hist->Integral(BG_hist->FindBin(2.6), BG_hist->FindBin(2.9)));
 
 			legend->AddEntry(Fit_func.function_Signal, Form("J#psi fit (%3.1f #pm %3.1f)  ", nb_JPsi, error_nb_JPsi), "l");
-			legend->AddEntry(Fit_func.function_Signal, Form("#Chi^{2} %3.1f, NdF %3.1f, #Chi^{2}/NdF %3.1f ", chi2, NDF, chi2 / NDF), "");
+			legend->AddEntry(Fit_func.function_Signal, Form("#Chi^{2}: %3.1f, NdF: %3.1f, #Chi^{2}/NdF: %3.1f ", chi2, NDF, chi2 / NDF), "");
 
 			TText *t = new TText();
 			t->SetTextAlign(22);
@@ -592,7 +592,7 @@ public: // Keep everything public for convenience
 			if (ratio_pad)
 			{
 				cancG0->cd(); // Go back to the main canvas before defining pad2
-				TPad *pad2 = new TPad("pad2", "pad2", 0, 0.05, 1, limit_lower_pad);
+				TPad *pad2 = new TPad(Form("pad2%i", i), Form("pad2%i", i), 0, 0.05, 1, limit_lower_pad);
 				pad2->SetTopMargin(0);
 				// pad2->SetTicks(1, 1);
 				pad2->SetGridy();
@@ -644,14 +644,14 @@ public: // Keep everything public for convenience
 			if (pull_pad)
 			{
 				cancG0->cd(); // Go back to the main canvas before defining pad2
-				TPad *pad2 = new TPad("pad2", "pad2", 0, 0.05, 1, limit_lower_pad);
+				TPad *pad2 = new TPad(Form("pad3%i", i), Form("pad3%i", i), 0, 0.05, 1, limit_lower_pad);
 				pad2->SetTopMargin(0);
 				pad2->SetGridy();
 				pad2->SetBottomMargin(0.3);
 				pad2->Draw();
 				pad2->cd();
 
-				TH1F *pulls_histo = new TH1F("pullsHistogram", "", Data_hist->GetNbinsX(), Data_hist->GetXaxis()->GetXmin(), Data_hist->GetXaxis()->GetXmax());
+				TH1F *pulls_histo = new TH1F(Form("pullsHistogram%i", i), "", Data_hist->GetNbinsX(), Data_hist->GetXaxis()->GetXmin(), Data_hist->GetXaxis()->GetXmax());
 				for (int i = 1; i <= Data_hist->GetNbinsX(); ++i)
 				{
 					double dataValue = Data_hist->GetBinContent(i);
@@ -660,7 +660,7 @@ public: // Keep everything public for convenience
 					double pull = (dataValue - fitValue) / dataError;
 					if (dataError == 0.0)
 						pull = 0.0;
-					cout << "pull " << pull << endl;
+					// cout << "pull " << pull << endl;
 					pulls_histo->SetBinContent(i, pull);
 				}
 
@@ -687,7 +687,7 @@ public: // Keep everything public for convenience
 
 				pulls_histo->GetXaxis()->SetTitleSize(30);
 				pulls_histo->GetXaxis()->SetTitleFont(43);
-				pulls_histo->GetXaxis()->SetTitleOffset(4.);
+				// pulls_histo->GetXaxis()->SetTitleOffset(4.);
 				pulls_histo->GetXaxis()->SetLabelFont(43);
 				pulls_histo->GetXaxis()->SetLabelSize(30);
 			}
@@ -697,9 +697,161 @@ public: // Keep everything public for convenience
 				cancG0->SaveAs(output_folder + name_pdf + ".pdf(");
 			else
 				cancG0->SaveAs(output_folder + name_pdf + ".pdf");
-			cancG0->SaveAs(output_string + ".pdf");
-			cancG0->SaveAs(output_string + ".png");
+			// cancG0->SaveAs(output_string + ".pdf");
+			// cancG0->SaveAs(output_string + ".png");
 
+			/////////////////////////////////////////
+			/////////////////////////////////////////
+
+			/////////////////////////////////////////
+			/////Acc calculation
+			/////////////////////////////////////////
+
+			/////Simulate the background and normalize simulations to data
+			float nb_event_bg = (Fit_func.function_BG->Integral(min_histo, max_histo)) / (Data_hist->GetXaxis()->GetBinWidth(2));
+			TString name_BG_func = Form("func_%i_bg_func", i);
+
+			TH1D *h_only_JPsi = (TH1D *)(hs_JPsi->GetStack()->Last());
+			double nb_JPsi_integral_MC_raw = h_only_JPsi->Integral(h_only_JPsi->FindBin(2.95), h_only_JPsi->FindBin(3.15));
+
+			double additional_norm_factor = 4.0;
+			double normalization_MC_to_data = additional_norm_factor * nb_JPsi; // nb_JPsi_integral_MC_raw;
+			cout << "Normalization factor for signal in MC: " << normalization_MC_to_data << endl;
+
+			int iteration_Acc = 1000;
+			double nb_jpsi_per_iteration[iteration_Acc];
+			Fit_Function Fit_func_MC;
+
+			TCanvas *cancAcc = new TCanvas("", "can0", 1500, 1000);
+
+			TH1D *BG_add_hist = new TH1D(Form("BG_add_hist_%i", i), "", nbBins, min_histo, max_histo);
+			TH1D *h_JPsi_norm = new TH1D(Form("h_JPsi_norm_%i", i), "", nbBins, min_histo, max_histo);
+			TH1D *hlast = new TH1D(Form("h_last_%i", i), "", nbBins, min_histo, max_histo);
+			//TH1D *hs_JPsi_BG = new TH1D(Form("h_last_%i", i), "", nbBins, min_histo, max_histo);
+			THStack *hs_JPsi_BG = new THStack("hs_JPsi_BG", "");
+
+			for (int l = 0; l < iteration_Acc; l++)
+			{
+				BG_add_hist->Reset();
+				h_JPsi_norm->Reset();
+				hlast->Reset();
+
+				BG_add_hist->FillRandom(name_BG_func, nb_event_bg);
+				BG_add_hist->SetLineWidth(0);
+				BG_add_hist->SetLineColor(kBlack);
+				BG_add_hist->SetMarkerSize(0);
+				BG_add_hist->SetFillColorAlpha(kCyan, 0.65);
+				BG_add_hist->SetStats(kFALSE);
+
+				h_JPsi_norm->SetFillColorAlpha(420, 0.50);
+				h_JPsi_norm->SetLineWidth(0);
+				for (int n = 0; n < normalization_MC_to_data; n++)
+				{
+					h_JPsi_norm->Fill(h_only_JPsi->GetRandom());
+				}
+
+				// h_only_JPsi->Scale(normalization_MC_to_data);
+				double nb_JPsi_integral_MC = h_JPsi_norm->Integral();
+
+				
+				/////End simulate the background
+
+				hlast->Add(h_JPsi_norm);
+				hlast->Add(BG_add_hist);
+				
+
+
+				// cout << "///////////////////////" << endl;
+				// cout << "FIT MC" << endl;
+				/// cout << "///////////////////////" << endl;
+				
+				redefineErrors(hlast);
+				Fit_func_MC.Set_Data_hist(hlast);
+				Fit_func_MC.Set_Limits(min_fit, max_fit);
+				// Fit_func_MC.Single_Gaussian_fit("SLER", Form("func_MC_%i", i));
+
+				if (fit_procedure == "Default")
+					Fit_func_MC.Single_Gaussian_Int_fit("QSLER", Form("func_MC_%i", i));
+
+				if (fit_procedure == "Crystall ball Pol 2 BG")
+					Fit_func_MC.Crystall_Ball_fit("QSLER", Form("func_MC_%i", i));
+
+				if (fit_procedure == "Crystall ball exp BG")
+					Fit_func_MC.Crystall_Ball_fit_exp("QSLER", Form("func_MC_%i", i));
+
+				if (fit_procedure == "Pol 2 BG")
+					Fit_func_MC.Single_Gaussian_Int_fit_Pol_BG_V2("QSLER", Form("func_MC_%i", i));
+
+				if (fit_procedure == "Double Gaussian")
+					Fit_func_MC.Double_Gaussian_Fit("QSLR", Form("func_MC_%i", i));
+
+				double nb_JPsi_MC = Fit_func_MC.Get_Integral_Signal(); // nb_JPsi_integral; //
+				nb_jpsi_per_iteration[l] = nb_JPsi_MC;
+
+				if (l == 0)
+				{
+					cancAcc->cd();
+
+					hlast->SetTitle(";" + label + ";Events");
+					hlast->GetYaxis()->SetTitleOffset(1.3);
+					hlast->SetStats(kFALSE);
+					hlast->Draw("");
+
+					hlast->SetLineWidth(1);
+					hlast->SetLineColor(kBlack);
+					hlast->SetMarkerStyle(1);
+					hlast->SetMarkerSize(1);
+
+					hs_JPsi_BG->Add(h_JPsi_norm);
+					hs_JPsi_BG->Add(BG_add_hist);
+
+					hlast->Draw("");
+					hs_JPsi_BG->Draw("e same hist");
+					Fit_func_MC.Draw_Functions();
+
+					auto legend_acc = new TLegend(0.54, 0.87, 0.90, 0.60);
+					legend_acc->AddEntry(h_only_JPsi, Form("nb JPsi %3.1f", nb_JPsi_integral_MC), "f1");
+					legend_acc->AddEntry(Fit_func_MC.function_Signal, Form("J#psi fit (%3.1f #pm %3.1f)  ", Fit_func_MC.Get_Integral_Signal(), Fit_func_MC.Get_Integral_Error_Signal()), "l");
+					legend_acc->AddEntry(Fit_func_MC.function_Signal, Form("#Chi^{2} %3.1f, NdF %3.1f, #Chi^{2}/NdF %3.1f ", Fit_func_MC.chi2, Fit_func_MC.NDF, Fit_func_MC.chi2 / Fit_func_MC.NDF), "");
+					legend_acc->SetFillStyle(0);
+					legend_acc->SetLineWidth(0);
+					legend_acc->Draw("same ");
+
+					cancAcc->SaveAs(output_folder + name_pdf + ".pdf");
+				}
+			}
+
+			double numerator_Acc = 0;
+			for (int i = 0; i < iteration_Acc; ++i)
+			{
+				numerator_Acc += nb_jpsi_per_iteration[i];
+			}
+
+			double iteration_in_double = static_cast<double>(iteration_Acc);
+			cout << "total rec " << numerator_Acc << endl;
+			cout << "iteration_in_double " << iteration_in_double << endl;
+			cout << "Acc num " << nb_JPsi_integral_MC_raw * numerator_Acc / (additional_norm_factor * nb_JPsi * iteration_in_double) << endl;
+			Acc_Num.push_back(nb_JPsi_integral_MC_raw * numerator_Acc / (additional_norm_factor * nb_JPsi * iteration_in_double)); //(sample_Acc->Integral());
+
+			TCanvas *cancAccIteration = new TCanvas("", "cancAccIteration", 1500, 1000);
+			cancAccIteration->cd();
+			TH1D *histAccIteration = new TH1D(Form("histAccIteration%i", i), "", 50, 0.0, 2.0 * numerator_Acc / iteration_in_double);
+			for (int i = 0; i < iteration_Acc; ++i)
+			{
+				histAccIteration->Fill(nb_jpsi_per_iteration[i]);
+			}
+
+			gStyle->SetOptStat(1110);
+			histAccIteration->Draw("hist");
+			histAccIteration->SetTitle(";Fitted events;Counts");
+
+			cancAccIteration->SaveAs(output_folder + name_pdf + ".pdf");
+
+			gStyle->SetOptStat(1);
+
+			// Compute_Acc();
+
+			/* //Store old code for now
 			/////////////////////////////////////////
 			/////Acc calculation
 			/////////////////////////////////////////
@@ -767,17 +919,17 @@ public: // Keep everything public for convenience
 			//  Fit_func_MC.Single_Gaussian_Fit_Flat_BG("SLR",Form("func_MC_%i", i));
 			cout << "///////////////////////" << endl;
 
-			//hs_JPsi_BG->SetLineWidth(1);
-			//hs_JPsi_BG->SetLineColor(kBlack);
-			//hs_JPsi_BG->SetMarkerSize(1);
+			// hs_JPsi_BG->SetLineWidth(1);
+			// hs_JPsi_BG->SetLineColor(kBlack);
+			// hs_JPsi_BG->SetMarkerSize(1);
 
 			hlast->SetLineWidth(1);
 			hlast->SetLineColor(kBlack);
 			hlast->SetMarkerStyle(1);
 			hlast->SetMarkerSize(1);
 
-			hlast->Draw("");// hist");	
-			hs_JPsi_BG->Draw("e same hist");//");// 
+			hlast->Draw("");				 // hist");
+			hs_JPsi_BG->Draw("e same hist"); //");//
 			Fit_func_MC.Draw_Functions();
 
 			auto legend_acc = new TLegend(0.54, 0.87, 0.90, 0.60);
@@ -794,8 +946,107 @@ public: // Keep everything public for convenience
 			// cout<<"acc num 1 "<<sample_Acc->Integral()<<endl;
 
 			cancAcc->SaveAs(output_folder + name_pdf + ".pdf");
+			*/
 		}
 	}
+	//
+	// void Compute_Acc()
+	//{
+	//	/////////////////////////////////////////
+	//	/////Acc calculation
+	//	/////////////////////////////////////////
+	//
+	//	/////Simulate the background and normalize simulations to data
+	//	float nb_event_bg = (Fit_func.function_BG->Integral(min_histo, max_histo)) / (Data_hist->GetXaxis()->GetBinWidth(2));
+	//	TH1D *BG_add_hist = new TH1D("BG_add_hist", "", nbBins, min_histo, max_histo);
+	//	TString name_BG_func = Form("func_%i_bg_func", i);
+	//	BG_add_hist->FillRandom(name_BG_func, 50000);
+	//	BG_add_hist->Scale(nb_event_bg / 50000.);
+	//	// BG_add_hist->Scale(nb_event_bg/50000.); //Remove the BH background
+	//	BG_add_hist->SetLineWidth(0);
+	//	BG_add_hist->SetLineColor(kBlack);
+	//	BG_add_hist->SetMarkerSize(0);
+	//	BG_add_hist->SetFillColorAlpha(kCyan, 0.65);
+	//	BG_add_hist->SetStats(kFALSE);
+	//	TH1D *h_only_JPsi = (TH1D *)(hs_JPsi->GetStack()->Last());
+	//
+	//	double nb_JPsi_integral_MC_raw = h_only_JPsi->Integral(h_only_JPsi->FindBin(2.95), h_only_JPsi->FindBin(3.15));
+	//	double normalization_MC_to_data = 2.0 * nb_JPsi / nb_JPsi_integral_MC_raw;
+	//
+	//	cout << "Normalization factor for signal in MC: " << normalization_MC_to_data << endl;
+	//
+	//	h_only_JPsi->Scale(normalization_MC_to_data);
+	//	double nb_JPsi_integral_MC = h_only_JPsi->Integral();
+	//
+	//	hs_JPsi_BG->Add(h_only_JPsi);
+	//	hs_JPsi_BG->Add(BG_add_hist);
+	//
+	//	// hs_JPsi->Add(BG_add_hist);
+	//	/////End simulate the background
+	//
+	//	TCanvas *cancAcc = new TCanvas("", "can0", 1500, 1000);
+	//	cancAcc->cd();
+	//	TH1D *hlast = (TH1D *)(hs_JPsi_BG->GetStack()->Last());
+	//	hlast->SetTitle(";" + label + ";Events");
+	//	hlast->GetYaxis()->SetTitleOffset(1.3);
+	//	hlast->Draw("");			// hist");
+	//	hs_JPsi_BG->Draw("e same"); // hist");
+	//
+	//	cout << "///////////////////////" << endl;
+	//	cout << "FIT MC" << endl;
+	//	cout << "///////////////////////" << endl;
+	//	Fit_Function Fit_func_MC;
+	//	redefineErrors(hlast);
+	//	Fit_func_MC.Set_Data_hist(hlast);
+	//	Fit_func_MC.Set_Limits(min_fit, max_fit);
+	//	// Fit_func_MC.Single_Gaussian_fit("SLER", Form("func_MC_%i", i));
+	//
+	//	if (fit_procedure == "Default")
+	//		Fit_func_MC.Single_Gaussian_Int_fit("SLER", Form("func_MC_%i", i));
+	//
+	//	if (fit_procedure == "Crystall ball Pol 2 BG")
+	//		Fit_func_MC.Crystall_Ball_fit("SLER", Form("func_MC_%i", i));
+	//
+	//	if (fit_procedure == "Crystall ball exp BG")
+	//		Fit_func_MC.Crystall_Ball_fit_exp("SLER", Form("func_MC_%i", i));
+	//
+	//	if (fit_procedure == "Pol 2 BG")
+	//		Fit_func_MC.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_MC_%i", i));
+	//
+	//	if (fit_procedure == "Double Gaussian")
+	//		Fit_func_MC.Double_Gaussian_Fit("SLR", Form("func_MC_%i", i));
+	//
+	//	//  Fit_func_MC.Single_Gaussian_Fit_Flat_BG("SLR",Form("func_MC_%i", i));
+	//	cout << "///////////////////////" << endl;
+	//
+	//	// hs_JPsi_BG->SetLineWidth(1);
+	//	// hs_JPsi_BG->SetLineColor(kBlack);
+	//	// hs_JPsi_BG->SetMarkerSize(1);
+	//
+	//	hlast->SetLineWidth(1);
+	//	hlast->SetLineColor(kBlack);
+	//	hlast->SetMarkerStyle(1);
+	//	hlast->SetMarkerSize(1);
+	//
+	//	hlast->Draw("");				 // hist");
+	//	hs_JPsi_BG->Draw("e same hist"); //");//
+	//	Fit_func_MC.Draw_Functions();
+	//
+	//	auto legend_acc = new TLegend(0.54, 0.87, 0.90, 0.60);
+	//	legend_acc->AddEntry(h_only_JPsi, Form("nb JPsi %3.1f", nb_JPsi_integral_MC), "f1");
+	//	legend_acc->AddEntry(Fit_func_MC.function_Signal, Form("J#psi fit (%3.1f #pm %3.1f)  ", Fit_func_MC.Get_Integral_Signal(), Fit_func_MC.Get_Integral_Error_Signal()), "l");
+	//	legend_acc->AddEntry(Fit_func_MC.function_Signal, Form("#Chi^{2} %3.1f, NdF %3.1f, #Chi^{2}/NdF %3.1f ", Fit_func_MC.chi2, Fit_func_MC.NDF, Fit_func_MC.chi2 / Fit_func_MC.NDF), "");
+	//	legend_acc->SetFillStyle(0);
+	//	legend_acc->SetLineWidth(0);
+	//	legend_acc->Draw("same ");
+	//
+	//	double nb_JPsi_MC = Fit_func_MC.Get_Integral_Signal(); // nb_JPsi_integral; //
+	//
+	//	Acc_Num.push_back(nb_JPsi_MC / normalization_MC_to_data); //(sample_Acc->Integral());
+	//	// cout<<"acc num 1 "<<sample_Acc->Integral()<<endl;
+	//
+	//	cancAcc->SaveAs(output_folder + name_pdf + ".pdf");
+	//}
 
 	void Process_MC()
 	{
@@ -940,7 +1191,7 @@ public: // Keep everything public for convenience
 			}
 			cout << "Average Flux " << avg_flux << "\n";
 			TH1D *MC_stack_hist = (TH1D *)(hs_MC->GetStack()->Last());
-			double Acc = Acc_Num[i] / (MC_stack_hist->Integral());
+			double Acc = Acc_Num[i] / (Analysis_Sample.reduction_factor_Gen * MC_stack_hist->Integral());
 
 			cout << "Acc calculation: num " << Acc_Num[i] << " denom: " << (MC_stack_hist->Integral()) << "\n";
 
@@ -1010,7 +1261,12 @@ public: // Keep everything public for convenience
 			t->DrawTextNDC(.5, .53, "Preliminary");
 
 			cancG0->SaveAs(output_folder + name_pdf + ".pdf");
+
+			gSystem->ProcessEvents();
 		}
+
+		// Analysis_Sample.clearAttribute();
+		cout << "Size " << Analysis_Sample.MC_tree.size() << endl;
 	}
 
 	void Finalize_int_CS_Calculation()
@@ -1093,7 +1349,8 @@ public: // Keep everything public for convenience
 
 		TText *t = new TText();
 		t->SetTextAlign(22);
-		t->SetTextColorAlpha(kGray, 0.70);
+		// t->SetTextColorAlpha(kGray, 0.70);
+		t->SetTextColor(kGray);
 		t->SetTextFont(40);
 		t->SetTextSize(0.25);
 		t->SetTextAngle(25);

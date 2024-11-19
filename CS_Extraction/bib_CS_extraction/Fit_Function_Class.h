@@ -40,6 +40,7 @@ public:
         TMatrixDSym cov_matrix;
         int nb_param;
         bool gaussian = true; 
+        bool fit_status;
         // TFitResultPtr fitResult;
 
         Fit_Function() {}
@@ -57,23 +58,23 @@ public:
 
         void Draw_Functions()
         {
-                cout << "Draw function" << endl;
+                //cout << "Draw function" << endl;
                 // this->function->SetFillColorAlpha(kRed, 0.8);
                 // this->function->Draw("3 same"); // "E3" for a one-sigma band
                 this->function->Draw("same l");
-                cout << "Draw BG" << endl;
+                //cout << "Draw BG" << endl;
                 this->function_BG->Draw("same l");
-                cout << "Draw signal" << endl;
+                //cout << "Draw signal" << endl;
                 this->function_Signal->Draw("same l");
-                cout << "End drawing" << endl;
+                //cout << "End drawing" << endl;
         }
 
         float Get_Integral_Signal()
         {
-                cout << "NB jpsi" << endl;
+                /*cout << "NB jpsi" << endl;
                 cout << function_Signal->GetParameter(0) / (double)(input_Data_hist->GetXaxis()->GetBinWidth(2)) << endl;
                 cout << (function_Signal->Integral(0., 10.)) / (input_Data_hist->GetXaxis()->GetBinWidth(2)) << endl;
-                cout << function_Signal->GetParameter(0) << endl;
+                cout << function_Signal->GetParameter(0) << endl;*/
 
                 double integral = 0.0;
                 if (gaussian)
@@ -102,9 +103,9 @@ public:
                 }
                 else if (gaussian)
                 {
-                        cout << "error NB jpsi" << endl;
+                        /*cout << "error NB jpsi" << endl;
                         cout << function->GetParError(0) / (double)(input_Data_hist->GetXaxis()->GetBinWidth(2)) << endl;
-                        cout << function->GetParError(0) << endl;
+                        cout << function->GetParError(0) << endl;*/
                         return function->GetParError(0) / (double)(input_Data_hist->GetXaxis()->GetBinWidth(2));
                 }
 
@@ -122,8 +123,8 @@ public:
                 TString name_signal = name + "_sig_func";
                 TString name_bg = name + "_bg_func";
 
-                cout << "name BG func" << endl;
-                cout << name_bg << endl;
+                //cout << "name BG func" << endl;
+                //cout << name_bg << endl;
 
                 // function = new TF1(name_function,"[0]*crystalball_function(x, [1], [2], [3], [4]) + ([5]+[6]*(x-3.1) + [7]*(x-3.1)*(x-3.1))",min_fit, max_fit);
                 function = new TF1(name_function, "[0]*ROOT::Math::crystalball_function(x,[3], [4], [2], [1]) + ([5]+[6]*(x-3.1) + [7]*(x-3.1)*(x-3.1))", min_fit, max_fit);
@@ -154,6 +155,7 @@ public:
                 cov_matrix = fitResult->GetCovarianceMatrix();
                 chi2 = fitResult->Chi2();
                 NDF = fitResult->Ndf();
+                fit_status = fitResult->IsValid();
 
                 function_Signal = new TF1(name_signal, "[0]*crystalball_function(x, [1], [2], [3], [4])", min_fit, max_fit);
                 function_Signal->SetParameter(0, function->GetParameter(0));
@@ -184,8 +186,8 @@ public:
                 TString name_signal = name + "_sig_func";
                 TString name_bg = name + "_bg_func";
 
-                cout << "name BG func" << endl;
-                cout << name_bg << endl;
+                //cout << "name BG func" << endl;
+                //cout << name_bg << endl;
 
                 function = new TF1(name_function, "[0]*crystalball_function(x, [1], [2], [3], [4]) +  exp([5]+[6]*x)", min_fit, max_fit);
                 // function = new TF1(name_function,"[0]*ROOT::Math::crystalball_function(x,[3], [4], [2], [1]) + ([5]+[6]*(x-3.1) + [7]*(x-3.1)*(x-3.1))",min_fit, max_fit);
@@ -215,6 +217,7 @@ public:
                 cov_matrix = fitResult->GetCovarianceMatrix();
                 chi2 = fitResult->Chi2();
                 NDF = fitResult->Ndf();
+                fit_status = fitResult->IsValid();
 
                 function_Signal = new TF1(name_signal, "[0]*crystalball_function(x, [1], [2], [3], [4])", min_fit, max_fit);
                 function_Signal->SetParameter(0, function->GetParameter(0));
@@ -242,8 +245,8 @@ public:
                 TString name_signal = name + "_sig_func";
                 TString name_bg = name + "_bg_func";
 
-                cout << "name BG func" << endl;
-                cout << name_bg << endl;
+                //cout << "name BG func" << endl;
+                //cout << name_bg << endl;
 
                 function = new TF1(name_function, "([0])*exp(-0.5*pow((x-[1])/[2],2)) + exp([3]+[4]*x)", min_fit, max_fit);
                 int init_amp_fit = (input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) > 0.0) ? input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) : 5;
@@ -265,6 +268,7 @@ public:
                 cov_matrix = fitResult->GetCovarianceMatrix();
                 chi2 = fitResult->Chi2();
                 NDF = fitResult->Ndf();
+                fit_status = fitResult->IsValid();
 
                 function_Signal = new TF1(name_signal, "([0])*exp(-0.5*pow((x-[1])/[2],2)) ", min_fit, max_fit);
                 function_Signal->SetParameter(0, function->GetParameter(0));
@@ -290,8 +294,8 @@ public:
                 TString name_signal = name + "_sig_func";
                 TString name_bg = name + "_bg_func";
 
-                cout << "name BG func" << endl;
-                cout << name_bg << endl;
+                //cout << "name BG func" << endl;
+                //cout << name_bg << endl;
 
                 function = new TF1(name_function, "([0]/(2.5066*[2]))*exp(-0.5*pow((x-[1])/[2],2)) + exp([3]+[4]*x)", min_fit, max_fit);
                 int init_amp_fit = (input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) > 0.0) ? input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) : 5;
@@ -302,7 +306,7 @@ public:
                 function->SetParameter(2, 0.04);
                 function->SetParLimits(2, 0.025, 0.10);
 
-                function->SetParameter(3, 7.);
+                function->SetParameter(3, 5.);
                 function->SetParLimits(3, 0.00, 100000.);
                 function->SetParameter(4, -2.);
                 function->SetParLimits(4, -100000., 0.0);
@@ -313,6 +317,7 @@ public:
                 cov_matrix = fitResult->GetCovarianceMatrix();
                 chi2 = fitResult->Chi2();
                 NDF = fitResult->Ndf();
+                fit_status = fitResult->IsValid();
 
                 function_Signal = new TF1(name_signal, "([0]/(2.5066*[2]))*exp(-0.5*pow((x-[1])/[2],2)) ", min_fit, max_fit);
                 function_Signal->SetParameter(0, function->GetParameter(0));
@@ -338,8 +343,8 @@ public:
                 TString name_signal = name + "_sig_func";
                 TString name_bg = name + "_bg_func";
 
-                cout << "name BG func" << endl;
-                cout << name_bg << endl;
+                //cout << "name BG func" << endl;
+                //cout << name_bg << endl;
 
                 function = new TF1(name_function, "([0]/(2.5066*[2]))*exp(-0.5*pow((x-[1])/[2],2)) + ([3]+[4]*(x-3.1)+[5]*(x-3.1)*(x-3.1))", min_fit, max_fit);
                 int init_amp_fit = (input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) > 0.0) ? input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) : 5;
@@ -363,6 +368,7 @@ public:
                 cov_matrix = fitResult->GetCovarianceMatrix();
                 chi2 = fitResult->Chi2();
                 NDF = fitResult->Ndf();
+                fit_status = fitResult->IsValid();
 
                 function_Signal = new TF1(name_signal, "([0]/(2.5066*[2]))*exp(-0.5*pow((x-[1])/[2],2)) ", min_fit, max_fit);
                 function_Signal->SetParameter(0, function->GetParameter(0));
@@ -389,8 +395,8 @@ public:
                 TString name_signal = name + "_sig_func";
                 TString name_bg = name + "_bg_func";
 
-                cout << "name BG func" << endl;
-                cout << name_bg << endl;
+                //cout << "name BG func" << endl;
+                //cout << name_bg << endl;
 
                 function = new TF1(name_function, "([0]/(2.5066*[2]))*exp(-0.5*pow((x-[1])/[2],2)) + ([3]+[5]*(x-[4])*(x-[4]))", min_fit, max_fit);
                 int init_amp_fit = (input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) > 0.0) ? input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) : 5;
@@ -414,6 +420,7 @@ public:
                 cov_matrix = fitResult->GetCovarianceMatrix();
                 chi2 = fitResult->Chi2();
                 NDF = fitResult->Ndf();
+                fit_status = fitResult->IsValid();
 
                 function_Signal = new TF1(name_signal, "([0]/(2.5066*[2]))*exp(-0.5*pow((x-[1])/[2],2)) ", min_fit, max_fit);
                 function_Signal->SetParameter(0, function->GetParameter(0));
@@ -466,6 +473,7 @@ public:
                 cov_matrix = fitResult->GetCovarianceMatrix();
                 chi2 = fitResult->Chi2();
                 NDF = fitResult->Ndf();
+                fit_status = fitResult->IsValid();
 
                 function_Signal = new TF1(name_signal, "([0])*exp(-0.5*pow((x-[1])/[2],2)) + ([3])*exp(-0.5*pow((x-[1])/[4],2))", min_fit, max_fit);
                 function_Signal->SetParameter(0, function->GetParameter(0));
@@ -514,6 +522,7 @@ public:
                 cov_matrix = fitResult->GetCovarianceMatrix();
                 chi2 = fitResult->Chi2();
                 NDF = fitResult->Ndf();
+                fit_status = fitResult->IsValid();
                 // TMatrixDSym covarianceMatrix(function->GetNpar());
                 // covarianceMatrix = fitResult->GetCovarianceMatrix();
                 // cov_matrix = covarianceMatrix;
