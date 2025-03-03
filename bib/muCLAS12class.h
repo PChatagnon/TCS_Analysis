@@ -8,9 +8,10 @@ float ebeam = 10.604;
 
 const float Pi = 3.14159269;
 
-const int PCAL = 1;
-const int ECIN = 4;
-const int ECOUT = 7;
+// This is taken care of in clas12root
+//const int PCAL = 1;
+//const int ECIN = 4;
+//const int ECOUT = 7;
 
 ////////////////////Configuration booleans
 bool all_Gen_vector = false;

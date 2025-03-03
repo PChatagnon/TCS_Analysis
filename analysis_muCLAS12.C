@@ -13,7 +13,6 @@
 #include "TCanvas.h"
 #include "TH3F.h"
 #include "bib/muCLAS12class.h"
-#include "bib/TCSfunc.h"
 #include "bib/muEvent.h"
 #include "bib/muMCEvent.h"
 #include "bib/InputParser.h"
