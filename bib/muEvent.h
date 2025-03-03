@@ -117,7 +117,7 @@ public:
                 return (rec_mu_m == 1 && rec_mu_p == 1);
         }
 
-        void Associate_detector_resp(hipo::bank CHE, hipo::bank SCIN)
+        void Associate_detector_resp(hipo::bank CHE, hipo::bank SCIN, , hipo::bank CALO)
         {
                 vector<Particle> Particles = {Electron, mu_minus, mu_plus};
 
@@ -179,31 +179,31 @@ public:
                                 }
                         }
 
-                        for (int c = 0; c < Calo.getRows(); c++)
+                        for (int c = 0; c < CALO.getRows(); c++)
                         {
-                                int Calopindex = Calo.getInt("pindex", c);
-                                int Calosector = Calo.getInt("sector", c);
-                                int Calolayer = Calo.getInt("layer", c);
-                                int Calodetector = Calo.getInt("detector", c);
-                                float Caloenergy = Calo.getFloat("energy", c);
-                                float Calox = Calo.getFloat("x", c);
-                                float Caloy = Calo.getFloat("y", c);
-                                float Caloz = Calo.getFloat("z", c);
-                                float Calohx = Calo.getFloat("hx", c);
-                                float Calohy = Calo.getFloat("hy", c);
-                                float Calohz = Calo.getFloat("hz", c);
-                                float Calou = Calo.getFloat("lu", c);
-                                float Calov = Calo.getFloat("lv", c);
-                                float Calow = Calo.getFloat("lw", c);
-                                float Calodu = Calo.getFloat("du", c);
-                                float Calodv = Calo.getFloat("dv", c);
-                                float Calodw = Calo.getFloat("dw", c);
-                                float Calom2u = Calo.getFloat("m2u", c);
-                                float Calom2v = Calo.getFloat("m2v", c);
-                                float Calom2w = Calo.getFloat("m2w", c);
-                                float Calom3u = Calo.getFloat("m3u", c);
-                                float Calom3v = Calo.getFloat("m3v", c);
-                                float Calom3w = Calo.getFloat("m3w", c);
+                                int Calopindex = CALO.getInt("pindex", c);
+                                int Calosector = CALO.getInt("sector", c);
+                                int Calolayer = CALO.getInt("layer", c);
+                                int Calodetector = CALO.getInt("detector", c);
+                                float Caloenergy = CALO.getFloat("energy", c);
+                                float Calox = CALO.getFloat("x", c);
+                                float Caloy = CALO.getFloat("y", c);
+                                float Caloz = CALO.getFloat("z", c);
+                                float Calohx = CALO.getFloat("hx", c);
+                                float Calohy = CALO.getFloat("hy", c);
+                                float Calohz = CALO.getFloat("hz", c);
+                                float Calou = CALO.getFloat("lu", c);
+                                float Calov = CALO.getFloat("lv", c);
+                                float Calow = CALO.getFloat("lw", c);
+                                float Calodu = CALO.getFloat("du", c);
+                                float Calodv = CALO.getFloat("dv", c);
+                                float Calodw = CALO.getFloat("dw", c);
+                                float Calom2u = CALO.getFloat("m2u", c);
+                                float Calom2v = CALO.getFloat("m2v", c);
+                                float Calom2w = CALO.getFloat("m2w", c);
+                                float Calom3u = CALO.getFloat("m3u", c);
+                                float Calom3v = CALO.getFloat("m3v", c);
+                                float Calom3w = CALO.getFloat("m3w", c);
 
                                 if (Calopindex == (particle.index))
                                 {

@@ -256,7 +256,7 @@ int analysis_muCLAS12()
 			///////////////////////////////////////////
 			// Associate detector responses and do EC cuts
 			///////////////////////////////////////////
-			ev.Associate_detector_resp(CHE, SCIN);
+			ev.Associate_detector_resp(CHE, SCIN, CALO);
 			//ev.Associate_DC_traj(TRAJ);
 			//ev.Set_Nphe_HTCC();
 			///////////////////////////////////////////
