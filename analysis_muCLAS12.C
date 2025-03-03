@@ -213,7 +213,7 @@ int analysis_muCLAS12()
 			int np_input = PART.getRows();
 			ev.Set_nb_part(np_input);
 			
-			MC_ev.Set_MC_Particles(MCEVENT, MCPART);
+			MC_ev.Set_MC_Particles(MCEVENT, MCPART, true);
 			MC_ev.Get_Kinematics();
 			
 
