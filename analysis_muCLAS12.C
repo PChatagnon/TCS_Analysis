@@ -131,18 +131,18 @@ int analysis_muCLAS12()
 
 	TLorentzVector gen_Electron, gen_mu_plus, gen_mu_minus, gen_Proton;
 
-	if (all_Gen_vector)
-	{
-		outT_Gen->Branch("gen_Electron", "TLorentzVector", &gen_Electron);
-		outT_Gen->Branch("gen_mu_plus", "TLorentzVector", &gen_mu_plus);
-		outT_Gen->Branch("gen_mu_minus", "TLorentzVector", &gen_mu_minus);
-		outT_Gen->Branch("gen_Proton", "TLorentzVector", &gen_Proton);
-
-		outT->Branch("gen_Electron", "TLorentzVector", &gen_Electron);
-		outT->Branch("gen_mu_plus", "TLorentzVector", &gen_mu_plus);
-		outT->Branch("gen_mu_minus", "TLorentzVector", &gen_mu_minus);
-		outT->Branch("gen_Proton", "TLorentzVector", &gen_Proton);
-	}
+	
+	cout<"Include all gen particles"<<endl;
+	outT_Gen->Branch("gen_Electron", "TLorentzVector", &gen_Electron);
+	outT_Gen->Branch("gen_mu_plus", "TLorentzVector", &gen_mu_plus);
+	outT_Gen->Branch("gen_mu_minus", "TLorentzVector", &gen_mu_minus);
+	outT_Gen->Branch("gen_Proton", "TLorentzVector", &gen_Proton);
+	
+	outT->Branch("gen_Electron", "TLorentzVector", &gen_Electron);
+	outT->Branch("gen_mu_plus", "TLorentzVector", &gen_mu_plus);
+	outT->Branch("gen_mu_minus", "TLorentzVector", &gen_mu_minus);
+	outT->Branch("gen_Proton", "TLorentzVector", &gen_Proton);
+	
 	///////////////////////////////////////////
 	
 
@@ -221,13 +221,12 @@ int analysis_muCLAS12()
 			outVars_Gen["Q2_Gen"] = MC_ev.Q2_Gen;
 			
 
-			if (all_Gen_vector)
-			{
-				gen_Electron = MC_ev.Electron;
-				gen_mu_plus = MC_ev.mu_plus;
-				gen_mu_minus = MC_ev.mu_minus;
-				gen_Proton = MC_ev.Proton;
-			}
+			
+			gen_Electron = MC_ev.Electron;
+			gen_mu_plus = MC_ev.mu_plus;
+			gen_mu_minus = MC_ev.mu_minus;
+			gen_Proton = MC_ev.Proton;
+			
 			
             outT_Gen->Fill();
 			
