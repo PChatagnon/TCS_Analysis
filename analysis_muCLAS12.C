@@ -120,9 +120,6 @@ int analysis_muCLAS12()
 	TString fvars_Gen[] = {
 		"M_Gen", 
 		"Q2_Gen",
-		"vz_elec_Gen", 
-		"vz_posi_Gen", 
-		"vz_prot_Gen",
 		};
 
 	std::map<TString, Float_t> outVars_Gen;
@@ -154,7 +151,7 @@ int analysis_muCLAS12()
 	// Get file name
 	////////////////////////////////////////////
 	int nbf = 0;
-	int nb_event = 0;
+	int nbEvent = 0;
 	for (Int_t i = input.getCmdIndex("-f") + 2; i < input.getCmdIndex("-ef") + 1; i++)
 	{
 		nbf++;
@@ -222,13 +219,11 @@ int analysis_muCLAS12()
 
 			outVars_Gen["M_Gen"] = MC_ev.M_Gen;
 			outVars_Gen["Q2_Gen"] = MC_ev.Q2_Gen;
-			outVars_Gen["vz_elec_Gen"] = MC_ev.vz_elec_Gen;
-			outVars_Gen["vz_posi_Gen"] = MC_ev.vz_posi_Gen;
-			outVars_Gen["vz_prot_Gen"] = MC_ev.vz_prot_Gen;
+			
 
 			if (all_Gen_vector)
 			{
-				gen_Electron = MC_ev.Electron_2;
+				gen_Electron = MC_ev.Electron;
 				gen_mu_plus = MC_ev.mu_plus;
 				gen_mu_minus = MC_ev.mu_minus;
 				gen_Proton = MC_ev.Proton;
@@ -276,7 +271,7 @@ int analysis_muCLAS12()
 			outVars["n_strip_ECIN_mu_minus"] = ev.mu_minus.N_strip(ECIN);
 			outVars["n_strip_ECOUT_mu_plus"] = ev.mu_plus.N_strip(ECOUT);
 			outVars["n_strip_ECOUT_mu_minus"] = ev.mu_minus.N_strip(ECOUT);
-			outVars["vz_elec"] = MCev.vz_elec_Gen;
+			outVars["vz_elec"] = MC_ev.vz_elec_Gen;
 			outVars["vz_mu_plus"] = ev.mu_plus.vertex.z;
 			outVars["vz_mu_minus"] = ev.mu_minus.vertex.z;
 
@@ -300,7 +295,7 @@ int analysis_muCLAS12()
 
 	cout << "Tree written" << endl;
 	cout << "nb of file " << nbf << "\n";
-	cout << "nb of events " << nb_event << "\n";
+	cout << "nb of events " << nbEvent << "\n";
 
 	// gROOT->ProcessLine(".q");
 
