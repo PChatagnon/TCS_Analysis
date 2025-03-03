@@ -15,6 +15,7 @@ const float Pi = 3.14159269;
 
 ////////////////////Configuration booleans
 bool all_Gen_vector = true;
+bool isElSpectro = false;
 ////////////////////
 
 class Track

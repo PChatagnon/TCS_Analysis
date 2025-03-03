@@ -83,7 +83,7 @@ public:
                         {
                                 mu_minus.Vector.SetXYZM(px, py, pz, mMu);
                                 mu_minus.index = i;
-                                mu_minus.pid = -211;
+                                mu_minus.pid = -13;
                                 mu_minus.beta = beta;
                                 mu_minus.status = status;
                                 mu_minus.chi2 = chi2;
@@ -98,7 +98,7 @@ public:
                         {
                                 mu_plus.Vector.SetXYZM(px, py, pz, mMu);
                                 mu_plus.index = i;
-                                mu_plus.pid = 211;
+                                mu_plus.pid = 13;
                                 mu_plus.beta = beta;
                                 mu_plus.status = status;
                                 mu_plus.chi2 = chi2;
