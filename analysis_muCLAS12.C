@@ -132,12 +132,12 @@ int analysis_muCLAS12()
 	TLorentzVector gen_Electron, gen_mu_plus, gen_mu_minus, gen_Proton;
 
 	
-	cout<"Include all gen particles"<<endl;
+	cout<<"Include all gen particles"<<endl;
 	outT_Gen->Branch("gen_Electron", "TLorentzVector", &gen_Electron);
 	outT_Gen->Branch("gen_mu_plus", "TLorentzVector", &gen_mu_plus);
 	outT_Gen->Branch("gen_mu_minus", "TLorentzVector", &gen_mu_minus);
 	outT_Gen->Branch("gen_Proton", "TLorentzVector", &gen_Proton);
-	
+
 	outT->Branch("gen_Electron", "TLorentzVector", &gen_Electron);
 	outT->Branch("gen_mu_plus", "TLorentzVector", &gen_mu_plus);
 	outT->Branch("gen_mu_minus", "TLorentzVector", &gen_mu_minus);
