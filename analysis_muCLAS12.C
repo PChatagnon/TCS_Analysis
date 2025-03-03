@@ -1,0 +1,321 @@
+#include "TFile.h"
+#include "TTree.h"
+#include "TChain.h"
+#include "TH1F.h"
+#include "TF1.h"
+#include "TTreeReader.h"
+#include "TTreeReaderValue.h"
+#include "TTreeReaderArray.h"
+#include "TH2D.h"
+#include "TLorentzVector.h"
+#include "TVector3.h"
+#include "TMath.h"
+#include "TCanvas.h"
+#include "TH3F.h"
+#include "bib/muCLAS12class.h"
+#include "bib/TCSfunc.h"
+#include "bib/muEvent.h"
+#include "bib/muMCEvent.h"
+#include "bib/InputParser.h"
+
+#include "hipo4/reader.h"
+#include "rcdb_reader.h"
+
+// QADB header and namespace
+#include "QADB.h"
+using namespace QA;
+
+#include <ctime> // time_t
+#include <cstdio>
+using namespace std;
+
+#define ADDVAR(x, name, t, tree) tree->Branch(name, x, TString(name) + TString(t))
+
+int analysis_muCLAS12()
+{
+
+	time_t begin, intermediate, end; // time_t is a datatype to store time values.
+
+	time(&begin); // note time before execution
+
+	gROOT->SetBatch(kTRUE);
+	gStyle->SetOptStat(111);
+	gStyle->SetPalette(55);
+	gStyle->SetLabelSize(.05, "xyz");
+	gStyle->SetTitleSize(.05, "xyz");
+	gStyle->SetTitleSize(.07, "t");
+	gStyle->SetMarkerStyle(13);
+	gStyle->SetOptFit(1);
+
+
+	Int_t argc = gApplication->Argc();
+	char **argv = gApplication->Argv();
+	Input input(argc, argv);
+
+	/////////Parse command line/////////////
+	bool option = input.cmdOptionExists("-option");
+	/////////////////////////////////////////
+
+	if (input.cmdOptionExists("-energy"))
+	{
+		ebeam = std::stof(input.getCmdOption("-energy"));
+	}
+
+	/////////End parse command line/////////////
+
+
+	double nbrecEvent = 0;
+
+	TString nameFiles = "";
+
+	TString type = "REC";
+
+
+	///////////////////////////////////////////
+	// Setup the TTree output
+	TString output_file = (TString)(input.getCmdOption("-o")); // argv[4]);
+	TFile *outFile = new TFile(Form("outputTCS_%s.root", output_file.Data()), "recreate");
+	
+	TTree *outT = new TTree("tree", "tree");
+	TTree *outT_Gen = new TTree("tree_Gen", "tree_Gen");
+
+	TLorentzVector tree_Electron, tree_mu_plus, tree_mu_minus, tree_Missing;
+	outT->Branch("Electron", "TLorentzVector", &tree_Electron);
+	outT->Branch("mu_plus", "TLorentzVector", &tree_mu_plus);
+	outT->Branch("mu_minus", "TLorentzVector", &tree_mu_minus);
+	outT->Branch("Missing", "TLorentzVector", &tree_Missing);
+
+	int trigger_bit;
+	outT->Branch("trigger_bit", &trigger_bit, "trigger_bit/I");
+
+	std::vector<TString> fvars = {
+		"evt_num",
+		"run",
+		"analysis_stage",
+		"topology",
+		
+		"MMassProt",
+		"Epho",
+		"M",
+		"Q2",
+		"mu_plus_SF",
+		"mu_minus_SF",	
+		"n_strip_PCAL_mu_plus",
+		"n_strip_PCAL_mu_minus",
+		"n_strip_ECIN_mu_plus",
+		"n_strip_ECIN_mu_minus",
+		"n_strip_ECOUT_mu_plus",	
+		"n_strip_ECOUT_mu_minus",
+		"vz_elec",
+		"vz_mu_plus",
+		"vz_mu_minus",
+	};
+
+	std::map<TString, Float_t> outVars;
+	for (size_t i = 0; i < fvars.size(); i++)
+	{
+		outVars[fvars[i]] = 0.;
+		ADDVAR(&(outVars[fvars[i]]), fvars[i], "/F", outT);
+	}
+
+	TString fvars_Gen[] = {
+		"M_Gen", 
+		"Q2_Gen",
+		"vz_elec_Gen", 
+		"vz_posi_Gen", 
+		"vz_prot_Gen",
+		};
+
+	std::map<TString, Float_t> outVars_Gen;
+	for (size_t i = 0; i < sizeof(fvars_Gen) / sizeof(TString); i++)
+	{
+		outVars_Gen[fvars_Gen[i]] = 0.;
+		ADDVAR(&(outVars_Gen[fvars_Gen[i]]), fvars_Gen[i], "/F", outT_Gen);
+	}
+
+	TLorentzVector gen_Electron, gen_mu_plus, gen_mu_minus, gen_Proton;
+
+	if (all_Gen_vector)
+	{
+		outT_Gen->Branch("gen_Electron", "TLorentzVector", &gen_Electron);
+		outT_Gen->Branch("gen_mu_plus", "TLorentzVector", &gen_mu_plus);
+		outT_Gen->Branch("gen_mu_minus", "TLorentzVector", &gen_mu_minus);
+		outT_Gen->Branch("gen_Proton", "TLorentzVector", &gen_Proton);
+
+		outT->Branch("gen_Electron", "TLorentzVector", &gen_Electron);
+		outT->Branch("gen_mu_plus", "TLorentzVector", &gen_mu_plus);
+		outT->Branch("gen_mu_minus", "TLorentzVector", &gen_mu_minus);
+		outT->Branch("gen_Proton", "TLorentzVector", &gen_Proton);
+	}
+	///////////////////////////////////////////
+	
+
+
+	////////////////////////////////////////////
+	// Get file name
+	////////////////////////////////////////////
+	int nbf = 0;
+	int nb_event = 0;
+	for (Int_t i = input.getCmdIndex("-f") + 2; i < input.getCmdIndex("-ef") + 1; i++)
+	{
+		if (TString(argv[i]).Contains("MC"))
+		{
+			IsData = false;
+		}
+		if (TString(argv[i]).Contains(".hipo"))
+		{
+			nbf++;
+			nameFiles = TString(argv[i]);
+		}
+
+		////////////////////////////////////////////
+		// hipo reader
+		hipo::reader reader;
+		hipo::dictionary factory;
+		hipo::event hipo_event;
+		////////////////////////////////////////////
+		
+		reader.open(nameFiles);
+		reader.readDictionary(factory);
+		
+		hipo::bank EVENT(factory.getSchema("REC::Event"));
+		hipo::bank PART(factory.getSchema("REC::Particle"));
+		hipo::bank SCIN(factory.getSchema("REC::Scintillator"));
+		hipo::bank CHE(factory.getSchema("REC::Cherenkov"));
+		hipo::bank CALO(factory.getSchema("REC::Calorimeter"));
+		hipo::bank RUN(factory.getSchema("RUN::config"));
+		hipo::bank MCPART(factory.getSchema("MC::Particle"));
+		hipo::bank MCEVENT(factory.getSchema("MC::Event"));
+		hipo::bank TRACK(factory.getSchema("REC::Track"));
+		hipo::bank TRAJ(factory.getSchema("REC::Traj"));
+
+		outFile->cd();
+
+		while (reader.next())
+		{
+
+			nbEvent++;
+			if (nbEvent % 30000 == 0)
+			{
+				time(&intermediate);
+				double intermediate_time = difftime(intermediate, begin);
+				cout << nbEvent << " events processed in " << intermediate_time << "s" << "\n";
+			}
+
+			muEvent ev;
+			muMCEvent MC_ev;
+
+			int run = 0;
+			int event_nb = 0;
+			
+			// Get banks
+			reader.read(hipo_event);
+			hipo_event.getStructure(MCPART);
+			hipo_event.getStructure(MCEVENT);
+			hipo_event.getStructure(RUN);
+			hipo_event.getStructure(PART);
+			hipo_event.getStructure(SCIN);
+			hipo_event.getStructure(CHE);
+			hipo_event.getStructure(CALO);
+			hipo_event.getStructure(EVENT);
+			hipo_event.getStructure(TRAJ);
+			hipo_event.getStructure(TRACK);
+            
+			int np_input = PART.getRows();
+			ev.Set_nb_part(np_input);
+			
+			MC_ev.Set_MC_Particles(MCEVENT, MCPART);
+			MC_ev.Get_Kinematics();
+			
+
+			outVars_Gen["M_Gen"] = MC_ev.M_Gen;
+			outVars_Gen["Q2_Gen"] = MC_ev.Q2_Gen;
+			outVars_Gen["vz_elec_Gen"] = MC_ev.vz_elec_Gen;
+			outVars_Gen["vz_posi_Gen"] = MC_ev.vz_posi_Gen;
+			outVars_Gen["vz_prot_Gen"] = MC_ev.vz_prot_Gen;
+
+			if (all_Gen_vector)
+			{
+				gen_Electron = MC_ev.Electron_2;
+				gen_mu_plus = MC_ev.mu_plus;
+				gen_mu_minus = MC_ev.mu_minus;
+				gen_Proton = MC_ev.Proton;
+			}
+			
+            outT_Gen->Fill();
+			
+			///////////////////////////////////////////
+			// Get Particles and cut on event topology
+			///////////////////////////////////////////
+			ev.Set_Particles(PART);
+
+			if (!ev.pass_topology_cut())
+			{
+				continue;
+			}
+
+			///////////////////////////////////////////
+			// Associate detector responses and do EC cuts
+			///////////////////////////////////////////
+			ev.Associate_detector_resp(CHE, SCIN);
+			//ev.Associate_DC_traj(TRAJ);
+			//ev.Set_Nphe_HTCC();
+			///////////////////////////////////////////
+
+			///////////////////////////////////////////
+			// Compute kinematics
+			///////////////////////////////////////////
+
+			//Add the electron from MC
+			ev.Electron.Vector = MC_ev.Electron;
+			ev.Get_Kinematics();
+
+
+			outVars["evt_num"] = nbEvent;
+			outVars["run"] = ev.run;
+			outVars["MMassProt"] = ev.MMass;
+			outVars["M"] = ev.M;
+			outVars["Q2"] = ev.Q2;
+			outVars["n_strip_PCAL_mu_plus"] = ev.mu_plus.N_strip(PCAL);
+			outVars["n_strip_PCAL_mu_minus"] = ev.mu_minus.N_strip(PCAL);
+			outVars["n_strip_ECIN_mu_plus"] = ev.mu_plus.N_strip(ECIN);
+			outVars["n_strip_ECIN_mu_minus"] = ev.mu_minus.N_strip(ECIN);
+			outVars["n_strip_ECOUT_mu_plus"] = ev.mu_plus.N_strip(ECOUT);
+			outVars["n_strip_ECOUT_mu_minus"] = ev.mu_minus.N_strip(ECOUT);
+			outVars["vz_elec"] = MCev.vz_elec_Gen;
+			outVars["vz_mu_plus"] = ev.mu_plus.vertex.z;
+			outVars["vz_mu_minus"] = ev.mu_minus.vertex.z;
+
+			tree_Electron = ev.Electron.Vector;
+			tree_mu_minus = ev.mu_minus.Vector;
+			tree_mu_plus = ev.mu_plus.Vector;
+			tree_Missing = ev.vMissing;
+			
+			outT->Fill();
+			
+		}
+	}
+
+	
+	
+
+	outFile->cd();
+	outT->Write();
+	outFile->Write();
+	outFile->Close();
+
+	cout << "Tree written" << endl;
+	cout << "nb of file " << nbf << "\n";
+	cout << "nb of events " << nbEvent << "\n";
+
+	// gROOT->ProcessLine(".q");
+
+	time(&end); // note time after execution
+
+	double difference = difftime(end, begin);
+	printf("All this work done in only %.2lf seconds. Congratulations !\n", difference);
+
+	gApplication->Terminate();
+
+	return 0;
+}
