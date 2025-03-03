@@ -1,7 +1,7 @@
 #ifndef TCSMCEvent
 #define TCSMCEvent
 
-class MCEvent
+class muMCEvent
 {
 
 public:
@@ -14,6 +14,8 @@ public:
         TLorentzVector vMissing;
         TLorentzVector vRestProton;
         TLorentzVector vPhoton;
+        TLorentzVector vBeam;
+
 
         // Kinematic variables
         float M_Gen;
@@ -25,7 +27,7 @@ public:
         float vz_mu_minus_Gen;
         float vz_prot_Gen;
 
-        MCEvent()
+        muMCEvent()
         {
                 vRestProton.SetPxPyPzE(0., 0., 0., mp);
                 vBeam.SetPxPyPzE(0., 0., ebeam, ebeam);

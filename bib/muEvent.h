@@ -1,7 +1,7 @@
 #ifndef TCSEvent
 #define TCSEvent
 
-class Event
+class muEvent
 {
 
 public:
@@ -40,7 +40,7 @@ public:
         float run;
         int trigger_bit;
 
-        Event(int nb_part)
+        muEvent(int nb_part)
         {
                 vRestProton.SetPxPyPzE(0., 0., 0., mp);
                 vBeam.SetPxPyPzE(0., 0., ebeam, ebeam);
@@ -48,7 +48,7 @@ public:
                 Photons = new Particle[np];
         }
 
-        Event()
+        muEvent()
         {
                 vRestProton.SetPxPyPzE(0., 0., 0., mp);
                 vBeam.SetPxPyPzE(0., 0., ebeam, ebeam);
@@ -117,7 +117,7 @@ public:
                 return (rec_mu_m == 1 && rec_mu_p == 1);
         }
 
-        void Associate_detector_resp(hipo::bank CHE, hipo::bank SCIN, , hipo::bank CALO)
+        void Associate_detector_resp(hipo::bank CHE, hipo::bank SCIN, hipo::bank CALO)
         {
                 vector<Particle> Particles = {Electron, mu_minus, mu_plus};
 
@@ -205,7 +205,7 @@ public:
                                 float Calom3v = CALO.getFloat("m3v", c);
                                 float Calom3w = CALO.getFloat("m3w", c);
 
-                                if (Calopindex == (particle.index))
+                                if (Calopindex == (Particles[i].index))
                                 {
                                         Calo.detector = Calodetector;
                                         Calo.pindex = Calopindex;

@@ -157,15 +157,8 @@ int analysis_muCLAS12()
 	int nb_event = 0;
 	for (Int_t i = input.getCmdIndex("-f") + 2; i < input.getCmdIndex("-ef") + 1; i++)
 	{
-		if (TString(argv[i]).Contains("MC"))
-		{
-			IsData = false;
-		}
-		if (TString(argv[i]).Contains(".hipo"))
-		{
-			nbf++;
-			nameFiles = TString(argv[i]);
-		}
+		nbf++;
+		nameFiles = TString(argv[i]);
 
 		////////////////////////////////////////////
 		// hipo reader
@@ -275,6 +268,8 @@ int analysis_muCLAS12()
 			outVars["MMassProt"] = ev.MMass;
 			outVars["M"] = ev.M;
 			outVars["Q2"] = ev.Q2;
+			outVars["mu_plus_SF"] =  ((ev.mu_plus.Energy(ECAL, PCAL) + ev.mu_plus.Energy(ECAL, ECIN) + ev.mu_plus.Energy(ECAL, ECOUT))) / ev.mu_plus.Vector.P();
+			outVars["mu_minus_SF"] = ((ev.mu_minus.Energy(ECAL, PCAL) + ev.mu_minus.Energy(ECAL, ECIN) + ev.mu_minus.Energy(ECAL, ECOUT))) / ev.mu_minus.Vector.P();
 			outVars["n_strip_PCAL_mu_plus"] = ev.mu_plus.N_strip(PCAL);
 			outVars["n_strip_PCAL_mu_minus"] = ev.mu_minus.N_strip(PCAL);
 			outVars["n_strip_ECIN_mu_plus"] = ev.mu_plus.N_strip(ECIN);
@@ -305,7 +300,7 @@ int analysis_muCLAS12()
 
 	cout << "Tree written" << endl;
 	cout << "nb of file " << nbf << "\n";
-	cout << "nb of events " << nbEvent << "\n";
+	cout << "nb of events " << nb_event << "\n";
 
 	// gROOT->ProcessLine(".q");
 
