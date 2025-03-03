@@ -73,7 +73,7 @@ int analysis_muCLAS12()
 	///////////////////////////////////////////
 	// Setup the TTree output
 	TString output_file = (TString)(input.getCmdOption("-o")); // argv[4]);
-	TFile *outFile = new TFile(Form("outputTCS_%s.root", output_file.Data()), "recreate");
+	TFile *outFile = new TFile(Form("output_muCLAS12_%s.root", output_file.Data()), "recreate");
 	
 	TTree *outT = new TTree("tree", "tree");
 	TTree *outT_Gen = new TTree("tree_Gen", "tree_Gen");
@@ -267,10 +267,10 @@ int analysis_muCLAS12()
 			outVars["mu_minus_SF"] = ((ev.mu_minus.Energy(ECAL, PCAL) + ev.mu_minus.Energy(ECAL, ECIN) + ev.mu_minus.Energy(ECAL, ECOUT))) / ev.mu_minus.Vector.P();
 			outVars["n_strip_PCAL_mu_plus"] = ev.mu_plus.N_strip(PCAL);
 			outVars["n_strip_PCAL_mu_minus"] = ev.mu_minus.N_strip(PCAL);
-			outVars["n_strip_ECIN_mu_plus"] = ev.mu_plus.N_strip(ECIN);
-			outVars["n_strip_ECIN_mu_minus"] = ev.mu_minus.N_strip(ECIN);
-			outVars["n_strip_ECOUT_mu_plus"] = ev.mu_plus.N_strip(ECOUT);
-			outVars["n_strip_ECOUT_mu_minus"] = ev.mu_minus.N_strip(ECOUT);
+			outVars["n_strip_ECIN_mu_plus"] = ev.mu_plus.N_strip(4);
+			outVars["n_strip_ECIN_mu_minus"] = ev.mu_minus.N_strip(4);
+			outVars["n_strip_ECOUT_mu_plus"] = ev.mu_plus.N_strip(7);
+			outVars["n_strip_ECOUT_mu_minus"] = ev.mu_minus.N_strip(7);
 			outVars["vz_elec"] = MC_ev.vz_elec_Gen;
 			outVars["vz_mu_plus"] = ev.mu_plus.vertex.z;
 			outVars["vz_mu_minus"] = ev.mu_minus.vertex.z;

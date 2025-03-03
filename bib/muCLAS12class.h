@@ -4,7 +4,7 @@
 const float me = 0.000511;
 const float mp = 0.938;
 const float mMu = 0.105658;
-float ebeam = 10.604;
+float ebeam = 10.6;
 
 const float Pi = 3.14159269;
 
@@ -14,7 +14,7 @@ const float Pi = 3.14159269;
 //const int ECOUT = 7;
 
 ////////////////////Configuration booleans
-bool all_Gen_vector = false;
+bool all_Gen_vector = true;
 ////////////////////
 
 class Track
