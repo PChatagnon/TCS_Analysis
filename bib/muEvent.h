@@ -232,6 +232,8 @@ public:
                                         Calo.m3v = Calom3v;
                                         Calo.m3w = Calom3w;
 
+                                        cout<<"Calo n strips "<<Calo.du<<" "<<Calo.dv<<" "<<Calo.dw<<endl;
+
                                         Particles[i].Calorimeter.push_back(Calo);	
                                 }
                         }
