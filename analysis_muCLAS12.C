@@ -99,6 +99,7 @@ int analysis_muCLAS12()
 		"M",
 		"Q2",
 		"t",
+
 		"mu_plus_SF",
 		"mu_minus_SF",	
 		"n_strip_PCAL_mu_plus",
@@ -122,6 +123,7 @@ int analysis_muCLAS12()
 	TString fvars_Gen[] = {
 		"M_Gen", 
 		"Q2_Gen",
+		"t_Gen",
 		};
 
 	std::map<TString, Float_t> outVars_Gen;
@@ -221,6 +223,7 @@ int analysis_muCLAS12()
 
 			outVars_Gen["M_Gen"] = MC_ev.M_Gen;
 			outVars_Gen["Q2_Gen"] = MC_ev.Q2_Gen;
+			outVars_Gen["t_Gen"] = MC_ev.t_Gen;
 			
 
 			

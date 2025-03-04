@@ -20,6 +20,7 @@ public:
         // Kinematic variables
         float M_Gen;
         float Q2_Gen;
+        float t_Gen;
         
         //MC vertex
         float vz_elec_Gen;
@@ -69,6 +70,7 @@ public:
                 float qp2_Gen = (mu_plus + mu_minus).M2();
                 M_Gen = sqrt(qp2_Gen);
                 Q2_Gen = -1.0 * (vBeam - Electron).M2();
+                t_Gen = -1.0 * (vRestProton - Proton).M2();
         }
 };
 
