@@ -204,6 +204,7 @@ public:
                                 float Calom3u = CALO.getFloat("m3u", c);
                                 float Calom3v = CALO.getFloat("m3v", c);
                                 float Calom3w = CALO.getFloat("m3w", c);
+                                cout<<c<<" "<<i<<" "<<Calopindex<<" "<<Particles[i].index<<endl;
 
                                 if (Calopindex == (Particles[i].index))
                                 {
@@ -239,6 +240,28 @@ public:
                 Electron = Particles[0];
                 mu_minus = Particles[1];
                 mu_plus = Particles[2];
+        }
+
+        void Correct_Momentum()
+        {
+                // Correct the momentum of the muons, provided by Rafo
+                TF1 *f_Eloss_mup = new TF1("f_Eloss_mup", "[1] + [2]*(x-[0]) + [3]/(x-[0]) + [4]/((x-[0])*(x-[0]))", 0., 80.);
+                TF1 *f_Eloss_mum = new TF1("f_Eloss_mup", "[1] + [2]*(x-[0]) + [3]/(x-[0]) + [4]/((x-[0])*(x-[0]))", 0., 80.);
+                f_Eloss_mup->SetParameters(-1.4651, -0.0216782, 0.00121857, -1.2927, -0.0990961);
+                f_Eloss_mum->SetParameters(-1.45262, -0.0176347, 0.000494985, -1.27237, -0.111361);
+                f_Eloss_mup->SetNpx(4500);
+                f_Eloss_mum->SetNpx(4500);
+
+                float corr_mup = f_Eloss_mup->Eval(mu_plus.Vector.P());
+                float corr_mum = f_Eloss_mum->Eval(mu_minus.Vector.P());
+
+                float theta_mup = mu_plus.Vector.Theta();
+                float phi_mup = mu_plus.Vector.Phi();
+                float theta_mum = mu_minus.Vector.Theta();
+                float phi_mum = mu_minus.Vector.Phi();
+
+                mu_plus.Vector.SetXYZM(px, py, pz, mMu);
+                mu_minus.Vector.SetXYZM(px, py, pz, mMu);
         }
 
 
