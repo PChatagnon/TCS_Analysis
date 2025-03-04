@@ -42,8 +42,8 @@ public:
                         Proton.SetXYZM(MCPART.getFloat("px", 2), MCPART.getFloat("py", 2), MCPART.getFloat("pz", 2), mp);
                         Electron.SetXYZM(MCPART.getFloat("px", 3), MCPART.getFloat("py", 3), MCPART.getFloat("pz", 3), me);
                         
-                        vz_mu_plus_Gen = MCPART.getFloat("vz", 0);
-                        vz_mu_minus_Gen = MCPART.getFloat("vz", 1);
+                        vz_mu_plus_Gen = MCPART.getFloat("vz", 1);
+                        vz_mu_minus_Gen = MCPART.getFloat("vz", 0);
                         vz_prot_Gen = MCPART.getFloat("vz", 2);
                         vz_elec_Gen = MCPART.getFloat("vz", 3);
                 }
@@ -55,8 +55,8 @@ public:
                         Proton.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), mp);
                         Electron.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), me);
                         
-                        vz_mu_plus_Gen = MCPART.getFloat("vz", 3);
-                        vz_mu_minus_Gen = MCPART.getFloat("vz", 2);
+                        vz_mu_plus_Gen = MCPART.getFloat("vz", 2);
+                        vz_mu_minus_Gen = MCPART.getFloat("vz", 3);
                         vz_prot_Gen = MCPART.getFloat("vz", 0);
                         vz_elec_Gen = MCPART.getFloat("vz", 1);
                 }

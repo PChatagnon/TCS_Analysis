@@ -27,6 +27,7 @@ public:
         float M;
         float qp2;
         float Q2;
+        float t;
 
         //muon ID variables
         float n_strip_PCAL_mu_plus;
@@ -287,6 +288,7 @@ public:
                 qp2 = (mu_minus.Vector + mu_plus.Vector).M2();
                 M = sqrt(qp2);
                 Q2 = -1.0 * (vBeam - Electron.Vector).M2();
+                t = -1.0 * (vMissing).M2();
         }
 
 
