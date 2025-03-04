@@ -1,5 +1,5 @@
-#ifndef TCSMCEvent
-#define TCSMCEvent
+#ifndef muMCEvent
+#define muMCEvent
 
 class muMCEvent
 {

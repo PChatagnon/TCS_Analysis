@@ -1,5 +1,5 @@
-#ifndef TCSclass
-#define TCSclass
+#ifndef muCLAS12class
+#define muCLAS12class
 
 const float me = 0.000511;
 const float mp = 0.938;
