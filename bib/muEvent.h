@@ -250,16 +250,24 @@ public:
                 f_Eloss_mup->SetNpx(4500);
                 f_Eloss_mum->SetNpx(4500);
 
-                float corr_mup = f_Eloss_mup->Eval(mu_plus.Vector.P());
-                float corr_mum = f_Eloss_mum->Eval(mu_minus.Vector.P());
+                float corr_mup = mu_plus.Vector.P()/(f_Eloss_mup->Eval(mu_plus.Vector.P()) + 1.);
+                float corr_mum = mu_minus.Vector.P()/(f_Eloss_mum->Eval(mu_minus.Vector.P()) + 1.);
 
                 float theta_mup = mu_plus.Vector.Theta();
                 float phi_mup = mu_plus.Vector.Phi();
                 float theta_mum = mu_minus.Vector.Theta();
                 float phi_mum = mu_minus.Vector.Phi();
 
-                //mu_plus.Vector.SetXYZM(px, py, pz, mMu);
-                //mu_minus.Vector.SetXYZM(px, py, pz, mMu);
+                double mupPxCorr = corr_mup * sin(theta_mup) * cos(phi_mup);
+		double mupPyCorr = corr_mup * sin(theta_mup) * sin(phi_mup);
+		double mupPzCorr = corr_mup * cos(theta_mup);
+
+                double mumPxCorr = corr_mum * sin(theta_mum) * cos(phi_mum);
+		double mumPyCorr = corr_mum * sin(theta_mum) * sin(phi_mum);
+		double mumPzCorr = corr_mum * cos(theta_mum);
+
+                mu_plus.Vector.SetXYZM(mupPxCorr, mupPyCorr, mupPzCorr, mMu);
+                mu_minus.Vector.SetXYZM(mumPxCorr, mumPyCorr, mumPzCorr, mMu);
         }
 
 
