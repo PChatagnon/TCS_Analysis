@@ -247,6 +247,9 @@ int analysis_muCLAS12()
 			PART.show();
 			CALO.show();
 			ev.Associate_detector_resp(CHE, SCIN, CALO);
+			cout<<ev.mu_plus.N_strip(PCAL)<<ev.mu_minus.N_strip(PCAL)<<endl;
+			cout<<ev.mu_plus.N_strip(ECIN)<<ev.mu_minus.N_strip(ECIN)<<endl;
+			cout<<ev.mu_plus.N_strip(ECOUT)<<ev.mu_minus.N_strip(ECOUT)<<endl;
 			//ev.Associate_DC_traj(TRAJ);
 			//ev.Set_Nphe_HTCC();
 			///////////////////////////////////////////
