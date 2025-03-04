@@ -13,8 +13,8 @@
 #include "TCanvas.h"
 #include "TH3F.h"
 #include "bib/muCLAS12class.h"
-#include "bib/muEvent.h"
 #include "bib/muMCEvent.h"
+#include "bib/muEvent.h"
 #include "bib/InputParser.h"
 
 #include "hipo4/reader.h"
