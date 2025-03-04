@@ -291,8 +291,10 @@ public:
                 for (int i = 0; i < Calorimeter.size(); i++)
                 {
                         if (layer == Calorimeter[i].layer && ECAL == Calorimeter[i].detector)
+                        {
                                 N_strip = Calorimeter[i].du + Calorimeter[i].dv + Calorimeter[i].dw;
-                        break;
+                                break;
+                        }
                 }
                 return N_strip;
         }

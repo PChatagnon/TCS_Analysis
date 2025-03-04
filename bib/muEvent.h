@@ -204,7 +204,6 @@ public:
                                 float Calom3u = CALO.getFloat("m3u", c);
                                 float Calom3v = CALO.getFloat("m3v", c);
                                 float Calom3w = CALO.getFloat("m3w", c);
-                                cout<<c<<" "<<i<<" "<<Calopindex<<" "<<Particles[i].index<<endl;
 
                                 if (Calopindex == (Particles[i].index))
                                 {
@@ -231,9 +230,6 @@ public:
                                         Calo.m3u = Calom3u;
                                         Calo.m3v = Calom3v;
                                         Calo.m3w = Calom3w;
-
-                                        cout<<"Calo n strips "<<Calo.du<<" "<<Calo.dv<<" "<<Calo.dw<<endl;
-
                                         Particles[i].Calorimeter.push_back(Calo);	
                                 }
                         }
