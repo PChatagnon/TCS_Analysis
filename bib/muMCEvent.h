@@ -37,8 +37,8 @@ public:
         {
                 if(IsElSpectro)
                 {
-                        mu_plus.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), mMu);
-                        mu_minus.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), mMu);
+                        mu_minus.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), mMu);
+                        mu_plus.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), mMu);
                         Proton.SetXYZM(MCPART.getFloat("px", 2), MCPART.getFloat("py", 2), MCPART.getFloat("pz", 2), mp);
                         Electron.SetXYZM(MCPART.getFloat("px", 3), MCPART.getFloat("py", 3), MCPART.getFloat("pz", 3), me);
                         
@@ -50,8 +50,8 @@ public:
 
                 if(!IsElSpectro)
                 {
-                        mu_plus.SetXYZM(MCPART.getFloat("px", 3), MCPART.getFloat("py", 3), MCPART.getFloat("pz", 3), mMu);
-                        mu_minus.SetXYZM(MCPART.getFloat("px", 2), MCPART.getFloat("py", 2), MCPART.getFloat("pz", 2), mMu);
+                        mu_plus.SetXYZM(MCPART.getFloat("px", 2), MCPART.getFloat("py", 2), MCPART.getFloat("pz", 2), mMu);
+                        mu_minus.SetXYZM(MCPART.getFloat("px", 3), MCPART.getFloat("py", 3), MCPART.getFloat("pz", 3), mMu);
                         Proton.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), mp);
                         Electron.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), me);
                         

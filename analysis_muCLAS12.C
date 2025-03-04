@@ -269,8 +269,8 @@ int analysis_muCLAS12()
 			outVars["n_strip_PCAL_mu_minus"] = ev.mu_minus.N_strip(PCAL);
 			outVars["n_strip_ECIN_mu_plus"] = ev.mu_plus.N_strip(ECIN);
 			outVars["n_strip_ECIN_mu_minus"] = ev.mu_minus.N_strip(ECIN);
-			outVars["n_strip_ECOUT_mu_plus"] = ev.mu_plus.N_strip(7);
-			outVars["n_strip_ECOUT_mu_minus"] = ev.mu_minus.N_strip(7);
+			outVars["n_strip_ECOUT_mu_plus"] = ev.mu_plus.N_strip(ECOUT);
+			outVars["n_strip_ECOUT_mu_minus"] = ev.mu_minus.N_strip(ECOUT);
 			outVars["vz_elec"] = MC_ev.vz_elec_Gen;
 			outVars["vz_mu_plus"] = ev.mu_plus.vertex.z;
 			outVars["vz_mu_minus"] = ev.mu_minus.vertex.z;
