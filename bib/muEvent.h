@@ -240,7 +240,7 @@ public:
                 mu_plus = Particles[2];
         }
 
-        void Correct_Momentum()
+        void Correct_Momentum(muMCEvent MC_ev)
         {
                 // Correct the momentum of the muons, provided by Rafo
                 TF1 *f_Eloss_mup = new TF1("f_Eloss_mup", "[1] + [2]*(x-[0]) + [3]/(x-[0]) + [4]/((x-[0])*(x-[0]))", 0., 80.);
@@ -253,10 +253,15 @@ public:
                 float corr_mup = mu_plus.Vector.P()/(f_Eloss_mup->Eval(mu_plus.Vector.P()) + 1.);
                 float corr_mum = mu_minus.Vector.P()/(f_Eloss_mum->Eval(mu_minus.Vector.P()) + 1.);
 
-                float theta_mup = mu_plus.Vector.Theta();
-                float phi_mup = mu_plus.Vector.Phi();
-                float theta_mum = mu_minus.Vector.Theta();
-                float phi_mum = mu_minus.Vector.Phi();
+                //float theta_mup = mu_plus.Vector.Theta();
+                //float phi_mup = mu_plus.Vector.Phi();
+                //float theta_mum = mu_minus.Vector.Theta();
+                //float phi_mum = mu_minus.Vector.Phi();
+
+                float theta_mup = MC_ev.mu_plus.Theta();
+                float phi_mup = MC_ev.mu_plus.Phi();
+                float theta_mum = MC_ev.mu_minus.Theta();
+                float phi_mum = MC_ev.mu_minus.Phi();
 
                 double mupPxCorr = corr_mup * sin(theta_mup) * cos(phi_mup);
 		double mupPyCorr = corr_mup * sin(theta_mup) * sin(phi_mup);

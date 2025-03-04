@@ -255,7 +255,7 @@ int analysis_muCLAS12()
 
 			//Add the electron from MC
 			ev.Electron.Vector = MC_ev.Electron;
-			ev.Correct_Momentum();
+			ev.Correct_Momentum(MC_ev);
 			ev.Get_Kinematics();
 
 
