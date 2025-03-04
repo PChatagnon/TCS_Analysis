@@ -1,5 +1,5 @@
-#ifndef muMCEvent
-#define muMCEvent
+#ifndef ClassmuMCEvent
+#define ClassmuMCEvent
 
 class muMCEvent
 {
