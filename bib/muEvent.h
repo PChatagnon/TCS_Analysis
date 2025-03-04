@@ -260,8 +260,8 @@ public:
                 float theta_mum = mu_minus.Vector.Theta();
                 float phi_mum = mu_minus.Vector.Phi();
 
-                mu_plus.Vector.SetXYZM(px, py, pz, mMu);
-                mu_minus.Vector.SetXYZM(px, py, pz, mMu);
+                //mu_plus.Vector.SetXYZM(px, py, pz, mMu);
+                //mu_minus.Vector.SetXYZM(px, py, pz, mMu);
         }
 
 
