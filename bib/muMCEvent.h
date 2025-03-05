@@ -34,7 +34,7 @@ public:
                 vBeam.SetPxPyPzE(0., 0., ebeam, ebeam);
         }
 
-        void Set_MC_Particles(hipo::bank MCEVENT, hipo::bank MCPART, bool IsElSpectro, bool IsGrape, bool IsCoincidence)
+        void Set_MC_Particles(hipo::bank MCEVENT, hipo::bank MCPART, bool IsElSpectro, bool IsGrape, bool IsCoincidence, bool IsCoincidence_Quasi)
         {
                 if(IsElSpectro)
                 {
@@ -67,6 +67,14 @@ public:
                         mu_plus.SetXYZM(MCPART.getFloat("px", 3), MCPART.getFloat("py", 3), MCPART.getFloat("pz", 3), mMu);
                         mu_minus.SetXYZM(MCPART.getFloat("px", 4), MCPART.getFloat("py", 4), MCPART.getFloat("pz", 4), mMu);
                         Proton.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), mp);
+                        Electron.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), me);
+                }
+
+                if(IsCoincidence_Quasi)
+                {
+                        mu_plus.SetXYZM(MCPART.getFloat("px", 2), MCPART.getFloat("py", 2), MCPART.getFloat("pz", 2), mMu);
+                        mu_minus.SetXYZM(MCPART.getFloat("px", 3), MCPART.getFloat("py", 3), MCPART.getFloat("pz", 3), mMu);
+                        //Proton.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), mp);
                         Electron.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), me);
                 }
         }

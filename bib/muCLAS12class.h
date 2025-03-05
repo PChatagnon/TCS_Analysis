@@ -18,6 +18,7 @@ bool all_Gen_vector = true;
 bool isElSpectro = false;
 bool isGrape = false;
 bool isCoincidence = false;
+bool isCoincidence_Quasi = false;
 ////////////////////
 
 class Track
