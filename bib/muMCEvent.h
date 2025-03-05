@@ -34,7 +34,7 @@ public:
                 vBeam.SetPxPyPzE(0., 0., ebeam, ebeam);
         }
 
-        void Set_MC_Particles(hipo::bank MCEVENT, hipo::bank MCPART, bool IsElSpectro, bool IsGrape, bool IsCoincidence, bool IsCoincidence_Quasi)
+        void Set_MC_Particles(hipo::bank MCEVENT, hipo::bank MCPART, bool IsElSpectro, bool IsGrape, bool IsCoincidence, bool IsCoincidence_Quasi, bool IsInelastic)
         {
                 if(IsElSpectro)
                 {
@@ -60,6 +60,13 @@ public:
                         vz_mu_minus_Gen = MCPART.getFloat("vz", 3);
                         vz_prot_Gen = MCPART.getFloat("vz", 0);
                         vz_elec_Gen = MCPART.getFloat("vz", 1);
+                }
+
+                if(IsInelastic)
+                {
+                        Electron.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), me);
+                        mu_plus.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), mMu);
+                        mu_minus.SetXYZM(MCPART.getFloat("px", 2), MCPART.getFloat("py", 2), MCPART.getFloat("pz", 2), mMu);
                 }
 
                 if(IsCoincidence)

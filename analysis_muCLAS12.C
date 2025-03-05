@@ -57,11 +57,14 @@ int analysis_muCLAS12()
 	isGrape = input.cmdOptionExists("-grape");
 	isCoincidence = input.cmdOptionExists("-coincidence");
 	isCoincidence_Quasi = input.cmdOptionExists("-coincidence_quasi");
+	IsInelastic = input.cmdOptionExists("-inelastic");
 
 	cout<<"isElSpectro "<<isElSpectro<<endl;
 	cout<<"isGrape "<<isGrape<<endl;
 	cout<<"isCoincidence "<<isCoincidence<<endl;
 	cout<<"isCoincidence_Quasi "<<isCoincidence_Quasi<<endl;
+	cout<<"IsInelastic "<<IsInelastic<<endl;
+
 	/////////////////////////////////////////
 
 	if (input.cmdOptionExists("-energy"))
@@ -226,7 +229,7 @@ int analysis_muCLAS12()
 			int np_input = PART.getRows();
 			ev.Set_nb_part(np_input);
 			
-			MC_ev.Set_MC_Particles(MCEVENT, MCPART, isElSpectro, isGrape, isCoincidence, isCoincidence_Quasi);
+			MC_ev.Set_MC_Particles(MCEVENT, MCPART, isElSpectro, isGrape, isCoincidence, isCoincidence_Quasi, IsInelastic);
 			MC_ev.Get_Kinematics();
 			
 

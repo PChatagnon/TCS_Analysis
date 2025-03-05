@@ -19,6 +19,7 @@ bool isElSpectro = false;
 bool isGrape = false;
 bool isCoincidence = false;
 bool isCoincidence_Quasi = false;
+bool IsInelastic = false;
 ////////////////////
 
 class Track
