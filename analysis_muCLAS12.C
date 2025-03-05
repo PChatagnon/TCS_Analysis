@@ -107,6 +107,7 @@ int analysis_muCLAS12()
 		"M",
 		"Q2",
 		"t",
+		"W",
 
 		"mu_plus_SF",
 		"mu_minus_SF",	
@@ -277,6 +278,7 @@ int analysis_muCLAS12()
 			outVars["M"] = ev.M;
 			outVars["Q2"] = ev.Q2;
 			outVars["t"] = ev.t;
+			outVars["W"] = ev.W;
 			outVars["mu_plus_SF"] =  ((ev.mu_plus.Energy(ECAL, PCAL) + ev.mu_plus.Energy(ECAL, ECIN) + ev.mu_plus.Energy(ECAL, ECOUT))) / ev.mu_plus.Vector.P();
 			outVars["mu_minus_SF"] = ((ev.mu_minus.Energy(ECAL, PCAL) + ev.mu_minus.Energy(ECAL, ECIN) + ev.mu_minus.Energy(ECAL, ECOUT))) / ev.mu_minus.Vector.P();
 			outVars["n_strip_PCAL_mu_plus"] = ev.mu_plus.N_strip(PCAL);
