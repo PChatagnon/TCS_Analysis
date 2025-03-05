@@ -56,6 +56,10 @@ int analysis_muCLAS12()
 	isElSpectro = input.cmdOptionExists("-elSpectro");
 	isGrape = input.cmdOptionExists("-grape");
 	isCoincidence = input.cmdOptionExists("-coincidence");
+
+	cout<<"isElSpectro "<<isElSpectro<<endl;
+	cout<<"isGrape "<<isGrape<<endl;
+	cout<<"isCoincidence "<<isCoincidence<<endl;
 	/////////////////////////////////////////
 
 	if (input.cmdOptionExists("-energy"))
