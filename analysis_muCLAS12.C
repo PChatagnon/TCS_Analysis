@@ -54,6 +54,8 @@ int analysis_muCLAS12()
 	/////////Parse command line/////////////
 	bool option = input.cmdOptionExists("-option");
 	isElSpectro = input.cmdOptionExists("-elSpectro");
+	isGrape = input.cmdOptionExists("-grape");
+	isCoincidence = input.cmdOptionExists("-coincidence");
 	/////////////////////////////////////////
 
 	if (input.cmdOptionExists("-energy"))
@@ -217,7 +219,7 @@ int analysis_muCLAS12()
 			int np_input = PART.getRows();
 			ev.Set_nb_part(np_input);
 			
-			MC_ev.Set_MC_Particles(MCEVENT, MCPART, isElSpectro);
+			MC_ev.Set_MC_Particles(MCEVENT, MCPART, isElSpectro, isGrape, isCoincidence);
 			MC_ev.Get_Kinematics();
 			
 
