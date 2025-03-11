@@ -289,7 +289,7 @@ public:
                 qp2 = (mu_minus.Vector + mu_plus.Vector).M2();
                 M = sqrt(qp2);
                 Q2 = -1.0 * (vBeam - Electron.Vector).M2();
-                t = -1.0 * (vRestProton-vMissing).M2();
+                t = -1.0 * (vRestProton+vMissing).M2();
                 W =  (Electron.Vector - vRestProton - vBeam).M();
         }
 
