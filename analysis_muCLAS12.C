@@ -51,6 +51,8 @@ int analysis_muCLAS12()
 	char **argv = gApplication->Argv();
 	Input input(argc, argv);
 
+	TRandom3 *randoms = new TRandom3();
+
 	/////////Parse command line/////////////
 	bool option = input.cmdOptionExists("-option");
 	isElSpectro = input.cmdOptionExists("-elSpectro");
@@ -270,7 +272,10 @@ int analysis_muCLAS12()
 			///////////////////////////////////////////
 
 			//Add the electron from MC
-			ev.Electron.Vector = MC_ev.Electron;
+			double Calorimeter_resolution = 0.05;
+			double smearing_factor = (1.+randoms.Gaus(0, Calorimeter_resolution)/sqrt(MC_ev.Electron.E()));
+			//ev.Electron.Vector = MC_ev.Electron;
+			ev.Electron.Vector.SetXYZM(smearing_factor*MC_ev.Electron.Px(), smearing_factor*MC_ev.Electron.Py(), smearing_factor*MC_ev.Electron.Pz(), me);
 			ev.Correct_Momentum(MC_ev);
 			ev.Get_Kinematics();
 
