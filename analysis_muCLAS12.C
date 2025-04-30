@@ -16,7 +16,6 @@
 #include "bib/muMCEvent.h"
 #include "bib/muEvent.h"
 #include "bib/InputParser.h"
-#include "bib/TCSfunc.h"
 
 #include "hipo4/reader.h"
 #include "rcdb_reader.h"
@@ -30,6 +29,69 @@ using namespace QA;
 using namespace std;
 
 #define ADDVAR(x, name, t, tree) tree->Branch(name, x, TString(name) + TString(t))
+
+ThetaPhi CM(TLorentzVector vElectron, TLorentzVector vPositron, TLorentzVector vProton)
+{
+
+	TLorentzVector vRestProton;
+	TLorentzVector vPhoton;
+	TLorentzVector vProtonLF;
+	TLorentzVector vElectronLF;
+	TLorentzVector vPositronLF;
+	TLorentzVector vRestProtonLF;
+	TLorentzVector vPhotonLF;
+	TLorentzVector vLepton;
+	TLorentzVector vIncoming;
+
+	ThetaPhi CM;
+
+	double phiCM;
+	double thetaCM;
+	double Pi = 3.14159265359;
+
+	TLorentzVector vBeam;
+	vBeam.SetPxPyPzE(0, 0, ebeam, ebeam);
+	vRestProton.SetPxPyPzE(0, 0, 0, 0.938);
+	vPhoton = vProton + vPositron + vElectron - vRestProton;
+	phiCM = 0.0;
+	thetaCM = 0.0;
+
+	vIncoming = vProton + vPositron + vElectron;
+	vPhoton.Boost(-vIncoming.BoostVector());
+	vRestProton.Boost(-vIncoming.BoostVector());
+	vProton.Boost(-vIncoming.BoostVector());
+	vElectron.Boost(-vIncoming.BoostVector());
+	vPositron.Boost(-vIncoming.BoostVector());
+	if (vProton.X() == 0 && vProton.Y() == 0 && vProton.Z() == 0)
+		cout << "problem1" << endl;
+
+	vPhoton.Rotate(Pi + vProton.Angle(vBeam.Vect().Unit()), vProton.Vect().Cross(vBeam.Vect().Unit()));
+	vElectron.Rotate(Pi + vProton.Angle(vBeam.Vect().Unit()), vProton.Vect().Cross(vBeam.Vect().Unit()));
+	vPositron.Rotate(Pi + vProton.Angle(vBeam.Vect().Unit()), vProton.Vect().Cross(vBeam.Vect().Unit()));
+	vRestProton.Rotate(Pi + vProton.Angle(vBeam.Vect().Unit()), vProton.Vect().Cross(vBeam.Vect().Unit()));
+	vProton.Rotate(Pi + vProton.Angle(vBeam.Vect().Unit()), vProton.Vect().Cross(vBeam.Vect().Unit()));
+	// cout<<"problem proton1"<<endl;
+	vElectron.RotateZ(-vRestProton.Phi());
+	vPositron.RotateZ(-vRestProton.Phi());
+	vProton.RotateZ(-vRestProton.Phi());
+	vPhoton.RotateZ(-vRestProton.Phi());
+	vRestProton.RotateZ(-vRestProton.Phi());
+
+	phiCM = (vElectron.Phi());
+
+	vLepton = vPositron + vElectron;
+	vElectron.Boost(-vLepton.BoostVector());
+	vProton.Boost(-vLepton.BoostVector());
+	vPhoton.Boost(-vLepton.BoostVector());
+	vRestProton.Boost(-vLepton.BoostVector());
+	vPositron.Boost(-vLepton.BoostVector());
+
+	thetaCM = vElectron.Angle(-vProton.Vect().Unit());
+
+	CM.theta = thetaCM * TMath::RadToDeg();
+	CM.phi = phiCM * TMath::RadToDeg();
+	return CM;
+}
 
 int analysis_muCLAS12()
 {
