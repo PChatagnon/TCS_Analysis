@@ -137,6 +137,7 @@ int analysis_muCLAS12()
 		ebeam = std::stof(input.getCmdOption("-energy"));
 	}
 
+	cout<<"ebeam "<<ebeam<<endl;
 	/////////End parse command line/////////////
 
 
