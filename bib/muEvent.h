@@ -286,10 +286,6 @@ public:
                 
                 vMissing = mu_minus.Vector + mu_plus.Vector + Electron.Vector - vRestProton - vBeam;
 
-                ThetaPhi cm = CM(mu_minus.Vector, mu_plus.Vector, vMissing);
-                theta = cm.theta;
-                phi = cm.phi;
-
                 MMass = (vMissing).M2();
                 qp2 = (mu_minus.Vector + mu_plus.Vector).M2();
                 M = sqrt(qp2);
