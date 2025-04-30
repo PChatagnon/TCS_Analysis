@@ -29,6 +29,8 @@ public:
         float Q2;
         float t;
         float W;
+        float phi;
+        float theta;
 
         //muon ID variables
         float n_strip_PCAL_mu_plus;
@@ -283,7 +285,10 @@ public:
                 // Kinematic variables
                 
                 vMissing = mu_minus.Vector + mu_plus.Vector + Electron.Vector - vRestProton - vBeam;
-                
+
+                cm = CM(mu_minus.Vector, mu_plus.Vector, vMissing);
+                theta = cm.theta;
+                phi = cm.phi;
 
                 MMass = (vMissing).M2();
                 qp2 = (mu_minus.Vector + mu_plus.Vector).M2();
