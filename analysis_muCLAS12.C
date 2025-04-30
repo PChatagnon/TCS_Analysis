@@ -356,7 +356,7 @@ int analysis_muCLAS12()
 			outVars["W"] = ev.W;
 
 
-			ThetaPhi cm = funcCM(ev.mu_plus.Vector, ev.mu_minus.Vector, ev.vMissing);
+			ThetaPhi cm = funcCM(ev.mu_minus.Vector, ev.mu_plus.Vector, MC_ev.Proton);
 			outVars["phi"] = cm.phi;
 			outVars["theta"] = cm.theta;
 
