@@ -16,6 +16,7 @@
 #include "bib/muMCEvent.h"
 #include "bib/muEvent.h"
 #include "bib/InputParser.h"
+#include "bib/TCSfunc.h"
 
 #include "hipo4/reader.h"
 #include "rcdb_reader.h"
