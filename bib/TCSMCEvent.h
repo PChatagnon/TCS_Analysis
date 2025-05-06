@@ -32,7 +32,7 @@ void GJ_angles(double &theta_GJ, double &phi_GJ, TLorentzVector vElectron, TLore
         vBeam.Rotate(rotation_proton, zAxis);
 
         cout << " "<< endl;
-        cout << proton.Px() << " " << proton.Py() << " " << proton.Pz() << " " << proton.E() << endl;
+        cout << vProton.Px() << " " << vProton.Py() << " " << vProton.Pz() << " " << vProton.E() << endl;
         cout << vBeam.Px() << " " << vBeam.Py() << " " << vBeam.Pz() << " " << vBeam.E() << endl;
 
         theta_GJ= vElectron.Theta();
@@ -82,8 +82,8 @@ public:
         ThetaPhi cm;
         float theta_Gen;
         float phi_Gen;
-        float theta_GJ_Gen;
-        float phi_GJ_Gen;
+        double theta_GJ_Gen;
+        double phi_GJ_Gen;
 
         MCEvent()
         {
