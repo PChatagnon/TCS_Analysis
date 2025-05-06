@@ -1,6 +1,45 @@
 #ifndef TCSMCEvent
 #define TCSMCEvent
 
+
+void GJ_angles(double &theta_GJ, double &phi_GJ, TLorentzVector vElectron, TLorentzVector vPositron, TLorentzVector vProton)
+{
+        TLorentzVector vBeam;
+        vBeam.SetPxPyPzE(0., 0., 5, 5);
+
+        vPair = *vPositron + *vElectron;
+
+        vPositron.Boost(-vPair.BoostVector());
+        vElectron.Boost(-vPair.BoostVector());
+        vProton.Boost(-vPair.BoostVector());
+        vBeam.Boost(-vPair.BoostVector());
+
+        TVector3 zAxis(0, 0, 1);
+        //TVector3 currentDir = vRestProton.Vect().Unit(); // direction after boost
+        //TVector3 rotationAxis = currentDir.Cross(zAxis);
+        //double rotationAngle = currentDir.Angle(zAxis);
+
+        //vPositron.Rotate(rotationAngle, rotationAxis);
+        //vElectron.Rotate(rotationAngle, rotationAxis);
+        //vProton.Rotate(rotationAngle, rotationAxis);
+
+        double rotation_proton = vProton.Phi();
+
+        vPositron.Rotate(rotation_proton, zAxis);
+        vElectron.Rotate(rotation_proton, zAxis);
+        vProton.Rotate(rotation_proton, zAxis);
+        vBeam.Rotate(rotation_proton, zAxis);
+
+        cout << " "<< endl;
+        cout << proton.Px() << " " << proton.Py() << " " << proton.Pz() << " " << proton.E() << endl;
+        cout << vBeam.Px() << " " << vBeam.Py() << " " << vBeam.Pz() << " " << vBeam.E() << endl;
+
+        theta_GJ= vElectron.Theta();
+        phi_GJ=vElectron.Phi();
+}
+
+
+
 class MCEvent
 {
 
@@ -42,6 +81,8 @@ public:
         ThetaPhi cm;
         float theta_Gen;
         float phi_Gen;
+        float theta_GJ_Gen;
+        float phi_GJ_Gen;
 
         MCEvent()
         {
@@ -131,6 +172,9 @@ public:
                 cm = CM(Electron_2, Positron, Proton);
                 theta_Gen = cm.theta;
                 phi_Gen = cm.phi;
+
+                //GJ angles
+                GJ_angles(theta_GJ_Gen, phi_GJ_Gen, Electron_2,  Positron,  Proton)
 
                 real_flux_Gen = n_real(ebeam, vPhoton.E());
                 virtual_flux_Gen = n_virtual(ebeam, vPhoton.E(), 0.02);
