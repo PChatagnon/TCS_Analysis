@@ -241,6 +241,8 @@ int analysisTCS_MC()
 		"Q2",
 		"theta",
 		"phi",
+		"theta_GJ_Gen",
+		"phi_GJ_Gen",
 		"helicity",
 		"polaT",
 		"positron_SF",
@@ -1031,6 +1033,8 @@ int analysisTCS_MC()
 					outVars["virtual_flux_Gen"] = MC_ev.virtual_flux_Gen;
 					outVars["virtual_flux_Frixione_Gen"] = MC_ev.virtual_flux_Frixione_Gen;
 					outVars["Epho_Gen"] = MC_ev.Epho_Gen;
+					outVars["theta_GJ_Gen"] = MC_ev.theta_GJ_Gen;
+					outVars["phi_GJ_Gen"] = MC_ev.phi_GJ_Gen;
 				}
 
 				if (PCAL_study)
