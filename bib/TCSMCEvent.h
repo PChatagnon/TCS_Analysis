@@ -7,7 +7,8 @@ void GJ_angles(double &theta_GJ, double &phi_GJ, TLorentzVector vElectron, TLore
         TLorentzVector vBeam;
         vBeam.SetPxPyPzE(0., 0., 5, 5);
 
-        vPair = *vPositron + *vElectron;
+        TLorentzVector vPair;
+        vPair = vPositron + vElectron;
 
         vPositron.Boost(-vPair.BoostVector());
         vElectron.Boost(-vPair.BoostVector());
@@ -174,7 +175,7 @@ public:
                 phi_Gen = cm.phi;
 
                 //GJ angles
-                GJ_angles(theta_GJ_Gen, phi_GJ_Gen, Electron_2,  Positron,  Proton)
+                GJ_angles(theta_GJ_Gen, phi_GJ_Gen, Electron_2,  Positron,  Proton);
 
                 real_flux_Gen = n_real(ebeam, vPhoton.E());
                 virtual_flux_Gen = n_virtual(ebeam, vPhoton.E(), 0.02);
