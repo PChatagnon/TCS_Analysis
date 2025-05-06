@@ -16,13 +16,14 @@ void GJ_angles(double &theta_GJ, double &phi_GJ, TLorentzVector vElectron, TLore
         vBeam.Boost(-vPair.BoostVector());
 
         TVector3 zAxis(0, 0, 1);
-        //TVector3 currentDir = vRestProton.Vect().Unit(); // direction after boost
-        //TVector3 rotationAxis = currentDir.Cross(zAxis);
-        //double rotationAngle = currentDir.Angle(zAxis);
+        TVector3 currentDir = vBeam.Vect().Unit(); // direction after boost
+        TVector3 rotationAxis = currentDir.Cross(zAxis);
+        double rotationAngle = currentDir.Angle(zAxis);
 
-        //vPositron.Rotate(rotationAngle, rotationAxis);
-        //vElectron.Rotate(rotationAngle, rotationAxis);
-        //vProton.Rotate(rotationAngle, rotationAxis);
+        vPositron.Rotate(rotationAngle, rotationAxis);
+        vElectron.Rotate(rotationAngle, rotationAxis);
+        vProton.Rotate(rotationAngle, rotationAxis);
+        vBeam.Rotate(rotationAngle, rotationAxis);
 
         double rotation_proton = vProton.Phi();
 
