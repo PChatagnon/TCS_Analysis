@@ -130,7 +130,7 @@ int analysisTCS_MC()
 		 << "\n";
 
 	/////////Instanciate QADB///////////
-	QADB *qa = new QADB();
+	QADB *qa = new QADB("pass2");
 	////////////////////////////////////
 
 	double nbrecEvent = 0;
