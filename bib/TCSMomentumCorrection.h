@@ -215,8 +215,8 @@ class Momentum_Corrections_Richard
 {
 public:
 	std::array<double, 5> corIn_PDep_noPhiDep;
-    std::array<double, 5> corOut_PDep_noPhiDep;
-	Momentum_Corrections_Richard(bool inbending)
+	std::array<double, 5> corOut_PDep_noPhiDep;
+	Momentum_Corrections_Richard(bool inbending, bool v2, bool FD)
 	{
 		if (inbending)
 		{
@@ -229,7 +229,49 @@ public:
 			corIn_PDep_noPhiDep = {-6.520e-02, 7.099e-03, -5.929e-05, 2.145e-01, -1.153e-01};
 			corOut_PDep_noPhiDep = {9.376e-03, -7.808e-04, 1.063e-04, -2.029e-02, 4.121e-02};
 		}
+
+		if (FD)
+		{
+
+			if (v2)
+			{
+				if (inbending)
+				{
+					corIn_PDep_noPhiDep =  {-4.319e-01,5.899e-02,-2.961e-03,1.311e+00,-1.251e+00};
+					corOut_PDep_noPhiDep = {-2.937e-01,3.924e-02,-1.189e-03,7.775e-01,-6.628e-01};
+				}
+
+				else
+				{
+					corIn_PDep_noPhiDep = {-2.937e-01,3.924e-02,-1.189e-03,7.775e-01,-6.628e-01};
+					corOut_PDep_noPhiDep =  {-4.319e-01,5.899e-02,-2.961e-03,1.311e+00,-1.251e+00};
+				}
+			}
+
+			else
+			{
+				if (inbending)
+				{
+					corIn_PDep_noPhiDep = {-7.500e-01,1.183e-01,-6.655e-03,2.031e+00,-1.798e+00};
+					corOut_PDep_noPhiDep =  {-4.605e-01,7.105e-02,-3.152e-03,1.155e+00,-9.593e-01};
+				}
+
+				else
+				{
+					corIn_PDep_noPhiDep =  {-4.605e-01,7.105e-02,-3.152e-03,1.155e+00,-9.593e-01};
+					corOut_PDep_noPhiDep = {-7.500e-01,1.183e-01,-6.655e-03,2.031e+00,-1.798e+00};
+				}
+			}
+		}
 	}
+
+	
+	double corIn_PDep[5] = {-4.319e-01, 5.899e-02, -2.961e-03, 1.311e+00, -1.251e+00};
+	double corOut_PDep[5] = {-2.937e-01, 3.924e-02, -1.189e-03, 7.775e-01, -6.628e-01};
+
+	
+	double corIn_PDep[5] = {-7.500e-01, 1.183e-01, -6.655e-03, 2.031e+00, -1.798e+00};
+	double corOut_PDep[5] = {-4.605e-01, 7.105e-02, -3.152e-03, 1.155e+00, -9.593e-01};
 
 	void Apply_Momentum_Corrections(Particle *Electron, Particle *Positron)
 	{
@@ -262,7 +304,6 @@ public:
 
 		Positron->Vector.SetXYZM(poPxCorr, poPyCorr, poPzCorr, me);
 	}
-
 };
 
 Particle RadiativeCorr(Particle vParticle, Particle Photons[], double thetaWin, double thetaWin1, int np)

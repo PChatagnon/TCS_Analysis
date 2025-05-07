@@ -40,6 +40,9 @@ bool QA_Golden = false;
 bool no_QADB = false;
 bool no_RCDB = false;
 
+bool FD_mom_corr = false;
+bool v2_mom_corr = false;
+
 bool inclusive_topology = false;
 
 bool RGA_Fall2018 = true; // inbending or outbending in the end

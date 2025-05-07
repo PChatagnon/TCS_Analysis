@@ -82,6 +82,8 @@ int analysisTCS_MC()
 	no_QADB = input.cmdOptionExists("-no_QADB");
 	no_RCDB = input.cmdOptionExists("-no_RCDB");
 	inclusive_topology = input.cmdOptionExists("-inclusive_topology");
+	FD_mom_corr = input.cmdOptionExists("-FD_mom_corr");
+	v2_mom_corr = input.cmdOptionExists("-v2_mom_corr");
 	/////////////////////////////////////////
 
 	if (input.cmdOptionExists("-energy"))
@@ -181,7 +183,7 @@ int analysisTCS_MC()
 	//////////////////////////////////////////////
 	MomentumCorrection MomCorr;
 	Energy_loss EnergyLoss(inbending, RGA_Fall2018);
-	Momentum_Corrections_Richard Momentum_Correction(inbending);
+	Momentum_Corrections_Richard Momentum_Correction(inbending, v2_mom_corr, FD_mom_corr);
 
 	////////////////////////////////////////////
 	// Instanciate observables
