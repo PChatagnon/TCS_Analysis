@@ -787,14 +787,14 @@ double Frixione_wThreshold(Double_t eg)
 
 
 double frixione_angular_limit(double eg, double Eb, double theta_max){
-    double alpha = 1. / 137.
-    double y = eg / Eb
-    double me = 0.00051
-    double Mp = 0.9383
+    double alpha = 1. / 137.;
+    double y = eg / Eb;
+    double me = 0.00051;
+    double Mp = 0.9383;
 
 
     double q2_max = -1 * me * me * y * y / (1 - y);
-    double q2_min = q2_max - Eb * Eb * (1-y) * ((theta_max/180) * np.pi) * ((theta_max/180) * np.pi);
+    double q2_min = q2_max - Eb * Eb * (1-y) * ((theta_max/180) * TMath::Pi()) * ((theta_max/180) * TMath::Pi());
 	auto flux = (1. / Eb) * alpha / (2 * TMath::Pi()) * (2 * me * me * y * (1 / q2_max - 1 / q2_min) + (1 + (1 - y) * (1 - y)) / y * log(q2_min / q2_max));
 
     if (flux == TMath::Infinity())

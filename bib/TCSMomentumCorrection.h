@@ -265,14 +265,6 @@ public:
 		}
 	}
 
-	
-	double corIn_PDep[5] = {-4.319e-01, 5.899e-02, -2.961e-03, 1.311e+00, -1.251e+00};
-	double corOut_PDep[5] = {-2.937e-01, 3.924e-02, -1.189e-03, 7.775e-01, -6.628e-01};
-
-	
-	double corIn_PDep[5] = {-7.500e-01, 1.183e-01, -6.655e-03, 2.031e+00, -1.798e+00};
-	double corOut_PDep[5] = {-4.605e-01, 7.105e-02, -3.152e-03, 1.155e+00, -9.593e-01};
-
 	void Apply_Momentum_Corrections(Particle *Electron, Particle *Positron)
 	{
 
