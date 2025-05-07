@@ -824,10 +824,10 @@ int analysisTCS_MC()
 					Plots.Fill_2D("multiplicity_2D_ep_p", ev.recep, ev.recp, 1);
 				}
 
-				if ((ev.topology_FS() != 11 && ev.topology_FS() != 101 && ev.topology_FS() != 110 && ev.topology_FS() != 111) && inclusive_topology)
+				/*if ((ev.topology_FS() != 11 && ev.topology_FS() != 101 && ev.topology_FS() != 110 && ev.topology_FS() != 111) && inclusive_topology)
 				{
 					continue;
-				}
+				}*/
 
 				if (!ev.pass_topology_cut() && !inclusive_topology)
 				{
