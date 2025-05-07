@@ -463,7 +463,7 @@ public:
 
                 real_flux = n_real(ebeam, Epho);
                 virtual_flux = n_virtual(ebeam, Epho, 0.02);
-                virtual_flux_Frixione = Frixione_wThreshold(Epho);
+                virtual_flux_Frixione = frixione_angular_limit(Epho, ebeam, 2.);//Frixione_wThreshold(Epho);
         }
 
         void Get_Polarization_Transfer()

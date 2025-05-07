@@ -176,7 +176,7 @@ public:
 
                 real_flux_Gen = n_real(ebeam, vPhoton.E());
                 virtual_flux_Gen = n_virtual(ebeam, vPhoton.E(), 0.02);
-                virtual_flux_Frixione_Gen = Frixione_wThreshold(vPhoton.E());
+                virtual_flux_Frixione_Gen =  frixione_angular_limit(Epho_Gen, ebeam, 2.);//Frixione_wThreshold(vPhoton.E());
         }
 };
 
