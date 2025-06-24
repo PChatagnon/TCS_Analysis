@@ -175,7 +175,7 @@ public:
                 GJ_angles(theta_GJ_Gen, phi_GJ_Gen, Electron_2,  Positron,  Proton);
 
                 real_flux_Gen = n_real(ebeam, vPhoton.E());
-                virtual_flux_Gen = n_virtual(ebeam, vPhoton.E(), 0.02);
+                virtual_flux_Gen = n_virtual(ebeam, vPhoton.E(), 0.02)>0 ? n_virtual(ebeam, vPhoton.E(), 0.02) : 0.0;
                 virtual_flux_Frixione_Gen =  frixione_angular_limit(Epho_Gen, ebeam, 2.5);//Frixione_wThreshold(vPhoton.E());
         }
 };
