@@ -150,7 +150,7 @@ public:
                 }
         }
 
-        void Get_Kinematics()
+        void Get_Kinematics(bool IsGrape)
         {
 
                 // Kinematic variables
@@ -163,6 +163,8 @@ public:
                 M_Gen_2 = sqrt(qp2_Gen);
                 M_Gen_1 = sqrt((Positron + Electron_1).M2());
                 Pt_Frac_Gen = vMissing.Pt() / vMissing.P();
+                if (IsGrape)
+                        Q2_Gen = (vBeam - Electron_1).M2();
                 Q2_Gen = 2 * ebeam * vMissing.E() * (1. - cos(vMissing.Theta()));
                 t_min_Gen = T_min( 0.0, mp*mp, M_Gen_2*M_Gen_2, mp*mp, (vPhoton+vRestProton).M2());
 

@@ -241,6 +241,7 @@ int analysisTCS_MC()
 		"L0",
 		"Pt_Frac",
 		"Q2",
+		"Q2_Gen",
 		"theta",
 		"phi",
 		"theta_GJ_Gen",
@@ -680,7 +681,7 @@ int analysisTCS_MC()
 				{
 
 					MC_ev.Set_MC_Particles(MCEVENT, MCPART, IsGrape, IsJPsi, IsElSpectro, IsTCSGen);
-					MC_ev.Get_Kinematics();
+					MC_ev.Get_Kinematics(IsGrape);
 
 					if (IsTCSGen || IsJPsi)
 						w = MC_ev.w;
@@ -1038,6 +1039,7 @@ int analysisTCS_MC()
 					outVars["virtual_flux_Gen"] = MC_ev.virtual_flux_Gen;
 					outVars["virtual_flux_Frixione_Gen"] = MC_ev.virtual_flux_Frixione_Gen;
 					outVars["Epho_Gen"] = MC_ev.Epho_Gen;
+					outVars["Q2_Gen"] = MC_ev.Q2_Gen;
 					outVars["theta_GJ_Gen"] = MC_ev.theta_GJ_Gen;
 					outVars["phi_GJ_Gen"] = MC_ev.phi_GJ_Gen;
 				}
