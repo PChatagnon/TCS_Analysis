@@ -165,7 +165,8 @@ public:
                 Pt_Frac_Gen = vMissing.Pt() / vMissing.P();
                 if (IsGrape)
                         Q2_Gen = (vBeam - Electron_1).M2();
-                Q2_Gen = 2 * ebeam * vMissing.E() * (1. - cos(vMissing.Theta()));
+                if (!IsGrape)
+                        Q2_Gen = 2 * ebeam * vMissing.E() * (1. - cos(vMissing.Theta()));
                 t_min_Gen = T_min( 0.0, mp*mp, M_Gen_2*M_Gen_2, mp*mp, (vPhoton+vRestProton).M2());
 
                 // Angular variables
