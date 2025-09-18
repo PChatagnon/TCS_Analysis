@@ -257,6 +257,8 @@ int analysisTCS_MC()
 		"acc_error",
 		"real_flux_Gen",
 		"virtual_flux_Gen",
+		"virtual_flux_01_Gen",
+		"virtual_flux_05_Gen",
 		"virtual_flux_Frixione_Gen",
 		"run",
 		"analysis_stage",
@@ -1037,6 +1039,8 @@ int analysisTCS_MC()
 				{
 					outVars["real_flux_Gen"] = MC_ev.real_flux_Gen;
 					outVars["virtual_flux_Gen"] = MC_ev.virtual_flux_Gen;
+					outVars["virtual_flux_01_Gen"] = MC_ev.virtual_flux_01_Gen;
+					outVars["virtual_flux_05_Gen"] = MC_ev.virtual_flux_05_Gen;
 					outVars["virtual_flux_Frixione_Gen"] = MC_ev.virtual_flux_Frixione_Gen;
 					outVars["Epho_Gen"] = MC_ev.Epho_Gen;
 					outVars["Q2_Gen"] = MC_ev.Q2_Gen;

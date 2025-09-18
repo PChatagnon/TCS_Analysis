@@ -78,7 +78,7 @@ public:
 
         // Photon flux
         float real_flux;
-        float virtual_flux;
+        float virtual_flux, virtual_flux_01, virtual_flux_05;
         float virtual_flux_Frixione;
 
         // run number and trigger bit
@@ -463,6 +463,8 @@ public:
 
                 real_flux = n_real(ebeam, Epho);
                 virtual_flux = n_virtual(ebeam, Epho, 0.02);
+                virtual_flux_01 = n_virtual(ebeam, Epho, 0.1);
+                virtual_flux_05 = n_virtual(ebeam, Epho, 0.5);
                 virtual_flux_Frixione = frixione_angular_limit(Epho, ebeam, 2.);//Frixione_wThreshold(Epho);
         }
 

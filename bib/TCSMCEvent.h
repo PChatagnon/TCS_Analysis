@@ -63,7 +63,7 @@ public:
         float Pt_Frac_Gen;
         float Q2_Gen;
         float real_flux_Gen;
-        float virtual_flux_Gen;
+        float virtual_flux_Gen, virtual_flux_01_Gen, virtual_flux_05_Gen;
         float virtual_flux_Frixione_Gen;
 
         //MC vertex
@@ -179,6 +179,8 @@ public:
 
                 real_flux_Gen = n_real(ebeam, vPhoton.E());
                 virtual_flux_Gen = n_virtual(ebeam, vPhoton.E(), 0.02)>0 ? n_virtual(ebeam, vPhoton.E(), 0.02) : 0.0;
+                virtual_flux_01_Gen = n_virtual(ebeam, vPhoton.E(), 0.1)>0 ? n_virtual(ebeam, vPhoton.E(), 0.1) : 0.0;
+                virtual_flux_05_Gen = n_virtual(ebeam, vPhoton.E(), 0.5)>0 ? n_virtual(ebeam, vPhoton.E(), 0.5) : 0.0;
                 virtual_flux_Frixione_Gen =  frixione_angular_limit(Epho_Gen, ebeam, 2.5);//Frixione_wThreshold(vPhoton.E());
         }
 };
