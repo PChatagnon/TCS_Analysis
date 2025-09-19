@@ -361,7 +361,8 @@ int analysisTCS_MC()
 		"weight", "evt_num", "t_Gen", "t_min_Gen", "MMassBeam_Gen", "Epho_Gen", "qp2_Gen", "M_Gen_1", "M_Gen_2", "Pt_Frac_Gen", "Q2_Gen",
 		"vz_elec_Gen", "vz_posi_Gen", "vz_prot_Gen",
 		"theta_GJ_Gen","phi_GJ_Gen",
-		"theta_Gen", "phi_Gen", "real_flux_Gen", "virtual_flux_Gen", "virtual_flux_Frixione_Gen"};
+		"theta_Gen", "phi_Gen", 
+		"real_flux_Gen", "virtual_flux_Gen", "virtual_flux_01_Gen", "virtual_flux_05_Gen", "virtual_flux_Frixione_Gen"};
 
 	std::map<TString, Float_t> outVars_Gen;
 	if (IsGrape || IsTCSGen || IsJPsi || IsElSpectro)
@@ -713,6 +714,8 @@ int analysisTCS_MC()
 					outVars_Gen["phi_GJ_Gen"] = MC_ev.phi_GJ_Gen;
 					outVars_Gen["real_flux_Gen"] = MC_ev.real_flux_Gen;
 					outVars_Gen["virtual_flux_Gen"] = MC_ev.virtual_flux_Gen;
+					outVars_Gen["virtual_flux_01_Gen"] = MC_ev.virtual_flux_01_Gen;
+					outVars_Gen["virtual_flux_05_Gen"] = MC_ev.virtual_flux_05_Gen;
 					outVars_Gen["virtual_flux_Frixione_Gen"] = MC_ev.virtual_flux_Frixione_Gen;
 					outVars_Gen["evt_num"] = nbEvent;
 					outVars_Gen["weight"] = w;
