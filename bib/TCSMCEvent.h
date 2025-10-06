@@ -64,6 +64,8 @@ public:
         float Q2_Gen;
         float real_flux_Gen;
         float virtual_flux_Gen, virtual_flux_01_Gen, virtual_flux_05_Gen, virtual_flux_02_Gen, virtual_flux_08_Gen;
+        float virtual_flux_016_Gen, virtual_flux_025_Gen, virtual_flux_034_Gen;
+
         float virtual_flux_Frixione_Gen;
 
         //MC vertex
@@ -183,6 +185,10 @@ public:
                 virtual_flux_05_Gen = n_virtual(ebeam, vPhoton.E(), 0.5)<Frixione_wThreshold(Epho_Gen) ? n_virtual(ebeam, vPhoton.E(), 0.5) : Frixione_wThreshold(Epho_Gen);
                 virtual_flux_02_Gen = n_virtual(ebeam, vPhoton.E(), 0.2)<Frixione_wThreshold(Epho_Gen) ? n_virtual(ebeam, vPhoton.E(), 0.2) : Frixione_wThreshold(Epho_Gen);
                 virtual_flux_08_Gen = n_virtual(ebeam, vPhoton.E(), 0.8)<Frixione_wThreshold(Epho_Gen) ? n_virtual(ebeam, vPhoton.E(), 0.8) : Frixione_wThreshold(Epho_Gen);
+                virtual_flux_016_Gen = n_virtual(ebeam, vPhoton.E(), 0.16)<Frixione_wThreshold(Epho_Gen) ? n_virtual(ebeam, vPhoton.E(), 0.16) : Frixione_wThreshold(Epho_Gen);
+                virtual_flux_025_Gen = n_virtual(ebeam, vPhoton.E(), 0.25)<Frixione_wThreshold(Epho_Gen) ? n_virtual(ebeam, vPhoton.E(), 0.25) : Frixione_wThreshold(Epho_Gen);
+                virtual_flux_034_Gen = n_virtual(ebeam, vPhoton.E(), 0.34)<Frixione_wThreshold(Epho_Gen) ? n_virtual(ebeam, vPhoton.E(), 0.34) : Frixione_wThreshold(Epho_Gen);
+                
                 virtual_flux_Frixione_Gen =  frixione_angular_limit(Epho_Gen, ebeam, 2.5);//Frixione_wThreshold(vPhoton.E());
         }
 };
