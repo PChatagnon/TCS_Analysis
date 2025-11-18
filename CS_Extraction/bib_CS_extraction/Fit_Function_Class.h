@@ -40,7 +40,9 @@ public:
         TMatrixDSym cov_matrix;
         int nb_param;
         bool gaussian = true; 
-        bool fit_status;
+        bool fit_status = false;
+
+        double error_N = 0.0;
         // TFitResultPtr fitResult;
 
         Fit_Function() {}
@@ -106,7 +108,10 @@ public:
                         /*cout << "error NB jpsi" << endl;
                         cout << function->GetParError(0) / (double)(input_Data_hist->GetXaxis()->GetBinWidth(2)) << endl;
                         cout << function->GetParError(0) << endl;*/
-                        return function->GetParError(0) / (double)(input_Data_hist->GetXaxis()->GetBinWidth(2));
+
+
+                        //return function->GetParError(0) / (double)(input_Data_hist->GetXaxis()->GetBinWidth(2));
+                        return error_N / (double)(input_Data_hist->GetXaxis()->GetBinWidth(2));
                 }
 
                 else return 0.0;
@@ -175,7 +180,7 @@ public:
                 function_BG->SetFillColorAlpha(kBlue, 0.8);
         }
 
-        void Crystall_Ball_fit_exp(TString options, TString name)
+        void Crystall_Ball_fit_exp_old(TString options, TString name)
         {
 
                 gaussian = false;
@@ -202,9 +207,70 @@ public:
                 function->SetParLimits(2, 0.025, 0.15);
                 // alpha and n
                 function->SetParameter(3, 0.75);
-                function->SetParLimits(3, 0.25, 1.5);
+                //function->SetParLimits(3, 0.5, 1.5);
                 function->SetParameter(4, 150);
-                function->SetParLimits(4, 50, 500);
+                //function->SetParLimits(4, 2, 500);
+                // BG
+                function->SetParameter(5, 7.);
+                function->SetParLimits(5, 0.00, 100000.);
+                function->SetParameter(6, -2.);
+                function->SetParLimits(6, -100000., 0.0);
+
+                input_Data_hist->Draw("e");
+                TFitResultPtr fitResult = input_Data_hist->Fit(name_function, options);
+
+                cov_matrix = fitResult->GetCovarianceMatrix();
+                chi2 = fitResult->Chi2();
+                NDF = fitResult->Ndf();
+                fit_status = fitResult->IsValid();
+
+                function_Signal = new TF1(name_signal, "[0]*crystalball_function(x, [1], [2], [3], [4])", min_fit, max_fit);
+                function_Signal->SetParameter(0, function->GetParameter(0));
+                function_Signal->SetParameter(1, function->GetParameter(1));
+                function_Signal->SetParameter(2, function->GetParameter(2));
+                function_Signal->SetParameter(3, function->GetParameter(3));
+                function_Signal->SetParameter(4, function->GetParameter(4));
+                function_Signal->SetLineColor(kGreen);
+                function_Signal->SetFillColorAlpha(kGreen, 0.8); // Set the transparency for the band
+                function_Signal->SetLineWidth(3);
+
+                function_BG = new TF1(name_bg, "exp([0]+[1]*x)", min_fit, max_fit);
+                function_BG->SetParameter(0, function->GetParameter(5));
+                function_BG->SetParameter(1, function->GetParameter(6));
+                function_BG->SetLineColor(kBlue);
+                function_BG->SetFillColorAlpha(kBlue, 0.8);
+        }
+
+        void Crystall_Ball_fit_exp(TString options, TString name)
+        {
+
+                gaussian = false;
+                int nb_param = 7;
+                cov_matrix.ResizeTo(nb_param, nb_param);
+
+                TString name_function = name + "_fit_func";
+                TString name_signal = name + "_sig_func";
+                TString name_bg = name + "_bg_func";
+
+                //cout << "name BG func" << endl;
+                //cout << name_bg << endl;
+
+                function = new TF1(name_function, "[0]*crystalball_function(x, [1], [2], [3], [4]) +  exp([5]+[6]*x)", min_fit, max_fit);
+                // function = new TF1(name_function,"[0]*ROOT::Math::crystalball_function(x,[3], [4], [2], [1]) + ([5]+[6]*(x-3.1) + [7]*(x-3.1)*(x-3.1))",min_fit, max_fit);
+
+                int init_amp_fit = (input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) > 0.0) ? input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) : 5;
+
+                function->SetParameter(0, init_amp_fit);
+                function->SetParLimits(0, init_amp_fit * 0.1, init_amp_fit * 100.);
+                function->SetParameter(1, 3.096);
+                function->SetParLimits(1, 3.07, 3.2);
+                function->SetParameter(2, 0.04);
+                function->SetParLimits(2, 0.025, 0.10);
+                // alpha and n
+                function->FixParameter(3, 0.9);
+                //function->SetParLimits(3, 0.5, 1.5);
+                function->FixParameter(4, 4);
+                //function->SetParLimits(4, 2, 500);
                 // BG
                 function->SetParameter(5, 7.);
                 function->SetParLimits(5, 0.00, 100000.);
@@ -253,7 +319,7 @@ public:
                 function->SetParameter(0, init_amp_fit);
                 function->SetParLimits(0, init_amp_fit * 0.1, init_amp_fit * 100.);
                 function->SetParameter(1, 3.096);
-                function->SetParLimits(1, 3.02, 3.2);
+                function->SetParLimits(1, 3.05, 3.2);
                 function->SetParameter(2, 0.04);
                 function->SetParLimits(2, 0.025, 0.15);
 
@@ -296,19 +362,23 @@ public:
 
                 //cout << "name BG func" << endl;
                 //cout << name_bg << endl;
+                TRandom3 r;
+                r.SetSeed(0);
+                double random_number = 0.9 + 0.2*r.Rndm();
+                double random_number1 = 0.98 + 0.04*r.Rndm();
 
                 function = new TF1(name_function, "([0]/(2.5066*[2]))*exp(-0.5*pow((x-[1])/[2],2)) + exp([3]+[4]*x)", min_fit, max_fit);
-                int init_amp_fit = (input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) > 0.0) ? input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) : 5;
-                function->SetParameter(0, init_amp_fit);
-                function->SetParLimits(0, 0.000, 100000.);
-                function->SetParameter(1, 3.096);
-                function->SetParLimits(1, 3.07, 3.2);
-                function->SetParameter(2, 0.04);
-                function->SetParLimits(2, 0.025, 0.10);
+                double init_amp_fit = (input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) > 0.0) ? input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) : 0.8;
+                function->SetParameter(0, init_amp_fit*random_number);
+                function->SetParLimits(0, 0.000, input_Data_hist->GetEntries());
+                function->SetParameter(1, 3.1*random_number1);
+                function->SetParLimits(1, 3.05, 3.25);
+                function->SetParameter(2, 0.045*random_number);
+                function->SetParLimits(2, 0.025, 0.05);
 
-                function->SetParameter(3, 5.);
+                function->SetParameter(3, 10.*random_number);
                 function->SetParLimits(3, 0.00, 100000.);
-                function->SetParameter(4, -2.);
+                function->SetParameter(4, -3.*random_number);
                 function->SetParLimits(4, -100000., 0.0);
 
                 input_Data_hist->Draw("e");
@@ -332,6 +402,10 @@ public:
                 function_BG->SetParameter(1, function->GetParameter(4));
                 function_BG->SetLineColor(kBlue);
                 function_BG->SetFillColorAlpha(kBlue, 0.8);
+
+                error_N = fitResult->UpperError(0);
+
+                //cout<<"fit status "<<fit_status<<endl;
         }
 
         void Single_Gaussian_Int_fit_Pol_BG(TString options, TString name)
@@ -353,7 +427,7 @@ public:
                 function->SetParameter(1, 3.096);
                 function->SetParLimits(1, 3.02, 3.2);
                 function->SetParameter(2, 0.04);
-                function->SetParLimits(2, 0.025, 0.10);
+                function->SetParLimits(2, 0.025, 0.6);
 
                 function->SetParameter(3, 7.);
                 function->SetParLimits(3, 0.00, 100000.);
@@ -401,11 +475,11 @@ public:
                 function = new TF1(name_function, "([0]/(2.5066*[2]))*exp(-0.5*pow((x-[1])/[2],2)) + ([3]+[5]*(x-[4])*(x-[4]))", min_fit, max_fit);
                 int init_amp_fit = (input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) > 0.0) ? input_Data_hist->GetBinContent(input_Data_hist->FindBin(3.096)) : 5;
                 function->SetParameter(0, init_amp_fit);
-                function->SetParLimits(0, 0.000, 100000.);
+                function->SetParLimits(0, 0.001, 100000.);
                 function->SetParameter(1, 3.096);
-                function->SetParLimits(1, 3.02, 3.2);
+                function->SetParLimits(1, 3.05, 3.2);
                 function->SetParameter(2, 0.04);
-                function->SetParLimits(2, 0.025, 0.10);
+                function->SetParLimits(2, 0.025, 0.5);
 
                 function->SetParameter(3, 7.);
                 function->SetParLimits(3, 0.00, 100000.);
@@ -436,6 +510,8 @@ public:
                 function_BG->SetParameter(2, function->GetParameter(5));
                 function_BG->SetLineColor(kBlue);
                 function_BG->SetFillColorAlpha(kBlue, 0.8);
+
+                error_N = fitResult->UpperError(0);
         }
 
         void Double_Gaussian_Fit(TString options, TString name)

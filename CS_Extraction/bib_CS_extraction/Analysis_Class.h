@@ -11,6 +11,11 @@ public: // Keep everything public for convenience
 	TString variable = "Epho";
 	TString bin_id = "bin 1";
 	TString fit_procedure = "Default";
+	TString mom_corr_version ="Default";
+
+	TString flux_formula = "Default"; //"Frixione";
+	TString option_cut_flux = "Q2max05"; //"Q2max02";//"Default"; //"Default"; //"Q2max01";//"Default"; //
+
 	bool debug = false;
 	bool ratio_pad = false;
 	bool pull_pad = true;
@@ -18,13 +23,19 @@ public: // Keep everything public for convenience
 
 	////// Store fit and plotting configuration //////
 	double min_fit = 2.7;
-	double max_fit = 3.3;
+	double max_fit = 3.45;
 	/////////////////////////////////
 
 	////// Store normalization configuration //////
 	double Mass_norm_low = 2.6;
 	double Mass_norm_high = 2.9;
 	/////////////////////////////////
+
+	double alpha_SDME = 0.5;
+	double additional_norm_factor = 4.0;
+	bool GJ_correction = true;
+
+	double ISR_correction = 0.84;
 
 	////// Store all quantities for the analysis //////
 	std::vector<vector<TString>> labels{};
@@ -44,7 +55,7 @@ public: // Keep everything public for convenience
 
 	////// Store the path to data and output //////
 	TString output_folder = "/Users/pc281174/Desktop/JPsi_analysis/CS_Extraction/";
-	TString name_pdf = "CS_Extraction_Gauss_exp_1";
+	TString name_pdf = "CS_Extraction_mom_corr";
 	/////////////////////////////////
 
 	////// Store kinematic and exclusivity cuts //////
@@ -74,7 +85,7 @@ public: // Keep everything public for convenience
 	/////// Set configurations //////
 	void Set_Sample_to_RGA()
 	{
-		Analysis_Sample.Setup_RGA();
+		Analysis_Sample.Setup_RGA(mom_corr_version);
 		RunGroup = "RGA";
 	}
 
@@ -156,8 +167,14 @@ public: // Keep everything public for convenience
 		if (isParameter(parameters, "fit_procedure"))
 			fit_procedure = TString(getParameterValue(parameters, "fit_procedure"));
 
+		if (isParameter(parameters, "option_cut_flux"))
+			option_cut_flux = TString(getParameterValue(parameters, "option_cut_flux"));
+
 		if (isParameter(parameters, "bin_id"))
 			bin_id = TString(getParameterValue(parameters, "bin_id"));
+
+		if (isParameter(parameters, "flux_formula"))
+			flux_formula = TString(getParameterValue(parameters, "flux_formula"));
 
 		if (isParameter(parameters, "exclusivity_cut"))
 			exclusivity_cut = Form("%s", getParameterValue(parameters, "exclusivity_cut").c_str());
@@ -167,6 +184,12 @@ public: // Keep everything public for convenience
 
 		if (isParameter(parameters, "kinematic_cut_BG"))
 			kinematic_cut_BG = Form("%s", getParameterValue(parameters, "kinematic_cut_BG").c_str());
+
+		if (isParameter(parameters, "mom_corr_version"))
+			mom_corr_version = Form("%s", getParameterValue(parameters, "mom_corr_version").c_str());
+
+		if (isParameter(parameters, "alpha_SDME"))
+			alpha_SDME = stof(getParameterValue(parameters, "alpha_SDME"));
 
 		if (isParameter(parameters, "data_cut"))
 			data_cut = Form("%s", getParameterValue(parameters, "data_cut").c_str());
@@ -182,29 +205,33 @@ public: // Keep everything public for convenience
 
 		if (isParameter(parameters, "pull_pad"))
 			pull_pad = (getParameterValue(parameters, "pull_pad") == "true");
+
+		cout<<"option cut flux "<<option_cut_flux<<endl;
+
 	}
 
 	//////  End Set parameters  //////
 
 	//////  Setup binnings  //////
-	void
-	Set_Binning_RGA()
+	
+
+	void Set_Binning_RGA()
 	{
 
 		// Store the binning and plotting configuration
-		TString min_hist_MC = "1.8";
+		TString min_hist_MC = "2.0";
 		TString min_hist = "2.6";
 		TString max_hist = "3.5";
-		TString bin_hist = "30.";
+		TString bin_hist = "45";//"30.";//
 
 		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>8.2 && Epho<8.65 ", "", "M2"});
 		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>8.65 && Epho<8.9 ", "", "M2"});
 		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>8.9 && Epho<9.05 ", "", "M2"});
 		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.05 && Epho<9.2 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.2 && Epho<9.46 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.46 && Epho<9.7 ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.7 && Epho<10. ", "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>10. && Epho<10.2 ", "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.2 && Epho<9.5 ", "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.5 && Epho<9.7 ", "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.7 && Epho<9.95 ", "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>9.95 && Epho<10.2 ", "", "M2"});
 		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>10.2 && Epho<10.4 ", "", "M2"});
 		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, "M>2.0 && Epho>10.4 && Epho<10.6 ", "", "M2"});
 
@@ -212,10 +239,10 @@ public: // Keep everything public for convenience
 		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>8.65 && Epho_Gen<8.9 ", "50", "8.65", "8.9"});
 		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>8.9 && Epho_Gen<9.05 ", "50", "8.9", "9.05"});
 		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.05 && Epho_Gen<9.2 ", "50", "9.05", "9.2"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.2 && Epho_Gen<9.46", "50", "9.2", "9.46"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.46 && Epho_Gen<9.7 ", "50", "9.46", "9.7"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.7 && Epho_Gen<10.0 ", "50", "9.7", "10."});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>10.0 && Epho_Gen<10.2 ", "50", "10.", "10.2"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.2 && Epho_Gen<9.5", "50", "9.2", "9.5"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.5 && Epho_Gen<9.7 ", "50", "9.5", "9.7"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.7 && Epho_Gen<9.95 ", "50", "9.7", "9.95"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>9.95 && Epho_Gen<10.2 ", "50", "9.95", "10.2"});
 		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>10.2 && Epho_Gen<10.4 ", "50", "10.2", "10.4"});
 		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, "weight<100 && M_Gen_2>2.0 && Epho_Gen>10.4 && Epho_Gen<10.6 ", "50", "10.4", "10.6"});
 	}
@@ -411,13 +438,33 @@ public: // Keep everything public for convenience
 
 				TString hist_name = Form("sample_hist_%s_%i_%i", Analysis_Sample.samples[j][3].Data(), j, i);
 				TH1D *sample_hist = new TH1D(hist_name, "", nbBins, min_histo, max_histo);
+
+				
 				TCut weight = Form("%s*%f*%f*%f/(%i)", "weight", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample); // Form("%f",1.0);//
+				
+				if(GJ_correction)
+					weight = Form("%s*(%f+%f*%s)*%f*%f*%f/(%i)", "weight", 1., alpha_SDME, "cos(theta_GJ_Gen)*cos(theta_GJ_Gen)", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+				
+				if(flux_formula=="Frixione")
+					weight = Form("(%s*(%s)/(%s))*(%f+%f*%s)*%f*%f*%f/(%i)", "weight", "virtual_flux_Frixione_Gen+real_flux_Gen", "virtual_flux_Gen+real_flux_Gen", 1., alpha_SDME, "cos(theta_GJ_Gen)*cos(theta_GJ_Gen)", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
+
+				
+
+
+				//TCut weight = Form("%s*(%f+%f)*%f*%f*%f/(%i)", "weight", 1., alpha_SDME, xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
+
 
 				Analysis_Sample.reduced_samples_tree[j]->Draw(label + ">>" + hist_name, cut * weight);
 
+				/*TCanvas *cancG4 = new TCanvas("", "can4", 1500, 1000);
+				sample_hist->Draw("hist");
+				cancG4->SaveAs(output_folder + name_pdf + ".pdf");*/
+
 				if (debug)
 					cout << cut * weight << "\n";
-				if (debug)
+				if (true)
 					cout << "Number of entries " << sample_hist->GetEntries() << "\n";
 
 				// UnderFlow-OverFlow
@@ -440,7 +487,7 @@ public: // Keep everything public for convenience
 				if (Analysis_Sample.samples[j][3] == "J#psi")
 					hs_JPsi->Add(sample_hist);
 
-				if (debug)
+				if (true)
 					cout << Analysis_Sample.samples[j][0] << "\n";
 				BG_hist->Add(sample_hist);
 
@@ -505,21 +552,27 @@ public: // Keep everything public for convenience
 			Fit_func.Set_Limits(min_fit, max_fit);
 			// Fit_func.Single_Gaussian_fit("SLER", Form("func_%i", i));
 			// Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
+			int nb_fit = 0;
+			while (!Fit_func.fit_status && nb_fit<40)
+			{
+				if (fit_procedure == "Default")
+					Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
 
-			if (fit_procedure == "Default")
-				Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
+				if (fit_procedure == "Crystall ball Pol 2 BG")
+					Fit_func.Crystall_Ball_fit("SLER", Form("func_%i", i));
 
-			if (fit_procedure == "Crystall ball Pol 2 BG")
-				Fit_func.Crystall_Ball_fit("SLER", Form("func_%i", i));
+				if (fit_procedure == "Crystall ball exp BG")
+					Fit_func.Crystall_Ball_fit_exp("SLR", Form("func_%i", i));
 
-			if (fit_procedure == "Crystall ball exp BG")
-				Fit_func.Crystall_Ball_fit_exp("SLER", Form("func_%i", i));
+				if (fit_procedure == "Pol 2 BG")
+					Fit_func.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
 
-			if (fit_procedure == "Pol 2 BG")
-				Fit_func.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
+				if (fit_procedure == "Double Gaussian")
+					Fit_func.Double_Gaussian_Fit("SELR", Form("func_%i", i));
 
-			if (fit_procedure == "Double Gaussian")
-				Fit_func.Double_Gaussian_Fit("SLR", Form("func_%i", i));
+				nb_fit++;
+				cout << Fit_func.fit_status << endl;
+			}
 			// Fit_func.Single_Gaussian_Fit_Flat_BG("SLR",Form("func_%i", i));
 			double chi2 = Fit_func.chi2;
 			double NDF = Fit_func.NDF;
@@ -561,6 +614,9 @@ public: // Keep everything public for convenience
 
 			legend->AddEntry(Fit_func.function_Signal, Form("J#psi fit (%3.1f #pm %3.1f)  ", nb_JPsi, error_nb_JPsi), "l");
 			legend->AddEntry(Fit_func.function_Signal, Form("#Chi^{2}: %3.1f, NdF: %3.1f, #Chi^{2}/NdF: %3.1f ", chi2, NDF, chi2 / NDF), "");
+			if (fit_procedure == "Crystall ball exp BG")
+				legend->AddEntry(Fit_func.function_Signal, Form("#alpha %3.1f, n %3.1f", Fit_func.function_Signal->GetParameter(3), Fit_func.function_Signal->GetParameter(4)), "");
+			
 
 			TText *t = new TText();
 			t->SetTextAlign(22);
@@ -712,13 +768,13 @@ public: // Keep everything public for convenience
 			TString name_BG_func = Form("func_%i_bg_func", i);
 
 			TH1D *h_only_JPsi = (TH1D *)(hs_JPsi->GetStack()->Last());
-			double nb_JPsi_integral_MC_raw = h_only_JPsi->Integral(h_only_JPsi->FindBin(2.95), h_only_JPsi->FindBin(3.15));
+			double nb_JPsi_integral_MC_raw = h_only_JPsi->Integral(h_only_JPsi->FindBin(2.90), h_only_JPsi->FindBin(3.15));
 
-			double additional_norm_factor = 4.0;
+			
 			double normalization_MC_to_data = additional_norm_factor * nb_JPsi; // nb_JPsi_integral_MC_raw;
 			cout << "Normalization factor for signal in MC: " << normalization_MC_to_data << endl;
 
-			int iteration_Acc = 1000;
+			const int iteration_Acc = 2000;
 			double nb_jpsi_per_iteration[iteration_Acc];
 			Fit_Function Fit_func_MC;
 
@@ -727,7 +783,7 @@ public: // Keep everything public for convenience
 			TH1D *BG_add_hist = new TH1D(Form("BG_add_hist_%i", i), "", nbBins, min_histo, max_histo);
 			TH1D *h_JPsi_norm = new TH1D(Form("h_JPsi_norm_%i", i), "", nbBins, min_histo, max_histo);
 			TH1D *hlast = new TH1D(Form("h_last_%i", i), "", nbBins, min_histo, max_histo);
-			//TH1D *hs_JPsi_BG = new TH1D(Form("h_last_%i", i), "", nbBins, min_histo, max_histo);
+			// TH1D *hs_JPsi_BG = new TH1D(Form("h_last_%i", i), "", nbBins, min_histo, max_histo);
 			THStack *hs_JPsi_BG = new THStack("hs_JPsi_BG", "");
 
 			for (int l = 0; l < iteration_Acc; l++)
@@ -753,18 +809,15 @@ public: // Keep everything public for convenience
 				// h_only_JPsi->Scale(normalization_MC_to_data);
 				double nb_JPsi_integral_MC = h_JPsi_norm->Integral();
 
-				
 				/////End simulate the background
 
 				hlast->Add(h_JPsi_norm);
 				hlast->Add(BG_add_hist);
-				
-
 
 				// cout << "///////////////////////" << endl;
 				// cout << "FIT MC" << endl;
 				/// cout << "///////////////////////" << endl;
-				
+
 				redefineErrors(hlast);
 				Fit_func_MC.Set_Data_hist(hlast);
 				Fit_func_MC.Set_Limits(min_fit, max_fit);
@@ -813,6 +866,9 @@ public: // Keep everything public for convenience
 					legend_acc->AddEntry(h_only_JPsi, Form("nb JPsi %3.1f", nb_JPsi_integral_MC), "f1");
 					legend_acc->AddEntry(Fit_func_MC.function_Signal, Form("J#psi fit (%3.1f #pm %3.1f)  ", Fit_func_MC.Get_Integral_Signal(), Fit_func_MC.Get_Integral_Error_Signal()), "l");
 					legend_acc->AddEntry(Fit_func_MC.function_Signal, Form("#Chi^{2} %3.1f, NdF %3.1f, #Chi^{2}/NdF %3.1f ", Fit_func_MC.chi2, Fit_func_MC.NDF, Fit_func_MC.chi2 / Fit_func_MC.NDF), "");
+					if (fit_procedure == "Crystall ball exp BG")
+						legend_acc->AddEntry(Fit_func_MC.function_Signal, Form("#alpha %3.1f, n %3.1f", Fit_func_MC.function_Signal->GetParameter(3), Fit_func_MC.function_Signal->GetParameter(4)), "");
+			
 					legend_acc->SetFillStyle(0);
 					legend_acc->SetLineWidth(0);
 					legend_acc->Draw("same ");
@@ -827,14 +883,10 @@ public: // Keep everything public for convenience
 				numerator_Acc += nb_jpsi_per_iteration[i];
 			}
 
-			double iteration_in_double = static_cast<double>(iteration_Acc);
-			cout << "total rec " << numerator_Acc << endl;
-			cout << "iteration_in_double " << iteration_in_double << endl;
-			cout << "Acc num " << nb_JPsi_integral_MC_raw * numerator_Acc / (additional_norm_factor * nb_JPsi * iteration_in_double) << endl;
-			Acc_Num.push_back(nb_JPsi_integral_MC_raw * numerator_Acc / (additional_norm_factor * nb_JPsi * iteration_in_double)); //(sample_Acc->Integral());
-
 			TCanvas *cancAccIteration = new TCanvas("", "cancAccIteration", 1500, 1000);
 			cancAccIteration->cd();
+
+			double iteration_in_double = static_cast<double>(iteration_Acc);
 			TH1D *histAccIteration = new TH1D(Form("histAccIteration%i", i), "", 50, 0.0, 2.0 * numerator_Acc / iteration_in_double);
 			for (int i = 0; i < iteration_Acc; ++i)
 			{
@@ -848,6 +900,11 @@ public: // Keep everything public for convenience
 			cancAccIteration->SaveAs(output_folder + name_pdf + ".pdf");
 
 			gStyle->SetOptStat(1);
+			
+			cout << "total rec " << numerator_Acc << endl;
+			cout << "iteration_in_double " << iteration_in_double << endl;
+			cout << "Acc num " << nb_JPsi_integral_MC_raw * histAccIteration->GetMean() / (normalization_MC_to_data) << endl;
+			Acc_Num.push_back(nb_JPsi_integral_MC_raw * histAccIteration->GetMean() / (normalization_MC_to_data)); //(sample_Acc->Integral());
 
 			// Compute_Acc();
 
@@ -1114,10 +1171,31 @@ public: // Keep everything public for convenience
 					TString hist_Acc = Form("sample_Acc_%s_%i_%i", Analysis_Sample.samples[j][3].Data(), j, i);
 					TH1D *sample_Acc = new TH1D(hist_Acc, "", nbBins, min_histo, max_histo);
 
-					TCut weight1 = Form("(%s+%s)*%f", "virtual_flux_Gen", "real_flux_Gen", lumi_sample);
-					// TCut weight1 = Form("(%s+%s)*%f", "virtual_flux_Frixione_Gen", "real_flux_Gen", lumi_sample);
+					
+					
+					//Standard flux
+					TCut weight1 = Form("(%s*%f+%s)*%f", "virtual_flux_Gen",  ISR_correction, "real_flux_Gen", lumi_sample);
+					//Frixione Flux
+					if(flux_formula=="Frixione")
+						weight1 = Form("(%s*%f+%s)*%f", "virtual_flux_Frixione_Gen",  ISR_correction, "real_flux_Gen", lumi_sample);
+
 					//  TCut weight1 = Form("(%s)*%f", "virtual_flux_Gen", lumi_sample);
-					TCut weight_acc = Form("%s*%f*%f*%f/(%i)", "weight", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample); // Form("%f",1.0);//
+
+
+					// This is the standard weight 
+					TCut weight_acc = Form("%s*%f*%f*%f/(%i)", "weight", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample); 
+
+					if(GJ_correction)
+						weight_acc = Form("%s*(%f+%f*%s)*%f*%f*%f/(%i)", "weight", 1., alpha_SDME,"cos(theta_GJ_Gen)*cos(theta_GJ_Gen)", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
+					if(flux_formula=="Frixione")
+						weight_acc = Form("(%s*(%s)/(%s))*(%f+%f*%s)*%f*%f*%f/(%i)", "weight","virtual_flux_Frixione_Gen+real_flux_Gen","virtual_flux_Gen+real_flux_Gen", 1., alpha_SDME,"cos(theta_GJ_Gen)*cos(theta_GJ_Gen)", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
+					//TCut weight_acc = Form("%s*(%f+%f)*%f*%f*%f/(%i)", "weight", 1., alpha_SDME, xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
+
+
+
 					// TCut weight_acc = Form("%s*(%s+%s)*%f*%f*%f/((%s+%s)*%i)", "weight", "virtual_flux_Frixione_Gen", "real_flux_Gen", xsec, lumi_factor, lumi_sample, "virtual_flux_Gen", "real_flux_Gen", nbEvents_sample); // Form("%f",1.0);//
 
 					// MC_tree[j]->Draw(label + ">>" + hist_name1, cut * weight1);
@@ -1151,7 +1229,7 @@ public: // Keep everything public for convenience
 
 					// double integral_flux_sample = (sample_hist1->GetEntries()>100) ? (Eg_max - Eg_min) * ((sample_hist1->Integral()) / sample_hist1->GetEntries()) : 0.0;
 					double integral_flux_sample = (sample_hist1->GetEntries() > 100) ? (Eg_max - Eg_min) * ((sample_hist1->Integral()) / sample_Acc->Integral()) : 0.0;
-					integral_flux.push_back(integral_flux_sample);
+					//integral_flux.push_back(integral_flux_sample);
 
 					if (debug)
 					{
@@ -1171,7 +1249,63 @@ public: // Keep everything public for convenience
 
 					TCut weight_no_rad = Form("%s*%f*%f*%f/(%i)", "weight", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample); // Form("%f",1.0);//
 
+					if(GJ_correction)
+						weight_no_rad = Form("%s*(%f+%f*%s)*%f*%f*%f/(%i)", "weight", 1., alpha_SDME, "cos(theta_GJ_Gen)*cos(theta_GJ_Gen)", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
+					if(flux_formula=="Frixione")
+						weight_no_rad = Form("(%s*(%s)/(%s))*(%f+%f*%s)*%f*%f*%f/(%i)", "weight","virtual_flux_Frixione_Gen+real_flux_Gen","virtual_flux_Gen+real_flux_Gen", 1., alpha_SDME,"cos(theta_GJ_Gen)*cos(theta_GJ_Gen)", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
+
+					//TCut weight_no_rad = Form("%s*(%f+%f)*%f*%f*%f/(%i)", "weight", 1., alpha_SDME,  xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
 					Analysis_Sample.MC_tree[j]->Draw(label + ">>" + hist_no_rad, cut * weight_no_rad);
+
+
+					////////////////////////////////
+					////////////////////////////////
+					////////////////////////////////
+					////////////////////////////////
+					///// FLUX COMPUTATION
+					TString hist_name1 = Form("sample_hist1_%s_%i_%i", Analysis_Sample.samples[j][3].Data(), j, i);
+					TH1D *sample_hist1 = new TH1D(hist_name1, "", nbBins, min_histo, max_histo);
+
+					//Standard flux
+					TCut weight1 = Form("(%s*%f+%s)*%f", "virtual_flux_Gen",  ISR_correction, "real_flux_Gen", lumi_sample);
+
+					if(option_cut_flux=="Q2max01"){
+						weight1 = Form("(%s*%f+%s)*%f", "virtual_flux_01_Gen",  ISR_correction, "real_flux_Gen", lumi_sample);
+						cout<<"Using Q2max 0.1 GeV2 flux"<<endl;
+						cout<<"weight1 "<<weight1<<endl;
+					}
+
+					if(option_cut_flux=="Q2max02"){
+						weight1 = Form("(%s*%f+%s)*%f", "virtual_flux_016_Gen",  ISR_correction, "real_flux_Gen", lumi_sample);
+						cout<<"Using Q2max 0.2 GeV2 flux"<<endl;
+						cout<<"weight1 "<<weight1<<endl;
+					}
+
+					if(option_cut_flux=="Q2max05")
+						weight1 = Form("(%s*%f+%s)*%f", "virtual_flux_025_Gen",  ISR_correction, "real_flux_Gen", lumi_sample);
+
+					if(option_cut_flux=="Q2max08")
+						weight1 = Form("(%s*%f+%s)*%f", "virtual_flux_034_Gen",  ISR_correction, "real_flux_Gen", lumi_sample);
+
+					//Frixione Flux
+					if(flux_formula=="Frixione")
+						weight1 = Form("(%s*%f+%s)*%f", "virtual_flux_Frixione_Gen",  ISR_correction, "real_flux_Gen", lumi_sample);
+
+					Analysis_Sample.MC_tree[j]->Draw(label + ">>" + hist_name1, cut * weight1);
+
+					double integral_flux_sample = (sample_hist1->GetEntries()>100) ? (Eg_max - Eg_min) * ((sample_hist1->Integral()) / sample_hist1->GetEntries()) : 0.0;
+					cout<<"label "<<label<<endl;
+					cout<<"integral_flux_sample "<<integral_flux_sample<<endl;
+					
+					integral_flux.push_back(integral_flux_sample);
+					////////////////////////////////
+					////////////////////////////////
+					////////////////////////////////
+					////////////////////////////////
+
 
 					// hs_MC_no_rad->SetTitle(";" + label + ";Events");
 					hs_MC_no_rad->SetTitle("; M_{GEN} ;Events");
@@ -1197,6 +1331,8 @@ public: // Keep everything public for convenience
 
 			TH1D *No_rad_MC_stack_hist = (TH1D *)(hs_MC_no_rad->GetStack()->Last());
 			double Rad_corr = (MC_stack_hist->Integral()) / (No_rad_MC_stack_hist->Integral());
+
+			cout << "here" << "\n";
 
 			Acc_hist->SetBinContent(i + 1, Acc);
 			Flux_hist->SetBinContent(i + 1, avg_flux * Analysis_Sample.lumi_factor);

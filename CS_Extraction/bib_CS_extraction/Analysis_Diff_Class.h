@@ -39,7 +39,7 @@ public:
 
 		TString min_hist_MC = "1.8";
 		TString min_hist = "2.7";
-		TString max_hist = "3.3";
+		TString max_hist = "3.4";
 		TString bin_hist = "40.";
 
 		labels = {};
@@ -70,7 +70,7 @@ public:
 
 		TString min_hist_MC = "1.8";
 		TString min_hist = "2.7";
-		TString max_hist = "3.3";
+		TString max_hist = "3.4";
 		TString bin_hist = "40.";
 
 		labels = {};
@@ -109,24 +109,57 @@ public:
 
 		TString min_hist_MC = "1.8";
 		TString min_hist = "2.7";
-		TString max_hist = "3.3";
+		TString max_hist = "3.4";
 		TString bin_hist = "40.";
 
 		labels = {};
 		labels_MC = {};
 
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>0.5 && -t<0.75 ", Eg_min, Eg_max), "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>0.75 && -t<1.0 ", Eg_min, Eg_max), "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>1.0 && -t<1.25 ", Eg_min, Eg_max), "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>1.25 && -t<2.0 ", Eg_min, Eg_max), "", "M2"});
-		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>2.0 && -t<6.0 ", Eg_min, Eg_max), "", "M2"});
-
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>0.5 && -t_Gen<0.75 ", Eg_min, Eg_max), "50", "0.5", "0.75"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>0.75 && -t_Gen<1.0 ", Eg_min, Eg_max), "50", "0.75", "1.0"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>1.0 && -t_Gen<1.25 ", Eg_min, Eg_max), "50", "1.0", "1.25"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>1.25 && -t_Gen<2.0 ", Eg_min, Eg_max), "50", "1.25", "2.0"});
-		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>2.0 && -t_Gen<6.0 ", Eg_min, Eg_max), "50", "2.0", "6.0"});
+		//labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>0.5 && -t<0.75 ", Eg_min, Eg_max), "", "M2"});
+		//labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>0.75 && -t<1.0 ", Eg_min, Eg_max), "", "M2"});
+		//labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>1.0 && -t<1.25 ", Eg_min, Eg_max), "", "M2"});
+		//labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>1.25 && -t<2.0 ", Eg_min, Eg_max), "", "M2"});
+		//labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>2.0 && -t<5.0 ", Eg_min, Eg_max), "", "M2"});
+//
+		//labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>0.5 && -t_Gen<0.75 ", Eg_min, Eg_max), "50", "0.5", "0.75"});
+		//labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>0.75 && -t_Gen<1.0 ", Eg_min, Eg_max), "50", "0.75", "1.0"});
+		//labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>1.0 && -t_Gen<1.25 ", Eg_min, Eg_max), "50", "1.0", "1.25"});
+		//labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>1.25 && -t_Gen<2.0 ", Eg_min, Eg_max), "50", "1.25", "2.0"});
+		//labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>2.0 && -t_Gen<5.0 ", Eg_min, Eg_max), "50", "2.0", "6.0"});
 		
+		//labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>0.5 && -t<0.8 ", Eg_min, Eg_max), "", "M2"});
+		//labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>0.8 && -t<1.1 ", Eg_min, Eg_max), "", "M2"});
+		//labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>1.1 && -t<1.6 ", Eg_min, Eg_max), "", "M2"});
+		//labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>1.6 && -t<4.5 ", Eg_min, Eg_max), "", "M2"});
+		////labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>2.0 && -t<5.0 ", Eg_min, Eg_max), "", "M2"});
+//
+		//labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>0.5 && -t_Gen<0.8 ", Eg_min, Eg_max), "50", "0.5", "0.8"});
+		//labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>0.8 && -t_Gen<1.1 ", Eg_min, Eg_max), "50", "0.8", "1.1"});
+		//labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>1.1 && -t_Gen<1.6 ", Eg_min, Eg_max), "50", "1.1", "1.6"});
+		//labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>1.6 && -t_Gen<4.5 ", Eg_min, Eg_max), "50", "1.6", "4.5"});
+		////labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>2.0 && -t_Gen<5.0 ", Eg_min, Eg_max), "50", "2.0", "6.0"});
+		
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>0.5 && -t<0.7 ", Eg_min, Eg_max), "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>0.7 && -t<0.9 ", Eg_min, Eg_max), "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>0.9 && -t<1.1 ", Eg_min, Eg_max), "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>1.1 && -t<1.3 ", Eg_min, Eg_max), "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>1.3 && -t<1.6 ", Eg_min, Eg_max), "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>1.6 && -t<2.0 ", Eg_min, Eg_max), "", "M2"});
+		//labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>2.0 && -t<4.5 ", Eg_min, Eg_max), "", "M2"});
+		labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>2.0 && -t<3.0 ", Eg_min, Eg_max), "", "M2"});
+		//labels.push_back({"M", "M_{ee}", min_hist, max_hist, bin_hist, Form("status_prot<4000 && M>2.0 && Epho>%f && Epho<%f && -t>3.2 && -t<4.5 ", Eg_min, Eg_max), "", "M2"});
+
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>0.5 && -t_Gen<0.7 ", Eg_min, Eg_max), "50", "0.5", "0.7"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>0.7 && -t_Gen<0.9 ", Eg_min, Eg_max), "50", "0.7", "0.9"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>0.9 && -t_Gen<1.1 ", Eg_min, Eg_max), "50", "0.9", "1.1"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>1.1 && -t_Gen<1.3 ", Eg_min, Eg_max), "50", "1.1", "1.3"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>1.3 && -t_Gen<1.6 ", Eg_min, Eg_max), "50", "1.3", "1.6"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>1.6 && -t_Gen<2.0 ", Eg_min, Eg_max), "50", "1.6", "2.0"});
+		//labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>2.0 && -t_Gen<4.5 ", Eg_min, Eg_max), "50", "2.0", "4.5"});
+		labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>2.0 && -t_Gen<3.0 ", Eg_min, Eg_max), "50", "2.0", "3.0"});
+		//labels_MC.push_back({"M_Gen_2", "M_{ee}", min_hist_MC, max_hist, bin_hist, Form("weight<100 && M_Gen_2>2.0 && Epho_Gen>%f && Epho_Gen<%f && -t_Gen>3.2 && -t_Gen<4.5 ", Eg_min, Eg_max), "50", "3.2", "4.5"});
+		
+
 		name_pdf = Form(name_pdf + "%.2f_%.2f", Eg_min, Eg_max);
 	}
 	//////////////////////////////
@@ -170,7 +203,7 @@ public:
 			cout << "\n";
 			cout << "//////////////////////////////////////////////////"
 				 << "\n";
-			cout << "Doing " << label << " plot"
+			cout << "Doing " << label << " " << i << " plot"
 				 << "\n";
 			cout << "//////////////////////////////////////////////////"
 				 << "\n";
@@ -188,15 +221,15 @@ public:
 
 			int nBins = stoi((string)nb_bins.Data());
 
-			TH1D *Data_hist = new TH1D("Data_hist", "Data_hist", nBins, min_histo_ini, max_histo_ini);
-			TH2D *Average_variable = new TH2D("Average_variable", "Average_variable", 100, 0., 11. , 100, 0., 11.);
+			TH1D *Data_hist = new TH1D(Form("Data_hist_%i", i), "Data_hist", nBins, min_histo_ini, max_histo_ini);
+			TH2D *Average_variable = new TH2D(Form("Average_variable_%i", i), "Average_variable", 100, 0., 11. , 100, 0., 11.);
 
 			// TCanvas *cancG1 = new TCanvas("", "can1",1500,1000);
 			TCut weight_data = Form("%s", "weight");
 			// TCut weight_data = Form("%s", "1");
 
-			Analysis_Sample.filtered_Data_tree->Draw(label + ">>Data_hist", weight_data * data_cut * cut * exclusivity_cut * kinematic_cut);
-			Analysis_Sample.filtered_Data_tree->Draw(variable + ":" + variable_2 + + ">>Average_variable", weight_data * data_cut * cut * exclusivity_cut * kinematic_cut);
+			Analysis_Sample.filtered_Data_tree->Draw(label + ">>" + Form("Data_hist_%i", i), weight_data * data_cut * cut * exclusivity_cut * kinematic_cut);
+			Analysis_Sample.filtered_Data_tree->Draw(variable + ":" + variable_2 + ">>" + Form("Average_variable_%i", i), weight_data * data_cut * cut * exclusivity_cut * kinematic_cut);
 			average_variable.push_back(Average_variable->ProjectionY()->GetMean());
 			sigma_variable.push_back(Average_variable->ProjectionY()->GetRMS());
 
@@ -205,7 +238,7 @@ public:
 
 			cout<<"Mean and RMS of variables "<<Average_variable->ProjectionX()->GetMean()<<" "<<Average_variable->ProjectionY()->GetMean()<<endl;
 
-			Data_hist->SaveAs("plot.pdf");
+			//Data_hist->SaveAs("plot.pdf");
 
 			int nbBins = Data_hist->GetNbinsX();
 			float min_histo = Data_hist->GetXaxis()->GetXmin();
@@ -253,7 +286,14 @@ public:
 
 				TString hist_name = Form("sample_hist_%s_%i_%i", Analysis_Sample.samples[j][3].Data(), j, i);
 				TH1D *sample_hist = new TH1D(hist_name, "", nbBins, min_histo, max_histo);
-				TCut weight = Form("%s*%f*%f*%f/(%i)", "weight", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
+				//TCut weight = Form("%s*%f*%f*%f/(%i)", "weight", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
+				TCut weight = Form("%s*(%f+%f*%s)*%f*%f*%f/(%i)", "weight", 1., alpha_SDME, "cos(theta_GJ_Gen)*cos(theta_GJ_Gen)", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
+				if(flux_formula=="Frixione")
+					weight = Form("(%s*(%s)/(%s))*(%f+%f*%s)*%f*%f*%f/(%i)", "weight", "virtual_flux_Frixione_Gen+real_flux_Gen", "virtual_flux_Gen+real_flux_Gen", 1., alpha_SDME, "cos(theta_GJ_Gen)*cos(theta_GJ_Gen)", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
 
 				// if (Analysis_Sample.samples[j][3] != "BH TCSGen")weight = Form("%s*%s*%f*%f*%f/(%i*%s)", "weight", "virtual_flux_Frixione_Gen", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample, "virtual_flux_Gen");
 
@@ -350,20 +390,35 @@ public:
 			Fit_func.Set_Data_hist(Data_hist);
 			Fit_func.Set_Limits(min_fit, max_fit);
 			
-			if(fit_procedure=="Default")
-				Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
+			int nb_fit = 0;
+			double error_ratio=1.3;
+			
 
-			if(fit_procedure=="Crystall ball Pol 2 BG")
-				Fit_func.Crystall_Ball_fit("SLER", Form("func_%i", i));
+			while ( (!Fit_func.fit_status ||  (error_ratio)>1.2 ) && nb_fit<100 ) //
+			{
+				if(nb_fit>1)
+					error_ratio = (Fit_func.Get_Integral_Error_Signal()/sqrt(Fit_func.Get_Integral_Signal()));
 
-			if(fit_procedure=="Crystall ball exp BG")
-				Fit_func.Crystall_Ball_fit_exp("SLER", Form("func_%i", i));
+				if (fit_procedure == "Default")
+					Fit_func.Single_Gaussian_Int_fit("SLER", Form("func_%i", i));
 
-			if(fit_procedure=="Pol 2 BG")
-				Fit_func.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
+				if (fit_procedure == "Crystall ball Pol 2 BG")
+					Fit_func.Crystall_Ball_fit("SLER", Form("func_%i", i));
 
-			if(fit_procedure=="Double Gaussian")
-				Fit_func.Double_Gaussian_Fit("SLR",Form("func_%i", i));
+				if (fit_procedure == "Crystall ball exp BG")
+					Fit_func.Crystall_Ball_fit_exp("SLR", Form("func_%i", i));
+
+				if (fit_procedure == "Pol 2 BG")
+					Fit_func.Single_Gaussian_Int_fit_Pol_BG_V2("SLER", Form("func_%i", i));
+
+				if (fit_procedure == "Double Gaussian")
+					Fit_func.Double_Gaussian_Fit("SELR", Form("func_%i", i));
+
+				nb_fit++;
+				cout<<Fit_func.Get_Integral_Error_Signal()<<endl;
+				cout<<Fit_func.Get_Integral_Signal()<<endl;
+				cout << Fit_func.fit_status << endl;
+			}
 
 			double chi2 = Fit_func.chi2;
 			double NDF = Fit_func.NDF;
@@ -395,6 +450,8 @@ public:
 
 			legend->AddEntry(Fit_func.function_Signal, Form("J#psi fit (%3.1f #pm %3.1f)  ", nb_JPsi, error_nb_JPsi), "l");
 			legend->AddEntry(Fit_func.function_Signal, Form("#Chi^{2} %3.1f, NdF %3.1f, #Chi^{2}/NdF %3.1f ", chi2, NDF, chi2 / NDF), "");
+			if (fit_procedure == "Crystall ball exp BG")
+				legend->AddEntry(Fit_func.function_Signal, Form("#alpha %3.1f, n %3.1f", Fit_func.function_Signal->GetParameter(3), Fit_func.function_Signal->GetParameter(4)), "");
 			legend->SetFillStyle(0);
 			legend->SetLineWidth(0);
 			legend->Draw("same ");
@@ -552,7 +609,7 @@ public:
 			double normalization_MC_to_data = additional_norm_factor * nb_JPsi; // nb_JPsi_integral_MC_raw;
 			cout << "Normalization factor for signal in MC: " << normalization_MC_to_data << endl;
 
-			int iteration_Acc = 1000;
+			const int iteration_Acc = 1000;
 			double nb_jpsi_per_iteration[iteration_Acc];
 			Fit_Function Fit_func_MC;
 
@@ -611,7 +668,7 @@ public:
 					Fit_func_MC.Crystall_Ball_fit("QSLER", Form("func_MC_%i", i));
 
 				if (fit_procedure == "Crystall ball exp BG")
-					Fit_func_MC.Crystall_Ball_fit_exp("QSLER", Form("func_MC_%i", i));
+					Fit_func_MC.Crystall_Ball_fit_exp("QSLR", Form("func_MC_%i", i));
 
 				if (fit_procedure == "Pol 2 BG")
 					Fit_func_MC.Single_Gaussian_Int_fit_Pol_BG_V2("QSLER", Form("func_MC_%i", i));
@@ -647,6 +704,8 @@ public:
 					legend_acc->AddEntry(h_only_JPsi, Form("nb JPsi %3.1f", nb_JPsi_integral_MC), "f1");
 					legend_acc->AddEntry(Fit_func_MC.function_Signal, Form("J#psi fit (%3.1f #pm %3.1f)  ", Fit_func_MC.Get_Integral_Signal(), Fit_func_MC.Get_Integral_Error_Signal()), "l");
 					legend_acc->AddEntry(Fit_func_MC.function_Signal, Form("#Chi^{2} %3.1f, NdF %3.1f, #Chi^{2}/NdF %3.1f ", Fit_func_MC.chi2, Fit_func_MC.NDF, Fit_func_MC.chi2 / Fit_func_MC.NDF), "");
+					if (fit_procedure == "Crystall ball exp BG")
+						legend_acc->AddEntry(Fit_func_MC.function_Signal, Form("#alpha %3.1f, n %3.1f", Fit_func_MC.function_Signal->GetParameter(3), Fit_func_MC.function_Signal->GetParameter(4)), "");
 					legend_acc->SetFillStyle(0);
 					legend_acc->SetLineWidth(0);
 					legend_acc->Draw("same ");
@@ -662,10 +721,7 @@ public:
 			}
 
 			double iteration_in_double = static_cast<double>(iteration_Acc);
-			cout << "total rec " << numerator_Acc << endl;
-			cout << "iteration_in_double " << iteration_in_double << endl;
-			cout << "Acc num " << nb_JPsi_integral_MC_raw * numerator_Acc / (additional_norm_factor * nb_JPsi * iteration_in_double) << endl;
-			Acc_Num.push_back(nb_JPsi_integral_MC_raw * numerator_Acc / (additional_norm_factor * nb_JPsi * iteration_in_double)); //(sample_Acc->Integral());
+			
 
 			TCanvas *cancAccIteration = new TCanvas("", "cancAccIteration", 1500, 1000);
 			cancAccIteration->cd();
@@ -682,6 +738,11 @@ public:
 			cancAccIteration->SaveAs(output_folder + name_pdf + ".pdf");
 
 			gStyle->SetOptStat(1);
+
+			cout << "total rec " << numerator_Acc << endl;
+			cout << "iteration_in_double " << iteration_in_double << endl;
+			cout << "Acc num " << nb_JPsi_integral_MC_raw * histAccIteration->GetMean() / (additional_norm_factor * nb_JPsi) << endl;
+			Acc_Num.push_back(nb_JPsi_integral_MC_raw * histAccIteration->GetMean() / (additional_norm_factor * nb_JPsi)); //(sample_Acc->Integral());
 
 
 			/*
@@ -816,17 +877,28 @@ public:
 					if (debug)
 						cout << "Nb of events in " << Analysis_Sample.samples[j][0] << " : " << nbEvents_sample << "\n";
 
-					TString hist_name1 = Form("sample_hist1_%s_%i_%i", Analysis_Sample.samples[j][3].Data(), j, i);
-					TH1D *sample_hist1 = new TH1D(hist_name1, "", nbBins, min_histo, max_histo);
+					//TString hist_name1 = Form("sample_hist1_%s_%i_%i", Analysis_Sample.samples[j][3].Data(), j, i);
+					//TH1D *sample_hist1 = new TH1D(hist_name1, "", nbBins, min_histo, max_histo);
 
 					TString hist_Acc = Form("sample_Acc_%s_%i_%i", Analysis_Sample.samples[j][3].Data(), j, i);
 					TH1D *sample_Acc = new TH1D(hist_Acc, "", nbBins, min_histo, max_histo);
 
-					TCut weight1 = Form("(%s+%s)*%f", "virtual_flux_Gen", "real_flux_Gen", lumi_sample);
-					TCut weight_acc = Form("%s*%f*%f*%f/(%i)", "weight", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+					//double ISR_correction = 0.84;
+					//TCut weight1 = Form("(%s*%f+%s)*%f", "virtual_flux_Gen", ISR_correction, "real_flux_Gen",  lumi_sample);
+
+					//if(flux_formula=="Frixione")
+					//	weight1 = Form("(%s*%f+%s)*%f", "virtual_flux_Frixione_Gen",  ISR_correction, "real_flux_Gen", lumi_sample);
+
+					//TCut weight_acc = Form("%s*%f*%f*%f/(%i)", "weight", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
+					TCut weight_acc = Form("%s*(%f+%f*%s)*%f*%f*%f/(%i)", "weight", 1., alpha_SDME,"cos(theta_GJ_Gen)*cos(theta_GJ_Gen)", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
+					if(flux_formula=="Frixione")
+						weight_acc = Form("(%s*(%s)/(%s))*(%f+%f*%s)*%f*%f*%f/(%i)", "weight","virtual_flux_Frixione_Gen+real_flux_Gen","virtual_flux_Gen+real_flux_Gen", 1., alpha_SDME,"cos(theta_GJ_Gen)*cos(theta_GJ_Gen)", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
 
 					// MC_tree[j]->Draw(label + ">>" + hist_name, cut * weight);
-					Analysis_Sample.MC_tree[j]->Draw(label + ">>" + hist_name1, cut * weight1 * weight_acc);
+					//Analysis_Sample.MC_tree[j]->Draw(label + ">>" + hist_name1, cut * weight1 * weight_acc);
 					Analysis_Sample.MC_tree[j]->Draw(label + ">>" + hist_Acc, cut * weight_acc);
 
 					if (debug)
@@ -834,12 +906,12 @@ public:
 						// cout << cut * weight << "\n";
 						cout << "Debug flux"
 							 << "\n";
-						cout << weight1 << endl;
+						//cout << weight1 << endl;
 						// cout << "Number of entries " << sample_hist->GetEntries() << "\n";
-						cout << "Number of entries " << sample_hist1->GetEntries() << "\n";
-						cout << "Integral flux " << sample_hist1->Integral() << "\n";
+						//cout << "Number of entries " << sample_hist1->GetEntries() << "\n";
+						//cout << "Integral flux " << sample_hist1->Integral() << "\n";
 						TCanvas *candebug = new TCanvas("", "candebug", 1500, 1000);
-						sample_hist1->Draw();
+						//sample_hist1->Draw();
 						candebug->SaveAs(output_folder + name_pdf + ".pdf");
 					}
 
@@ -853,9 +925,8 @@ public:
 					hs_MC->Add(sample_Acc);
 
 					// double integral_flux_sample = (sample_hist1->GetEntries() > 100) ? (variable_max - variable_min) * ((sample_hist1->Integral()) / sample_hist1->GetEntries()) : 0.0;
-					double integral_flux_sample = (sample_hist1->GetEntries() > 100) ? (Eg_max - Eg_min) * ((sample_hist1->Integral()) / sample_Acc->Integral()) : 0.0;
-					// double integral_flux_sample = (sample_hist1->GetEntries() > 100) ? (Eg_max - Eg_min) * ((sample_hist1->Integral()) / sample_hist1->GetEntries()) : 0.0;
-					integral_flux.push_back(integral_flux_sample);
+					
+					//here was the old flux code
 
 					if (debug)
 						cout << Analysis_Sample.samples[j][0] << "\n";
@@ -868,7 +939,66 @@ public:
 					TString hist_no_rad = Form("sample_no_rad_%s_%i_%i", Analysis_Sample.samples[j][3].Data(), j, i);
 					TH1D *sample_no_rad = new TH1D(hist_no_rad, "", nbBins, min_histo, max_histo);
 
-					TCut weight_no_rad = Form("%s*%f*%f*%f/(%i)", "weight", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+					//TCut weight_no_rad = Form("%s*%f*%f*%f/(%i)", "weight", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+					TCut weight_no_rad = Form("%s*(%f+%f*%s)*%f*%f*%f/(%i)", "weight", 1., alpha_SDME, "cos(theta_GJ_Gen)*cos(theta_GJ_Gen)", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
+					if(flux_formula=="Frixione")
+						weight_no_rad = Form("(%s*(%s)/(%s))*(%f+%f*%s)*%f*%f*%f/(%i)", "weight","virtual_flux_Frixione_Gen+real_flux_Gen","virtual_flux_Gen+real_flux_Gen", 1., alpha_SDME,"cos(theta_GJ_Gen)*cos(theta_GJ_Gen)", xsec, Analysis_Sample.lumi_factor, lumi_sample, nbEvents_sample);
+
+
+					/// put here flux computation
+
+					////////////////////////////////
+					////////////////////////////////
+					////////////////////////////////
+					////////////////////////////////
+					///// FLUX COMPUTATION
+					TString hist_name1 = Form("sample_hist1_%s_%i_%i", Analysis_Sample.samples[j][3].Data(), j, i);
+					TH1D *sample_hist1 = new TH1D(hist_name1, "", nbBins, min_histo, max_histo);
+
+					//Standard flux
+					TCut weight1 = Form("(%s*%f+%s)*%f", "virtual_flux_Gen",  ISR_correction, "real_flux_Gen", lumi_sample);
+
+					if(option_cut_flux=="Q2max02")
+						weight1 = Form("(%s*%f+%s)*%f", "virtual_flux_016_Gen",  ISR_correction, "real_flux_Gen", lumi_sample);
+
+					if(option_cut_flux=="Q2max05")
+						weight1 = Form("(%s*%f+%s)*%f", "virtual_flux_025_Gen",  ISR_correction, "real_flux_Gen", lumi_sample);
+
+					if(option_cut_flux=="Q2max08")
+						weight1 = Form("(%s*%f+%s)*%f", "virtual_flux_034_Gen",  ISR_correction, "real_flux_Gen", lumi_sample);
+
+						
+					//Frixione Flux
+					if(flux_formula=="Frixione")
+						weight1 = Form("(%s*%f+%s)*%f", "virtual_flux_Frixione_Gen",  ISR_correction, "real_flux_Gen", lumi_sample);
+
+					Analysis_Sample.MC_tree[j]->Draw(label + ">>" + hist_name1, cut * weight1);
+
+					double Eg_max_diff = Eg_max;
+					cout<<"Eg_max_diff "<<Eg_max_diff<<" Eg_min "<<Eg_min<<endl;
+					cout<<"charge spring 2019 "<<std::stof(Analysis_Sample.samples[j][4].Data())<<endl;
+					cout<<(std::stof(Analysis_Sample.samples[j][4].Data())>45.)<<endl;
+
+
+					//An ugly way to account for the max energy of the Spring2019 beam energy
+					if(std::stof(Analysis_Sample.samples[j][4].Data())>45. && Eg_max>10.2){
+						cout<<"Taking into account the energy of the Spring19 dataset"<<endl;
+						Eg_max_diff=10.2;
+					}
+					cout<<"Eg_max_diff "<<Eg_max_diff<<" Eg_min "<<Eg_min<<endl;
+						
+
+					double integral_flux_sample = (sample_hist1->GetEntries()>100) ? (Eg_max_diff - Eg_min) * ((sample_hist1->Integral()) / sample_hist1->GetEntries()) : 0.0;
+					cout<<"label "<<label<<endl;
+					cout<<"integral_flux_sample "<<integral_flux_sample<<endl;
+					
+					integral_flux.push_back(integral_flux_sample);
+					////////////////////////////////
+					////////////////////////////////
+					////////////////////////////////
+					////////////////////////////////
+
 
 					Analysis_Sample.MC_tree[j]->Draw(label + ">>" + hist_no_rad, cut * weight_no_rad);
 
@@ -1165,8 +1295,8 @@ public:
 		JPsi_CS_Integrated_GLUEX->SetPointError(0, (Eg_max - Eg_min) / 2.0, error_integrated_CS_GLUEX);
 		cout << "integrated CS " << integrated_CS_GLUEX << endl;
 
-		TFile *CS_CLAS12 = new TFile("../CS_Extraction_combine_good_error_Gaussian_with_int_SLER_CS_graph.root");
-		TGraphAsymmErrors *CS_CLAS12_Graph = (TGraphAsymmErrors *)CS_CLAS12->Get("Graph");
+		TFile *CS_CLAS12 = new TFile("../Results_CS/CS_Nominal/CS_Extraction_combine_nominal_CS_graph.root");
+		TGraphAsymmErrors *CS_CLAS12_Graph = (TGraphAsymmErrors *)CS_CLAS12->Get(";1");
 
 		JPsi_CS_GlueX_Eg->Draw("AP");
 		JPsi_CS_Integrated->Draw("P");
