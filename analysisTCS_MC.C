@@ -161,7 +161,7 @@ int analysisTCS_MC()
 	//////////////////////////////////////////////
 
 	// Acceptance Acc_TCS(TString(argv[3]), 4, 3, 3, 36, 13);
-	Acceptance Acc_TCS(TString(input.getCmdOption("-a")), 4, 3, 3, 36, 13);
+	Acceptance Acc_TCS(TString(input.getCmdOption("-acc")), 4, 3, 3, 36, 13);
 
 	Acc_TCS.Draw_Acc();
 	Acc_TCS.Draw_Error();
