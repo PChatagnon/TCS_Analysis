@@ -363,7 +363,7 @@ int analysisTCS_MC()
 		"theta_GJ_Gen","phi_GJ_Gen",
 		"theta_Gen", "phi_Gen", 
 		"real_flux_Gen", "virtual_flux_Gen", "virtual_flux_01_Gen", "virtual_flux_05_Gen", "virtual_flux_02_Gen", "virtual_flux_08_Gen","virtual_flux_Frixione_Gen",
-		"virtual_flux_016_Gen", "virtual_flux_025_Gen", "virtual_flux_034_Gen"};
+		"virtual_flux_017_Gen", "virtual_flux_0027_Gen", "virtual_flux_025_Gen", "virtual_flux_034_Gen"};
 
 	std::map<TString, Float_t> outVars_Gen;
 	if (IsGrape || IsTCSGen || IsJPsi || IsElSpectro)
@@ -719,7 +719,8 @@ int analysisTCS_MC()
 					outVars_Gen["virtual_flux_05_Gen"] = MC_ev.virtual_flux_05_Gen;
 					outVars_Gen["virtual_flux_08_Gen"] = MC_ev.virtual_flux_08_Gen;
 					outVars_Gen["virtual_flux_02_Gen"] = MC_ev.virtual_flux_02_Gen;
-					outVars_Gen["virtual_flux_016_Gen"] = MC_ev.virtual_flux_016_Gen;
+					outVars_Gen["virtual_flux_0027_Gen"] = MC_ev.virtual_flux_0027_Gen;
+					outVars_Gen["virtual_flux_017_Gen"] = MC_ev.virtual_flux_017_Gen;
 					outVars_Gen["virtual_flux_025_Gen"] = MC_ev.virtual_flux_025_Gen;
 					outVars_Gen["virtual_flux_034_Gen"] = MC_ev.virtual_flux_034_Gen;
 					outVars_Gen["virtual_flux_Frixione_Gen"] = MC_ev.virtual_flux_Frixione_Gen;
