@@ -12,6 +12,7 @@
 #include "TMath.h"
 #include "TCanvas.h"
 #include "TH3F.h"
+#include "bib/muCLAS12class.h"
 #include "bib/YEvent.h"
 #include "bib/InputParser.h"
 
