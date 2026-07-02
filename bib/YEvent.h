@@ -1,7 +1,7 @@
 #ifndef ClassmuEvent
 #define ClassmuEvent
 
-class YEvent
+class Y_Event
 {
 
 public:
@@ -36,16 +36,16 @@ public:
         float theta;
 
         // masses
-        float m_pi =
-        float m_k =
+        float m_pi = 0.13957;
+        float m_k = 0.493677;
         float m_p = 0.938;
-        float m_e =
+        float m_e = 0.000511;
 
         // run number and trigger bit
         float run;
         int trigger_bit;
 
-        YEvent(int nb_part)
+        Y_Event(int nb_part)
         {
                 vRestProton.SetPxPyPzE(0., 0., 0., mp);
                 vBeam.SetPxPyPzE(0., 0., ebeam, ebeam);
@@ -53,7 +53,7 @@ public:
                 Photons = new Particle[np];
         }
 
-        YEvent()
+        Y_Event()
         {
                 vRestProton.SetPxPyPzE(0., 0., 0., mp);
                 vBeam.SetPxPyPzE(0., 0., ebeam, ebeam);
