@@ -133,6 +133,7 @@ int analysis_PhiPi()
 	////////////////////////////////////////////
 	int nbf = 0;
 	int nbEvent = 0;
+	int nbSelected = 0;
 	for (Int_t i = input.getCmdIndex("-f") + 2; i < input.getCmdIndex("-ef") + 1; i++)
 	{
 		nbf++;
@@ -204,7 +205,7 @@ int analysis_PhiPi()
 			{
 				continue;
 			}
-
+			nbSelected++;
 			///////////////////////////////////////////
 			// Associate detector responses and do EC cuts
 			///////////////////////////////////////////
@@ -252,6 +253,7 @@ int analysis_PhiPi()
 	cout << "Tree written" << endl;
 	cout << "nb of file " << nbf << "\n";
 	cout << "nb of events " << nbEvent << "\n";
+	cout << "nb of selected " << nbSelected << "\n";
 
 	// gROOT->ProcessLine(".q");
 
