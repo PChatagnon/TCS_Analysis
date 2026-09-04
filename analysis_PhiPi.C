@@ -168,7 +168,7 @@ int analysis_PhiPi()
 		{
 
 			nbEvent++;
-			if (nbEvent % 30000 == 0)
+			if (nbEvent % 500000 == 0)
 			{
 				time(&intermediate);
 				double intermediate_time = difftime(intermediate, begin);
