@@ -112,6 +112,8 @@ int analysis_PhiPi()
 		"Q2",
 		"MM",
 		"M_KK",
+		"M_Kppi",
+		"M_Kmpi",
 		"W",
 
 
@@ -228,6 +230,8 @@ int analysis_PhiPi()
 			outVars["Q2"] = ev.Q2;
 			outVars["MM"] = ev.MM;
 			outVars["M_KK"] = ev.M_KK;
+			outVars["M_Kppi"] = ev.M_Kppi;
+			outVars["M_Kmpi"] = ev.M_Kmpi;
 			outVars["W"] = ev.W;
 
 

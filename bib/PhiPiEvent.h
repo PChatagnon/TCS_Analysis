@@ -32,6 +32,8 @@ public:
         float W;
         float Q2;
         float M_KK;
+        float M_Kppi;
+        float M_Kmpi;
         float theta;
 
         // masses
@@ -318,12 +320,14 @@ public:
         {
                 // Kinematic variables
                 
-                vMissing = proton.Vector + k_minus.Vector + k_plus.Vector + pi_minus.Vector + pi_plus.Vector + Electron.Vector - vRestProton - vBeam;
+                vMissing = proton.Vector + k_minus.Vector + k_plus.Vector + pi_plus.Vector + Electron.Vector - vRestProton - vBeam;
 
                 MM = (vMissing).M2();
                 W =  (Electron.Vector - vRestProton - vBeam).M();
                 Q2 = (Electron.Vector  - vBeam).M2();
 		M_KK = (k_minus.Vector + k_plus.Vector).M();
+                M_Kppi = (k_plus.Vector + pi_plus.Vector).M();
+                M_Kmpi = (k_minus.Vector + pi_plus.Vector).M();
         }
 
 
