@@ -30,7 +30,7 @@ using namespace std;
 #define ADDVAR(x, name, t, tree) tree->Branch(name, x, TString(name) + TString(t))
 
 
-int analysis_Y2175()
+int analysis_PhiPi()
 {
 
 	time_t begin, intermediate, end; // time_t is a datatype to store time values.
