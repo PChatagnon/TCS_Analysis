@@ -54,7 +54,7 @@ public:
         {
                 vRestDeuterium.SetPxPyPzE(0., 0., 0., m_d);
                 vBeam.SetPxPyPzE(0., 0., ebeam, ebeam);
-                neutron.SetXYZM(1, 1, 1, m_n);
+                neutron.Vector.SetXYZM(1, 1, 1, m_n);
                 np = nb_part;
                 Photons = new Particle[np];
         }
