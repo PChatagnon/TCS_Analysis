@@ -211,6 +211,8 @@ public:
                         if (pid == 2112)
                         {
                                 Candidate_neutron.SetXYZM(px, py, pz, m_n);
+                                cout<<"Candidate neutron angle: "<<Candidate_neutron.Angle(Expected_neutron.Vect())<<endl;
+                                cout<<"Expected neutron angle: "<<neutron.Vector.Angle(Expected_neutron.Vect())<<endl;
                                 if(Candidate_neutron.Angle(Expected_neutron.Vect()) < neutron.Vector.Angle(Expected_neutron.Vect()))
                                 {
                                         neutron.Vector.SetXYZM(px, py, pz, m_n);

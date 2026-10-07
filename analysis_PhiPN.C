@@ -202,6 +202,11 @@ int analysis_PhiPN()
 			ev.Set_Particles(PART);
 			ev.Set_Neutrons(PART);
 
+			cout<<"rec_p "<<ev.rec_p<<endl;
+			cout<<"rec_n "<<ev.rec_n<<endl;
+			cout<<"rec_e "<<ev.rec_e<<endl;
+			cout<<"rec_k_m "<<ev.rec_k_m<<endl;
+			cout<<"rec_k_p "<<ev.rec_k_p<<endl;
 			if (!ev.pass_topology_cut())
 			{
 				continue;
