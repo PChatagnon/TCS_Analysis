@@ -12,7 +12,7 @@
 #include "TMath.h"
 #include "TCanvas.h"
 #include "TH3F.h"
-#include "muCLAS12class.h"
+#include "bib/muCLAS12class.h"
 #include "bib/PhiPNEvent.h"
 #include "bib/InputParser.h"
 
