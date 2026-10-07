@@ -374,13 +374,17 @@ public:
                 
                 vMissing = proton.Vector + k_minus.Vector + k_plus.Vector + neutron.Vector + Electron.Vector - vRestDeuterium - vBeam;
 
-                MM = (vMissing).M2();
+                 MM = (vMissing).M2();
                 W =  (Electron.Vector - vRestDeuterium - vBeam).M();
                 Q2 = (Electron.Vector  - vBeam).M2();
-		M_KK = (k_minus.Vector + k_plus.Vector).M();
+                M_KK = (k_minus.Vector + k_plus.Vector).M();
                 TLorentzVector Kstar_vec = (proton.Vector + neutron.Vector);
                 TVector3 Kstar_vec_boost = Kstar_vec.BoostVector(); // Velocity of the pair's 
-                TLorentzVector pair = (proton.Vector.Boost(-Kstar_vec_boost) - neutron.Vector.Boost(-Kstar_vec_boost));
+                TLorentzVector protonBoost = proton.Vector;
+                TLorentzVector neutronBoost = neutron.Vector;
+                protonBoost.Boost(-Kstar_vec_boost);
+                neutronBoost.Boost(-Kstar_vec_boost);
+                TLorentzVector pair = (protonBoost-neutronBoost);
                 Kstar = pair.P()/2.;
         }
 
