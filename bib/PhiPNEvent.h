@@ -63,6 +63,7 @@ public:
         {
                 vRestDeuterium.SetPxPyPzE(0., 0., 0., m_d);
                 vBeam.SetPxPyPzE(0., 0., ebeam, ebeam);
+                neutron.Vector.SetXYZM(1, 1, 1, m_n);
         }
 
         void Set_nb_part(int input_np)
