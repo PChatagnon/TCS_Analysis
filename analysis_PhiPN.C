@@ -17,7 +17,6 @@
 #include "bib/InputParser.h"
 
 #include "hipo4/reader.h"
-#include "rcdb_reader.h"
 
 // QADB header and namespace
 #include "QADB.h"
@@ -84,11 +83,11 @@ int analysis_PhiPN()
 
 	TString type = "REC";
 
-
+	cout<<"Input files: "<<endl;
 	///////////////////////////////////////////
 	// Setup the TTree output
 	TString output_file = (TString)(input.getCmdOption("-o")); // argv[4]);
-	TFile *outFile = new TFile(Form("output_PhiPi_%s.root", output_file.Data()), "recreate");
+	TFile *outFile = new TFile(Form("output_PhiPN_%s.root", output_file.Data()), "recreate");
 	
 	TTree *outT = new TTree("tree", "tree");
 	TTree *outT_Gen = new TTree("tree_Gen", "tree_Gen");
