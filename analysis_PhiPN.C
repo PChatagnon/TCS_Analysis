@@ -200,6 +200,11 @@ int analysis_PhiPN()
 			// Get Particles and cut on event topology
 			///////////////////////////////////////////
 			ev.Set_Particles(PART);
+			if (ev.rec_p<1 || ev.rec_e<1 || ev.rec_k_m<1 || ev.rec_k_p<1)
+			{
+				continue;
+			}
+
 			ev.Set_Neutrons(PART);
 
 			cout<<"rec_p "<<ev.rec_p<<endl;
