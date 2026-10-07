@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "analysisTCS_MC.C": "cpp",
+        "analysis_muCLAS12.C": "cpp",
+        "TCSHistogramms (copie).C": "cpp",
+        "Plot_Data_Simu.C": "cpp",
+        "Comparison_2D_Plots.C": "cpp",
+        "Compare1D.C": "cpp",
+        "Compare1D_V2.C": "cpp",
+        "iostream": "cpp",
+        "PhaseSpace.C": "cpp"
+    }
+}
