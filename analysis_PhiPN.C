@@ -83,7 +83,6 @@ int analysis_PhiPN()
 
 	TString type = "REC";
 
-	cout<<"Input files: "<<endl;
 	///////////////////////////////////////////
 	// Setup the TTree output
 	TString output_file = (TString)(input.getCmdOption("-o")); // argv[4]);
