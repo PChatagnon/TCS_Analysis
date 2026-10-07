@@ -380,7 +380,8 @@ public:
 		M_KK = (k_minus.Vector + k_plus.Vector).M();
                 TLorentzVector Kstar_vec = (proton.Vector + neutron.Vector);
                 TVector3 Kstar_vec_boost = Kstar_vec.BoostVector(); // Velocity of the pair's 
-                Kstar = (proton.Vector - neutron.Vector).Boost(-Kstar_vec_boost).P();
+                TLorentzVector pair = (proton.Vector.Boost(-Kstar_vec_boost) - neutron.Vector.Boost(-Kstar_vec_boost));
+                Kstar = pair.P()/2.;
         }
 
 
