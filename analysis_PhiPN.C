@@ -201,6 +201,7 @@ int analysis_PhiPN()
 			// Get Particles and cut on event topology
 			///////////////////////////////////////////
 			ev.Set_Particles(PART);
+			ev.Set_Neutrons(PART)
 
 			if (!ev.pass_topology_cut())
 			{

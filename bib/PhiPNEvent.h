@@ -210,7 +210,7 @@ public:
                         if (pid == 2112)
                         {
                                 Candidate_neutron.SetXYZM(px, py, pz, m_n);
-                                if(Candidate_neutron.Angle(Expected_neutron.Vect()) < neutron.Angle(Expected_neutron.Vect()))
+                                if(Candidate_neutron.Angle(Expected_neutron.Vect()) < neutron.Vector.Angle(Expected_neutron.Vect()))
                                 {
                                         neutron.Vector.SetXYZM(px, py, pz, m_n);
                                         neutron.index = i;
