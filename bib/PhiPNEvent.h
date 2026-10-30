@@ -374,7 +374,7 @@ public:
                 
                 vMissing = proton.Vector + k_minus.Vector + k_plus.Vector + neutron.Vector + Electron.Vector - vRestDeuterium - vBeam;
 
-                 MM = (vMissing).M2();
+                MM = (vMissing).M2();
                 W =  (Electron.Vector - vRestDeuterium - vBeam).M();
                 Q2 = (Electron.Vector  - vBeam).M2();
                 M_KK = (k_minus.Vector + k_plus.Vector).M();
