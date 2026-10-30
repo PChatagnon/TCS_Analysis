@@ -213,7 +213,7 @@ int analysis_mini_muCLAS12()
 				cout << nbEvent << " events processed in " << intermediate_time << "s" << "\n";
 			}
 
-			muEvent ev;
+			mini_muEvent ev;
 			muMCEvent MC_ev;
 
 			int run = 0;
