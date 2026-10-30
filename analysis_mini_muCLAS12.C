@@ -151,7 +151,7 @@ int analysis_mini_muCLAS12()
 		ADDVAR(&(outVars_Gen[fvars_Gen[i]]), fvars_Gen[i], "/F", outT_Gen);
 	}
 
-	/*TLorentzVector gen_Electron, gen_mu_plus, gen_mu_minus, gen_Proton;
+	TLorentzVector gen_Electron, gen_mu_plus, gen_mu_minus, gen_Proton;
 
 	
 	cout<<"Include all gen particles"<<endl;
@@ -163,7 +163,7 @@ int analysis_mini_muCLAS12()
 	outT->Branch("gen_Electron", "TLorentzVector", &gen_Electron);
 	outT->Branch("gen_mu_plus", "TLorentzVector", &gen_mu_plus);
 	outT->Branch("gen_mu_minus", "TLorentzVector", &gen_mu_minus);
-	outT->Branch("gen_Proton", "TLorentzVector", &gen_Proton);*/
+	outT->Branch("gen_Proton", "TLorentzVector", &gen_Proton);
 	
 	///////////////////////////////////////////
 	
@@ -235,7 +235,7 @@ int analysis_mini_muCLAS12()
 			int np_input = PART.getRows();
 			ev.Set_nb_part(np_input);
 			
-			/*MC_ev.Set_MC_Particles(MCEVENT, MCPART, isElSpectro, isGrape, isCoincidence, isCoincidence_Quasi, IsInelastic);
+			MC_ev.Set_MC_Particles(MCEVENT, MCPART, isElSpectro, isGrape, isCoincidence, isCoincidence_Quasi, IsInelastic);
 			MC_ev.Get_Kinematics();
 			
 
@@ -248,7 +248,7 @@ int analysis_mini_muCLAS12()
 			gen_Electron = MC_ev.Electron;
 			gen_mu_plus = MC_ev.mu_plus;
 			gen_mu_minus = MC_ev.mu_minus;
-			gen_Proton = MC_ev.Proton;*/
+			gen_Proton = MC_ev.Proton;
 			
 			
             outT_Gen->Fill();
