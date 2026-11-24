@@ -21,6 +21,7 @@ public:
         float M_Gen;
         float Q2_Gen;
         float t_Gen;
+        float w;
         
         //MC vertex
         float vz_elec_Gen;
@@ -34,7 +35,7 @@ public:
                 vBeam.SetPxPyPzE(0., 0., ebeam, ebeam);
         }
 
-        void Set_MC_Particles(hipo::bank MCEVENT, hipo::bank MCPART, bool IsElSpectro, bool IsGrape, bool IsCoincidence, bool IsCoincidence_Quasi, bool IsInelastic)
+        void Set_MC_Particles(hipo::bank MCEVENT, hipo::bank MCPART, bool IsElSpectro, bool IsGrape, bool IsCoincidence, bool IsCoincidence_Quasi, bool IsInelastic, bool IsJPsiGen)
         {
                 if(IsElSpectro)
                 {
@@ -84,7 +85,19 @@ public:
                         //Proton.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), mp);
                         Electron.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), me);
                 }
-        }
+                
+                if(IsJPsiGen)
+                {
+                        mu_plus.SetXYZM(MCPART.getFloat("px", 2), MCPART.getFloat("py", 2), MCPART.getFloat("pz", 2), mMu);
+                        mu_minus.SetXYZM(MCPART.getFloat("px", 1), MCPART.getFloat("py", 1), MCPART.getFloat("pz", 1), mMu);
+                        Proton.SetXYZM(MCPART.getFloat("px", 0), MCPART.getFloat("py", 0), MCPART.getFloat("pz", 0), mp);
+
+                        float MC_factor_1 = MCEVENT.getFloat("ptarget", 0);
+                        float MC_factor_2 = MCEVENT.getFloat("pbeam", 0);
+                        float MC_factor_3 = MCEVENT.getFloat("ebeam", 0);
+                        w = MC_factor_1 * MC_factor_2 * MC_factor_3;
+                }
+
 
         void Get_Kinematics()
         {

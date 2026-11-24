@@ -61,12 +61,14 @@ int analysis_mini_muCLAS12()
 	isCoincidence = input.cmdOptionExists("-coincidence");
 	isCoincidence_Quasi = input.cmdOptionExists("-coincidence_quasi");
 	IsInelastic = input.cmdOptionExists("-inelastic");
+	bool IsJPsiGen = input.cmdOptionExists("-JPsiGen");
 
 	cout<<"isElSpectro "<<isElSpectro<<endl;
 	cout<<"isGrape "<<isGrape<<endl;
 	cout<<"isCoincidence "<<isCoincidence<<endl;
 	cout<<"isCoincidence_Quasi "<<isCoincidence_Quasi<<endl;
 	cout<<"IsInelastic "<<IsInelastic<<endl;
+	cout<<"IsJPsiGen "<<IsJPsiGen<<endl;
 
 	/////////////////////////////////////////
 
@@ -116,6 +118,7 @@ int analysis_mini_muCLAS12()
 		"Q2",
 		"t",
 		"W",
+		"weight",
 
 
 		"mu_plus_SF",
@@ -235,7 +238,7 @@ int analysis_mini_muCLAS12()
 			int np_input = PART.getRows();
 			ev.Set_nb_part(np_input);
 			
-			MC_ev.Set_MC_Particles(MCEVENT, MCPART, isElSpectro, isGrape, isCoincidence, isCoincidence_Quasi, IsInelastic);
+			MC_ev.Set_MC_Particles(MCEVENT, MCPART, isElSpectro, isGrape, isCoincidence, isCoincidence_Quasi, IsInelastic, IsJPsiGen);
 			MC_ev.Get_Kinematics();
 			
 
@@ -287,6 +290,7 @@ int analysis_mini_muCLAS12()
 			outVars["Q2"] = ev.Q2;
 			outVars["t"] = ev.t;
 			outVars["W"] = ev.W;
+			outVars["weight"] = MC_ev.weight;
 
 
 
