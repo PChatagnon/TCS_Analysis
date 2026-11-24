@@ -61,6 +61,7 @@ public:
                         vz_mu_minus_Gen = MCPART.getFloat("vz", 3);
                         vz_prot_Gen = MCPART.getFloat("vz", 0);
                         vz_elec_Gen = MCPART.getFloat("vz", 1);
+                        w=1.0;
                 }
 
                 if(IsInelastic)
