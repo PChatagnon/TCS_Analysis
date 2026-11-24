@@ -290,7 +290,7 @@ int analysis_mini_muCLAS12()
 			outVars["Q2"] = ev.Q2;
 			outVars["t"] = ev.t;
 			outVars["W"] = ev.W;
-			outVars["weight"] = MC_ev.weight;
+			outVars["weight"] = MC_ev.w;
 
 
 
