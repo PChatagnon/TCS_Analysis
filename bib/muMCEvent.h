@@ -21,7 +21,7 @@ public:
         float M_Gen;
         float Q2_Gen;
         float t_Gen;
-        float w;
+        float w = 1.0;
         
         //MC vertex
         float vz_elec_Gen;
