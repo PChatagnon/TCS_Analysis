@@ -3,7 +3,7 @@
 
 class muMCEvent
 {
-        
+
 public:
         // Particle and Lorentz vectors
         TLorentzVector Electron;
@@ -97,7 +97,7 @@ public:
                         float MC_factor_3 = MCEVENT.getFloat("ebeam", 0);
                         w = MC_factor_1 * MC_factor_2 * MC_factor_3;
                 }
-
+        }
 
         void Get_Kinematics()
         {
